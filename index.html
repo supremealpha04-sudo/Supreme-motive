@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Daily Quotes</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#FFD700">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SupremeMotive">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        /* Install Button */
+        .install-btn {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .install-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Notification Bell */
+        .notification-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-bell {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .notification-bell:hover {
+            color: var(--gold);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* Notification Dropdown */
+        .notification-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            width: 380px;
+            max-height: 500px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-color);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .notification-header h3 {
+            color: var(--gold);
+            font-size: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mark-read-btn, .settings-btn {
+            background: none;
+            border: none;
+            color: var(--electric-blue);
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .mark-read-btn:hover, .settings-btn:hover {
+            color: var(--gold);
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: var(--border-color);
+        }
+
+        .notification-item.unread {
+            background: rgba(255, 215, 0, 0.05);
+            border-left: 3px solid var(--gold);
+        }
+
+        .notification-title {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .notification-message {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+
+        .loading-notifications {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        /* Floating Feed Button */
+        .floating-feed-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 999;
+            animation: pulse 2s infinite;
+        }
+
+        .floating-feed-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 215, 0, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+
+        /* Floating Feed Menu */
+        .feed-menu {
+            position: fixed;
+            bottom: 170px;
+            right: 20px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--gold);
+            z-index: 998;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .feed-menu.show {
+            display: block;
+        }
+
+        .feed-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feed-menu-item:hover {
+            background: var(--border-color);
+            color: var(--gold);
+        }
+
+        .feed-menu-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .feed-menu-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.3rem 0;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Install Banner */
+        .install-banner {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .install-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .install-banner-icon {
+            font-size: 1.5rem;
+        }
+
+        .install-banner-text {
+            font-weight: 600;
+        }
+
+        .install-banner-close {
+            background: none;
+            border: none;
+            color: var(--bg-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .categories {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .quote-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .quote-text {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-style: italic;
+        }
+
+        .quote-tag {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quote-tag span {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .quote-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 70px;
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .action-btn.liked {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .action-btn.saved {
+            background: var(--electric-blue);
+            color: var(--bg-color);
+            border-color: var(--electric-blue);
+        }
+
+        .like-count {
+            font-weight: bold;
+            color: inherit;
+            min-width: 25px;
+            display: inline-block;
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .offline-badge {
+            background: #F44336;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .login-btn, .logout-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .quote-actions {
+                gap: 0.3rem;
+            }
+
+            .action-btn {
+                min-width: calc(50% - 0.3rem);
+                font-size: 0.85rem;
+            }
+
+            .notification-dropdown {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+            }
+
+            .install-banner {
+                left: 10px;
+                right: 10px;
+                bottom: 90px;
+            }
+
+            .floating-feed-btn {
+                bottom: 90px;
+                right: 15px;
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .feed-menu {
+                bottom: 150px;
+                right: 15px;
+            }
+
+            .back-to-top {
+                bottom: 90px;
+                left: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="file_00000000f25071f5a01e8c22ec168ef4.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+            <span id="offlineIndicator" class="offline-badge hidden">Offline</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html" class="active">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="support.html">Support</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <!-- Install Button -->
+            <button id="installBtn" class="install-btn hidden">
+                <i class="fas fa-download"></i> Install App
+            </button>
+            
+            <!-- Notification Bell -->
+            <div class="notification-container">
+                <button class="notification-bell" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <span id="notificationBadge" class="notification-badge hidden">0</span>
+                
+                <!-- Notification Dropdown -->
+                <div id="notificationDropdown" class="notification-dropdown hidden">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <div class="notification-actions">
+                            <button id="markAllRead" class="mark-read-btn">Mark all read</button>
+                            <button id="notificationSettingsBtn" class="settings-btn">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="notificationList" class="notification-list">
+                        <div class="loading-notifications">Loading...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Auth Buttons -->
+            <div class="auth-buttons" id="authButtons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon">📚</span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📰</span>
+            <span>Articles</span>
+        </a>
+        <a href="videos.html" class="nav-item">
+            <span class="nav-icon">🎬</span>
+            <span>Videos</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div class="header">
+            <h1>Daily Motivation</h1>
+            <p>Inspire your day with powerful quotes</p>
+        </div>
+
+        <div class="categories" id="categories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="life">Life</button>
+            <button class="category-btn" data-category="success">Success</button>
+            <button class="category-btn" data-category="love">Love</button>
+            <button class="category-btn" data-category="wisdom">Wisdom</button>
+            <button class="category-btn" data-category="motivation">Motivation</button>
+            <button class="category-btn" data-category="happiness">Happiness</button>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div id="quotesContainer">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading quotes...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Floating Feed Button -->
+    <button id="floatingFeedBtn" class="floating-feed-btn" title="Quick Feed">
+        <i class="fas fa-rss"></i>
+    </button>
+
+    <!-- Feed Menu -->
+    <div id="feedMenu" class="feed-menu">
+        <div class="feed-menu-item" data-type="quotes">
+            <i class="fas fa-quote-left"></i>
+            <span>Daily Quotes</span>
+        </div>
+        <div class="feed-menu-item" data-type="posts">
+            <i class="fas fa-newspaper"></i>
+            <span>Latest Articles</span>
+        </div>
+        <div class="feed-menu-item" data-type="ebooks">
+            <i class="fas fa-book"></i>
+            <span>New Ebooks</span>
+        </div>
+        <div class="feed-menu-item" data-type="videos">
+            <i class="fas fa-video"></i>
+            <span>Recent Videos</span>
+        </div>
+        <div class="feed-menu-divider"></div>
+        <div class="feed-menu-item" data-type="refresh">
+            <i class="fas fa-sync-alt"></i>
+            <span>Refresh Feed</span>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="back-to-top" title="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Install Banner -->
+    <div id="installBanner" class="install-banner hidden">
+        <div class="install-banner-content">
+            <span class="install-banner-icon">📱</span>
+            <span class="install-banner-text">Install SupremeMotive for a better experience!</span>
+        </div>
+        <div>
+            <button id="installBannerBtn" class="install-btn" style="padding: 0.3rem 1rem; margin-right: 0.5rem;">
+                Install
+            </button>
+            <button id="closeBannerBtn" class="install-banner-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification Modal for Large View -->
+    <div id="notificationModal" class="modal hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div style="background: var(--card-bg); border-radius: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow: auto; padding: 2rem; border: 2px solid var(--gold); position: relative;">
+            <button id="closeNotificationModal" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer;">&times;</button>
+            <div id="notificationModalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // ENVIRONMENT VARIABLES (Loaded from Vercel)
+        // ============================================
+        // These values should be set in Vercel Environment Variables
+        // For local development, create a .env file with:
+        // VITE_SUPABASE_URL=your_supabase_url
+        // VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+        // ADMIN_EMAILS=comma,separated,emails
+        
+        // Using a dynamic configuration - works with Vercel's environment variables
+        const SUPABASE_URL = window._env_?.VITE_SUPABASE_URL || 
+                            (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_URL) || 
+                            'https://dzcykpbfykajhoutzhpf.supabase.co';
+                            
+        const SUPABASE_ANON_KEY = window._env_?.VITE_SUPABASE_ANON_KEY || 
+                                  (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_ANON_KEY) || 
+                                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6Y3lrcGJmeWthamhvdXR6aHBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MDcxNjQsImV4cCI6MjA4ODE4MzE2NH0.IcuAZj89hwpeRGokawx-V-6BAQtwsiOTBIS_E5-TSMg';
+        
+        // Admin emails from environment variable
+        const ADMIN_EMAILS_RAW = window._env_?.ADMIN_EMAILS || 
+                                 (typeof process !== 'undefined' && process.env?.ADMIN_EMAILS) || 
+                                 'supremealpha04@gmail.com,suprememotive43@gmail.com,sandrakukk055@gmail.com,emmanuelamer6@gmail.com';
+        
+        const ADMIN_EMAILS = ADMIN_EMAILS_RAW.split(',').map(email => email.trim());
+
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ============================================
+        // PWA INSTALLATION
+        // ============================================
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        const installBanner = document.getElementById('installBanner');
+        const installBannerBtn = document.getElementById('installBannerBtn');
+        const closeBannerBtn = document.getElementById('closeBannerBtn');
+        const backToTop = document.getElementById('backToTop');
+        const floatingFeedBtn = document.getElementById('floatingFeedBtn');
+        const feedMenu = document.getElementById('feedMenu');
+        const notificationModal = document.getElementById('notificationModal');
+        const closeNotificationModal = document.getElementById('closeNotificationModal');
+        const notificationModalContent = document.getElementById('notificationModalContent');
+
+        // Check if already installed or in standalone mode
+        function isAppInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true;
+        }
+
+        // Hide install UI if already installed
+        if (isAppInstalled()) {
+            if (installBtn) installBtn.classList.add('hidden');
+            if (installBanner) installBanner.classList.add('hidden');
+        }
+
+        // Listen for beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            if (installBtn && !isAppInstalled()) {
+                installBtn.classList.remove('hidden');
+            }
+            if (installBanner && !isAppInstalled()) {
+                const bannerDismissed = localStorage.getItem('installBannerDismissed');
+                if (!bannerDismissed) {
+                    installBanner.classList.remove('hidden');
+                }
+            }
+        });
+
+        async function installApp() {
+            if (!deferredPrompt) {
+                showInstallInstructions();
+                return;
+            }
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            
+            if (installBtn) installBtn.classList.add('hidden');
+            if (installBanner) installBanner.classList.add('hidden');
+            localStorage.setItem('installBannerDismissed', 'true');
+            
+            if (outcome === 'accepted') {
+                showAlert('Thank you for installing SupremeMotive! 🎉', 'success');
+            }
+        }
+
+        function showInstallInstructions() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            if (isIOS) {
+                showAlert('To install: Tap Share button → Add to Home Screen', 'info');
+            } else {
+                showAlert('To install: Click the menu (⋮) → Install App', 'info');
+            }
+        }
+
+        function closeBanner() {
+            installBanner.classList.add('hidden');
+            localStorage.setItem('installBannerDismissed', 'true');
+        }
+
+        installBtn?.addEventListener('click', installApp);
+        installBannerBtn?.addEventListener('click', installApp);
+        closeBannerBtn?.addEventListener('click', closeBanner);
+
+        // ============================================
+        // FLOATING FEED BUTTON
+        // ============================================
+        floatingFeedBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            feedMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!floatingFeedBtn.contains(e.target) && !feedMenu.contains(e.target)) {
+                feedMenu.classList.remove('show');
+            }
+        });
+
+        document.querySelectorAll('.feed-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const type = item.dataset.type;
+                feedMenu.classList.remove('show');
+                
+                switch(type) {
+                    case 'quotes':
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        break;
+                    case 'posts':
+                        window.location.href = 'post.html';
+                        break;
+                    case 'ebooks':
+                        window.location.href = 'ebooks.html';
+                        break;
+                    case 'videos':
+                        window.location.href = 'videos.html';
+                        break;
+                    case 'refresh':
+                        window.location.reload();
+                        break;
+                }
+            });
+        });
+
+        // ============================================
+        // BACK TO TOP BUTTON
+        // ============================================
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ============================================
+        // PWA & OFFLINE DETECTION
+        // ============================================
+        const offlineIndicator = document.getElementById('offlineIndicator');
+        
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                offlineIndicator.classList.add('hidden');
+            } else {
+                offlineIndicator.classList.remove('hidden');
+                showAlert('You are offline. Some features may be limited.', 'warning');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered successfully:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+
+        // Request notification permission
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                Notification.requestPermission();
+            }
+        }
+
+        // Sample quotes (fallback for offline)
+        const sampleQuotes = [
+            {
+                id: '1',
+                text: 'Actions lie just like words so if you don\'t mean it stop doing it.',
+                author: 'Unknown',
+                category: 'life',
+                tag: 'Tr'
+            },
+            {
+                id: '2',
+                text: 'The only way to do great work is to love what you do.',
+                author: 'Steve Jobs',
+                category: 'success',
+                tag: 'St'
+            },
+            {
+                id: '3',
+                text: 'Life is what happens when you\'re busy making other plans.',
+                author: 'John Lennon',
+                category: 'life',
+                tag: 'Lf'
+            },
+            {
+                id: '4',
+                text: 'The future belongs to those who believe in the beauty of their dreams.',
+                author: 'Eleanor Roosevelt',
+                category: 'motivation',
+                tag: 'Mv'
+            }
+        ];
+
+        // State
+        let currentUser = null;
+        let currentCategory = 'all';
+        let quotes = [];
+        let userLikes = new Set();
+        let userSaves = new Set();
+        let notifications = [];
+        let unreadCount = 0;
+
+        // DOM Elements
+        const quotesContainer = document.getElementById('quotesContainer');
+        const alertContainer = document.getElementById('alertContainer');
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const themeToggle = document.getElementById('themeToggle');
+        const adminLink = document.getElementById('adminLink');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userGreeting = document.getElementById('userGreeting');
+        const categoryBtns = document.querySelectorAll('.category-btn');
+        
+        // Notification Elements
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationList = document.getElementById('notificationList');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const markAllReadBtn = document.getElementById('markAllRead');
+        const notificationSettingsBtn = document.getElementById('notificationSettingsBtn');
+
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5');
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-color', '#333333');
+                document.documentElement.style.setProperty('--text-secondary', '#666666');
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD');
+                themeToggle.textContent = '☀️';
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A');
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A');
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0');
+                document.documentElement.style.setProperty('--border-color', '#333333');
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5';
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A');
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A');
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0');
+                document.documentElement.style.setProperty('--border-color', '#333333');
+                themeToggle.textContent = '🌙';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5');
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-color', '#333333');
+                document.documentElement.style.setProperty('--text-secondary', '#666666');
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD');
+                themeToggle.textContent = '☀️';
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // ============================================
+        // SHOW ALERT
+        // ============================================
+        function showAlert(message, type = 'success') {
+            alertContainer.innerHTML = `<div class="alert">${message}</div>`;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 2000);
+        }
+
+        // ============================================
+        // UPDATE AUTH UI
+        // ============================================
+        function updateAuthUI(user) {
+            if (user) {
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                userGreeting.classList.remove('hidden');
+                userGreeting.textContent = `Hi, ${user.email.split('@')[0]}!`;
+                
+                if (ADMIN_EMAILS.includes(user.email)) {
+                    adminLink.style.display = 'block';
+                    adminLink.href = 'admin/admin-dashboard.html';
+                } else {
+                    adminLink.style.display = 'none';
+                }
+            } else {
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+                userGreeting.classList.add('hidden');
+                adminLink.style.display = 'none';
+            }
+        }
+
+        // ============================================
+        // CHECK AUTH
+        // ============================================
+        async function checkAuth() {
+            try {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                currentUser = user;
+                updateAuthUI(user);
+                if (user) {
+                    await loadUserInteractions();
+                    await loadNotifications();
+                    subscribeToNotifications();
+                }
+            } catch (error) {
+                console.error('Auth error:', error);
+                updateAuthUI(null);
+            }
+        }
+
+        // ============================================
+        // LOGOUT FUNCTION
+        // ============================================
+        async function handleLogout() {
+            try {
+                await supabaseClient.auth.signOut();
+                currentUser = null;
+                userLikes.clear();
+                userSaves.clear();
+                updateAuthUI(null);
+                renderQuotes();
+                showAlert('Logged out successfully');
+            } catch (error) {
+                console.error('Logout error:', error);
+                showAlert('Error logging out');
+            }
+        }
+
+        logoutBtn.addEventListener('click', handleLogout);
+
+        // ============================================
+        // LOAD USER INTERACTIONS
+        // ============================================
+        async function loadUserInteractions() {
+            if (!currentUser) return;
+
+            try {
+                const { data: likes } = await supabaseClient
+                    .from('quote_likes')
+                    .select('quote_id')
+                    .eq('user_id', currentUser.id);
+
+                if (likes) {
+                    userLikes = new Set(likes.map(l => l.quote_id));
+                }
+
+                const { data: saves } = await supabaseClient
+                    .from('quote_saves')
+                    .select('quote_id')
+                    .eq('user_id', currentUser.id);
+
+                if (saves) {
+                    userSaves = new Set(saves.map(s => s.quote_id));
+                }
+            } catch (error) {
+                console.error('Error loading interactions:', error);
+            }
+        }
+
+        // ============================================
+        // NOTIFICATION FUNCTIONS
+        // ============================================
+        
+        async function loadNotifications() {
+            if (!currentUser) return;
+            
+            try {
+                const { data, error } = await supabaseClient
+                    .from('notifications')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+                    
+                if (error) throw error;
+                
+                notifications = data || [];
+                updateNotificationUI();
+                
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        function updateNotificationUI() {
+            unreadCount = notifications.filter(n => !n.is_read).length;
+            
+            if (unreadCount > 0) {
+                notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                notificationBadge.classList.remove('hidden');
+            } else {
+                notificationBadge.classList.add('hidden');
+            }
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<div class="loading-notifications">No notifications yet</div>';
+                return;
+            }
+            
+            notificationList.innerHTML = notifications.map(notification => `
+                <div class="notification-item ${!notification.is_read ? 'unread' : ''}" 
+                     data-id="${notification.id}" 
+                     data-content-id="${notification.content_id}"
+                     data-type="${notification.type}"
+                     data-title="${escapeHtml(notification.title)}"
+                     data-message="${escapeHtml(notification.message)}">
+                    <div class="notification-title">${escapeHtml(notification.title)}</div>
+                    <div class="notification-message">${escapeHtml(notification.message)}</div>
+                    <div class="notification-time">${formatTimeAgo(notification.created_at)}</div>
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', () => handleNotificationClick(item));
+            });
+        }
+
+        function showNotificationModal(notification) {
+            notificationModalContent.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--gold);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h2 style="color: var(--gold); margin-bottom: 1rem;">${notification.title}</h2>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+                        ${notification.message}
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button id="viewNotificationBtn" class="install-btn" style="padding: 0.8rem 2rem;">
+                            View Details
+                        </button>
+                        <button id="dismissNotificationBtn" class="logout-btn" style="padding: 0.8rem 2rem;">
+                            Dismiss
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            notificationModal.style.display = 'flex';
+            
+            document.getElementById('viewNotificationBtn').addEventListener('click', async () => {
+                await markNotificationAsRead(notification.id);
+                notificationModal.style.display = 'none';
+                
+                // Navigate based on notification type
+                if (notification.content_id) {
+                    switch(notification.type) {
+                        case 'new_quote':
+                            // Scroll to quote
+                            window.location.href = `index.html?quote=${notification.content_id}`;
+                            break;
+                        case 'new_post':
+                            window.location.href = `post.html?id=${notification.content_id}`;
+                            break;
+                        case 'new_ebook':
+                            window.location.href = `ebooks.html?id=${notification.content_id}`;
+                            break;
+                        case 'comment_reply':
+                        case 'like':
+                            window.location.href = `post.html?id=${notification.content_id}`;
+                            break;
+                        case 'unlock_approved':
+                            window.location.href = `ebooks.html?id=${notification.content_id}`;
+                            break;
+                        default:
+                            window.location.reload();
+                    }
+                }
+            });
+            
+            document.getElementById('dismissNotificationBtn').addEventListener('click', () => {
+                notificationModal.style.display = 'none';
+                markNotificationAsRead(notification.id);
+            });
+        }
+
+        async function handleNotificationClick(element) {
+            const notificationId = element.dataset.id;
+            const notification = notifications.find(n => n.id === notificationId);
+            
+            if (notification) {
+                showNotificationModal(notification);
+            }
+        }
+
+        async function markNotificationAsRead(notificationId) {
+            try {
+                await supabaseClient
+                    .from('notifications')
+                    .update({ is_read: true })
+                    .eq('id', notificationId);
+                    
+                const notification = notifications.find(n => n.id === notificationId);
+                if (notification) notification.is_read = true;
+                updateNotificationUI();
+                
+            } catch (error) {
+                console.error('Error marking notification as read:', error);
+            }
+        }
+
+        async function markAllAsRead() {
+            try {
+                await supabaseClient
+                    .from('notifications')
+                    .update({ is_read: true })
+                    .eq('user_id', currentUser.id);
+                    
+                notifications.forEach(n => n.is_read = true);
+                updateNotificationUI();
+                showAlert('All notifications marked as read');
+                
+            } catch (error) {
+                console.error('Error marking all as read:', error);
+                showAlert('Error marking notifications', 'error');
+            }
+        }
+
+        function subscribeToNotifications() {
+            if (!currentUser) return;
+            
+            const subscription = supabaseClient
+                .channel('notifications')
+                .on('postgres_changes', {
+                    event: 'INSERT',
+                    schema: 'public',
+                    table: 'notifications',
+                    filter: `user_id=eq.${currentUser.id}`
+                }, (payload) => {
+                    notifications.unshift(payload.new);
+                    updateNotificationUI();
+                    
+                    if (Notification.permission === 'granted') {
+                        new Notification(payload.new.title, {
+                            body: payload.new.message,
+                            icon: '/logo.png'
+                        });
+                    }
+                    
+                    // Show modal for new notification
+                    showNotificationModal(payload.new);
+                })
+                .subscribe();
+                
+            return subscription;
+        }
+
+        function formatTimeAgo(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} min ago`;
+            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            return date.toLocaleDateString();
+        }
+
+        // Close notification modal
+        closeNotificationModal.addEventListener('click', () => {
+            notificationModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === notificationModal) {
+                notificationModal.style.display = 'none';
+            }
+        });
+
+        // ============================================
+        // QUOTE FUNCTIONS
+        // ============================================
+        
+        async function loadQuotes() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('quotes')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    quotes = data;
+                    localStorage.setItem('cachedQuotes', JSON.stringify(data));
+                } else {
+                    const cached = localStorage.getItem('cachedQuotes');
+                    if (cached) {
+                        quotes = JSON.parse(cached);
+                    } else {
+                        quotes = sampleQuotes;
+                    }
+                }
+
+                renderQuotes();
+
+            } catch (error) {
+                console.error('Error loading quotes:', error);
+                const cached = localStorage.getItem('cachedQuotes');
+                if (cached) {
+                    quotes = JSON.parse(cached);
+                } else {
+                    quotes = sampleQuotes;
+                }
+                renderQuotes();
+                
+                if (!navigator.onLine) {
+                    showAlert('You are offline. Showing cached quotes.', 'warning');
+                }
+            }
+        }
+
+        async function getLikeCount(quoteId) {
+            try {
+                const { count } = await supabaseClient
+                    .from('quote_likes')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('quote_id', quoteId);
+                return count || 0;
+            } catch (error) {
+                return 0;
+            }
+        }
+
+        window.shareQuote = (quoteId) => {
+            const quote = quotes.find(q => q.id === quoteId);
+            const shareText = `"${quote.text}" — ${quote.author}`;
+            const shareUrl = window.location.href;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SupremeMotive Quote',
+                    text: shareText,
+                    url: shareUrl
+                }).catch(() => copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`));
+            } else {
+                copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`);
+            }
+        };
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('Quote copied to clipboard!');
+            }).catch(() => {
+                showAlert('Could not copy quote');
+            });
+        }
+
+        async function renderQuotes() {
+            let filteredQuotes = [...quotes];
+
+            if (currentCategory !== 'all') {
+                filteredQuotes = filteredQuotes.filter(q => q.category === currentCategory);
+            }
+
+            if (filteredQuotes.length === 0) {
+                quotesContainer.innerHTML = `<div class="loading"><p>No quotes in this category</p></div>`;
+                return;
+            }
+
+            let quotesWithLikes = filteredQuotes;
+            if (navigator.onLine) {
+                quotesWithLikes = await Promise.all(filteredQuotes.map(async (quote) => {
+                    const likeCount = await getLikeCount(quote.id);
+                    return { ...quote, likeCount };
+                }));
+            } else {
+                quotesWithLikes = filteredQuotes.map(quote => ({ ...quote, likeCount: 0 }));
+            }
+
+            quotesContainer.innerHTML = quotesWithLikes.map(quote => {
+                const isLiked = userLikes.has(quote.id);
+                const isSaved = userSaves.has(quote.id);
+                const displayLikeCount = quote.likeCount + (isLiked ? 1 : 0);
+
+                return `
+                    <div class="quote-card">
+                        <div class="quote-text">${quote.text}</div>
+                        <div class="quote-tag"><span>${quote.tag}</span> ${quote.category.charAt(0).toUpperCase() + quote.category.slice(1)} Quotes</div>
+                        <div class="quote-actions">
+                            <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" onclick="handleLike('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
+                                <span>❤️</span>
+                                <span class="like-count">${displayLikeCount}</span>
+                            </button>
+                            <button class="action-btn save-btn ${isSaved ? 'saved' : ''}" onclick="handleSave('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
+                                <span>🔖</span>
+                                <span>Save</span>
+                            </button>
+                            <button class="action-btn" onclick="downloadQuote('${quote.id}')">
+                                <span>📥</span>
+                                <span>Download</span>
+                            </button>
+                            <button class="action-btn" onclick="shareQuote('${quote.id}')">
+                                <span>📤</span>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.handleLike = async (quoteId) => {
+            if (!currentUser) {
+                if (confirm('Please login to like quotes')) {
+                    window.location.href = 'login.html';
+                }
+                return;
+            }
+
+            if (!navigator.onLine) {
+                showAlert('You need to be online to like quotes', 'warning');
+                return;
+            }
+
+            try {
+                if (userLikes.has(quoteId)) {
+                    await supabaseClient
+                        .from('quote_likes')
+                        .delete()
+                        .eq('quote_id', quoteId)
+                        .eq('user_id', currentUser.id);
+                    userLikes.delete(quoteId);
+                } else {
+                    await supabaseClient
+                        .from('quote_likes')
+                        .insert([{ quote_id: quoteId, user_id: currentUser.id }]);
+                    userLikes.add(quoteId);
+                }
+                renderQuotes();
+            } catch (error) {
+                showAlert('Error updating like');
+            }
+        };
+
+        window.handleSave = async (quoteId) => {
+            if (!currentUser) {
+                if (confirm('Please login to save quotes')) {
+                    window.location.href = 'login.html';
+                }
+                return;
+            }
+
+            if (!navigator.onLine) {
+                showAlert('You need to be online to save quotes', 'warning');
+                return;
+            }
+
+            try {
+                if (userSaves.has(quoteId)) {
+                    await supabaseClient
+                        .from('quote_saves')
+                        .delete()
+                        .eq('quote_id', quoteId)
+                        .eq('user_id', currentUser.id);
+                    userSaves.delete(quoteId);
+                    showAlert('Quote removed from saved');
+                } else {
+                    await supabaseClient
+                        .from('quote_saves')
+                        .insert([{ quote_id: quoteId, user_id: currentUser.id }]);
+                    userSaves.add(quoteId);
+                    showAlert('Quote saved!');
+                }
+                renderQuotes();
+            } catch (error) {
+                showAlert('Error saving quote');
+            }
+        };
+
+        window.downloadQuote = (quoteId) => {
+            const quote = quotes.find(q => q.id === quoteId);
+            const canvas = document.createElement('canvas');
+            canvas.width = 380;
+            canvas.height = 380;
+            const ctx = canvas.getContext('2d');
+
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.font = 'bold 50px Georgia, serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText('“', 25, 20);
+
+            ctx.font = 'bold 28px Arial, Helvetica, sans-serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'center';
+            
+            const words = quote.text.split(' ');
+            let line = '';
+            let lines = [];
+            let y = 100;
+
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                if (metrics.width > 300 && n > 0) {
+                    lines.push(line);
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line);
+
+            lines.forEach((line, index) => {
+                ctx.fillText(line, 190, y + (index * 40));
+            });
+
+            ctx.font = 'bold 50px Georgia, serif';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.textAlign = 'right';
+            ctx.fillText('”', 355, 300);
+
+            const tagText = 'supreme motive';
+            ctx.font = '14px Arial, Helvetica, sans-serif';
+            const textWidth = ctx.measureText(tagText).width;
+            const rectX = 380 - textWidth - 30;
+            const rectY = 340;
+            const rectWidth = textWidth + 24;
+            const rectHeight = 30;
+            
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.setLineDash([5, 5]);
+            ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(tagText, rectX + 12, rectY + 15);
+
+            const link = document.createElement('a');
+            link.download = `suprememotive-${quote.category}-quote.jpg`;
+            link.href = canvas.toDataURL('image/jpeg', 0.95);
+            link.click();
+            showAlert('Quote downloaded!');
+        };
+
+        // ============================================
+        // CATEGORY FILTERING
+        // ============================================
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentCategory = btn.dataset.category;
+                renderQuotes();
+            });
+        });
+
+        // ============================================
+        // NOTIFICATION EVENT HANDLERS
+        // ============================================
+        notificationBell.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notificationDropdown.classList.toggle('hidden');
+            if (!notificationDropdown.classList.contains('hidden')) {
+                loadNotifications();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.classList.add('hidden');
+            }
+        });
+
+        if (markAllReadBtn) {
+            markAllReadBtn.addEventListener('click', markAllAsRead);
+        }
+
+        if (notificationSettingsBtn) {
+            notificationSettingsBtn.addEventListener('click', () => {
+                window.location.href = 'profile.html?tab=notifications';
+            });
+        }
+
+        // ============================================
+        // ESCAPE HTML
+        // ============================================
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        async function init() {
+            initTheme();
+            await checkAuth();
+            await loadQuotes();
+            requestNotificationPermission();
+        }
+
+        init();
+    </script>
+</body>
+</html>
