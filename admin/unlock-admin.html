@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Unlock Requests Management</title>
+    <link rel="icon" type="image/png" href="../logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FFC107;
+            --info: #2196F3;
+            --whatsapp: #25D366;
+            --telegram: #27A5E7;
+            --purple: #9C27B0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Admin Layout */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Modern Glass Effect */
+        .sidebar {
+            width: 280px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--gold);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-email {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .sidebar-nav a:hover::before {
+            width: 100%;
+        }
+
+        .sidebar-nav a:hover {
+            transform: translateX(5px);
+            color: var(--bg-color);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .sidebar-nav a i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--error);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .content-header h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .stats-badge {
+            background: var(--card-bg);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            border: 1px solid var(--warning);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stats-badge span:last-child {
+            color: var(--warning);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .alert-info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--info);
+            color: var(--info);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .tab .count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+
+        .tab.active .count {
+            background: var(--bg-color);
+            color: var(--gold);
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+
+        .filter-select {
+            padding: 0.8rem 2rem 0.8rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23B0B0B0'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        /* WhatsApp Contact Card */
+        .whatsapp-card {
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.1), rgba(37, 211, 102, 0.05));
+            border: 1px solid var(--whatsapp);
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .whatsapp-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .whatsapp-icon {
+            font-size: 2rem;
+            color: var(--whatsapp);
+        }
+
+        .whatsapp-text h4 {
+            color: var(--whatsapp);
+            margin-bottom: 0.3rem;
+        }
+
+        .whatsapp-text p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .whatsapp-number {
+            background: var(--whatsapp);
+            color: var(--bg-color);
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Requests Table */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .requests-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .requests-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--gold);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.85rem;
+        }
+
+        .requests-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 0.85rem;
+        }
+
+        .requests-table tr:hover td {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.2rem;
+            font-size: 0.85rem;
+        }
+
+        .user-email {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+
+        .ebook-info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .ebook-cover {
+            width: 35px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .ebook-title {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 0.2rem;
+            font-size: 0.85rem;
+        }
+
+        .ebook-price {
+            font-size: 0.75rem;
+            color: var(--electric-blue);
+        }
+
+        .payment-method {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .payment-telegram {
+            background: rgba(39, 165, 231, 0.15);
+            color: var(--telegram);
+            border: 1px solid var(--telegram);
+        }
+
+        .payment-whatsapp {
+            background: rgba(37, 211, 102, 0.15);
+            color: var(--whatsapp);
+            border: 1px solid var(--whatsapp);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .status-approved {
+            background: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(244, 67, 54, 0.15);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .date-time {
+            font-size: 0.75rem;
+        }
+
+        .date {
+            color: var(--text-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .time {
+            color: var(--text-secondary);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 0.4rem 1rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .approve-btn {
+            background: linear-gradient(135deg, var(--success), #45A049);
+            color: white;
+        }
+
+        .reject-btn {
+            background: linear-gradient(135deg, var(--error), #FF6B6B);
+            color: white;
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, var(--electric-blue), var(--cyan));
+            color: var(--bg-color);
+        }
+
+        .whatsapp-contact-btn {
+            background: var(--whatsapp);
+            color: var(--bg-color);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid var(--gold);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--error);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-body textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-body textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn {
+            background: linear-gradient(135deg, var(--success), #45A049);
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            background: var(--border-color);
+            color: var(--text-color);
+        }
+
+        .cancel-btn:hover {
+            background: var(--error);
+            color: white;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem;
+            }
+
+            .sidebar-logo {
+                font-size: 0;
+            }
+
+            .sidebar-logo::before {
+                content: 'SM';
+                font-size: 1.5rem;
+                background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .role-badge,
+            .admin-email,
+            .sidebar-nav a span {
+                display: none;
+            }
+
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 0.9rem;
+            }
+
+            .sidebar-nav a i {
+                margin: 0;
+                font-size: 1.3rem;
+            }
+
+            .sidebar-footer {
+                left: 1rem;
+                right: 1rem;
+            }
+
+            .logout-btn span:last-child {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .whatsapp-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+            }
+
+            .tab {
+                white-space: nowrap;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .requests-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SupremeMotive</div>
+                <div id="roleBadge" class="role-badge">Unlock Admin</div>
+                <div id="adminEmail" class="admin-email"></div>
+            </div>
+
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="admin-dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="post-admin.html">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Post Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="admin-quotes.html">
+                        <i class="fas fa-quote-right"></i>
+                        <span>Quote Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ebook-admin.html">
+                        <i class="fas fa-book"></i>
+                        <span>Ebook Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="unlock-admin.html" class="active">
+                        <i class="fas fa-unlock-alt"></i>
+                        <span>Unlock Requests</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../index.html">
+                        <i class="fas fa-home"></i>
+                        <span>View Site</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>
+                    <i class="fas fa-unlock-alt"></i>
+                    Unlock Requests
+                </h1>
+                <div class="stats-badge">
+                    <i class="fas fa-clock"></i>
+                    <span id="pendingCountValue">0</span> Pending
+                </div>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <!-- WhatsApp Support Card -->
+            <div class="whatsapp-card">
+                <div class="whatsapp-info">
+                    <div class="whatsapp-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="whatsapp-text">
+                        <h4>💰 Manual Payment Support (WhatsApp)</h4>
+                        <p>For manual payment confirmations, contact the user directly via WhatsApp to verify payment and approve manually.</p>
+                    </div>
+                </div>
+                <div class="whatsapp-number">
+                    <i class="fab fa-whatsapp"></i>
+                    <span id="whatsappNumber">+234 XXX XXX XXX</span>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-list"></i></div>
+                    <div class="stat-value" id="totalRequests">0</div>
+                    <div class="stat-label">Total Requests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value" id="pendingRequests">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-value" id="approvedRequests">0</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-value" id="rejectedRequests">0</div>
+                    <div class="stat-label">Rejected</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-status="all">
+                    <i class="fas fa-list"></i> All
+                    <span class="count" id="allCount">0</span>
+                </button>
+                <button class="tab" data-status="pending">
+                    <i class="fas fa-clock"></i> Pending
+                    <span class="count" id="pendingTabCount">0</span>
+                </button>
+                <button class="tab" data-status="approved">
+                    <i class="fas fa-check-circle"></i> Approved
+                    <span class="count" id="approvedTabCount">0</span>
+                </button>
+                <button class="tab" data-status="rejected">
+                    <i class="fas fa-times-circle"></i> Rejected
+                    <span class="count" id="rejectedTabCount">0</span>
+                </button>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search by user name, email or ebook title...">
+                </div>
+                <select class="filter-select" id="ebookFilter">
+                    <option value="all">All Ebooks</option>
+                </select>
+            </div>
+
+            <!-- Requests Table -->
+            <div class="table-container">
+                <table class="requests-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Ebook</th>
+                            <th>Payment</th>
+                            <th>Request Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td colspan="6" class="loading">
+                                <div class="spinner"></div>
+                                <p>Loading requests...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Rejection Modal -->
+    <div class="modal" id="rejectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-times-circle"></i> Reject Request</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Please provide a reason for rejection (optional):</p>
+                <textarea id="rejectReason" placeholder="Enter reason..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="confirm-btn" id="confirmRejectBtn">
+                    <i class="fas fa-check"></i> Confirm Rejection
+                </button>
+                <button class="cancel-btn" id="cancelModalBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails for unlock management
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ];
+
+        // WhatsApp Support Number (can be updated via API)
+        let whatsappNumber = '+234 XXX XXX XXX';
+
+        // State
+        let currentUser = null;
+        let allRequests = [];
+        let allEbooks = [];
+        let currentStatus = 'all';
+        let searchTerm = '';
+        let selectedEbookFilter = 'all';
+        let selectedRequestId = null;
+
+        // DOM Elements
+        const tableBody = document.getElementById('tableBody');
+        const alertContainer = document.getElementById('alertContainer');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const pendingCountSpan = document.getElementById('pendingCountValue');
+        const totalRequestsSpan = document.getElementById('totalRequests');
+        const pendingRequestsSpan = document.getElementById('pendingRequests');
+        const approvedRequestsSpan = document.getElementById('approvedRequests');
+        const rejectedRequestsSpan = document.getElementById('rejectedRequests');
+        const allCountSpan = document.getElementById('allCount');
+        const pendingTabCountSpan = document.getElementById('pendingTabCount');
+        const approvedTabCountSpan = document.getElementById('approvedTabCount');
+        const rejectedTabCountSpan = document.getElementById('rejectedTabCount');
+        const searchInput = document.getElementById('searchInput');
+        const ebookFilter = document.getElementById('ebookFilter');
+        const tabs = document.querySelectorAll('.tab');
+        const rejectModal = document.getElementById('rejectModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        const confirmRejectBtn = document.getElementById('confirmRejectBtn');
+        const rejectReason = document.getElementById('rejectReason');
+        const roleBadge = document.getElementById('roleBadge');
+        const adminEmailSpan = document.getElementById('adminEmail');
+        const whatsappNumberSpan = document.getElementById('whatsappNumber');
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // ============================================
+        // CHECK AUTH
+        // ============================================
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+
+                if (!result?.user) {
+                    window.location.href = '../login.html';
+                    return false;
+                }
+
+                currentUser = result.user;
+                adminEmailSpan.textContent = currentUser.email;
+
+                if (!ADMIN_EMAILS.includes(currentUser.email)) {
+                    window.location.href = '../index.html';
+                    return false;
+                }
+
+                roleBadge.innerHTML = '<i class="fas fa-unlock-alt"></i> Unlock Admin';
+                
+                // Load WhatsApp number from settings
+                await loadWhatsAppNumber();
+                
+                return true;
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = '../login.html';
+                return false;
+            }
+        }
+
+        // ============================================
+        // LOAD WHATSAPP NUMBER
+        // ============================================
+        async function loadWhatsAppNumber() {
+            try {
+                const result = await callAPI('getSettings', { key: 'whatsapp_number' })
+                if (result && result.success && result.data) {
+                    whatsappNumber = result.data.value
+                    whatsappNumberSpan.textContent = whatsappNumber
+                }
+            } catch (error) {
+                console.error('Error loading WhatsApp number:', error)
+            }
+        }
+
+        // ============================================
+        // LOAD EBOOKS FOR FILTER
+        // ============================================
+        async function loadEbooks() {
+            try {
+                const result = await callAPI('getAllEbooks')
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load ebooks')
+                }
+
+                allEbooks = result.data || [];
+
+                // Populate ebook filter
+                let options = '<option value="all">All Ebooks</option>';
+                allEbooks.forEach(ebook => {
+                    options += `<option value="${ebook.id}">${escapeHtml(ebook.title)}</option>`;
+                });
+                ebookFilter.innerHTML = options;
+
+            } catch (error) {
+                console.error('Error loading ebooks:', error);
+            }
+        }
+
+        // ============================================
+        // LOAD REQUESTS
+        // ============================================
+        async function loadRequests() {
+            try {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading requests...</p>
+                        </td>
+                    </tr>
+                `;
+
+                const result = await callAPI('getUnlockRequests')
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load requests')
+                }
+
+                allRequests = result.data || []
+                updateStats()
+                renderRequests()
+
+            } catch (error) {
+                console.error('Error loading requests:', error);
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <h3>Error Loading Requests</h3>
+                            <p>${error.message}</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // ============================================
+        // UPDATE STATISTICS
+        // ============================================
+        function updateStats() {
+            const total = allRequests.length;
+            const pending = allRequests.filter(r => r.status === 'pending').length;
+            const approved = allRequests.filter(r => r.status === 'approved').length;
+            const rejected = allRequests.filter(r => r.status === 'rejected').length;
+
+            totalRequestsSpan.textContent = total;
+            pendingRequestsSpan.textContent = pending;
+            approvedRequestsSpan.textContent = approved;
+            rejectedRequestsSpan.textContent = rejected;
+            pendingCountSpan.textContent = pending;
+
+            allCountSpan.textContent = total;
+            pendingTabCountSpan.textContent = pending;
+            approvedTabCountSpan.textContent = approved;
+            rejectedTabCountSpan.textContent = rejected;
+        }
+
+        // ============================================
+        // RENDER REQUESTS
+        // ============================================
+        function renderRequests() {
+            let filteredRequests = [...allRequests];
+
+            // Filter by status
+            if (currentStatus !== 'all') {
+                filteredRequests = filteredRequests.filter(r => r.status === currentStatus);
+            }
+
+            // Filter by ebook
+            if (selectedEbookFilter !== 'all') {
+                filteredRequests = filteredRequests.filter(r => r.ebook_id === selectedEbookFilter);
+            }
+
+            // Filter by search
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                filteredRequests = filteredRequests.filter(r => 
+                    r.user_name?.toLowerCase().includes(term) ||
+                    r.user_email?.toLowerCase().includes(term) ||
+                    r.ebook_title?.toLowerCase().includes(term)
+                );
+            }
+
+            if (filteredRequests.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+                            <h3>No Requests Found</h3>
+                            <p>No unlock requests match your filters.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = filteredRequests.map(request => {
+                const date = new Date(request.created_at).toLocaleDateString();
+                const time = new Date(request.created_at).toLocaleTimeString();
+                const userInitial = (request.user_name || 'U').charAt(0).toUpperCase();
+                const paymentMethod = request.payment_method || 'whatsapp';
+                
+                return `
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">${userInitial}</div>
+                                <div class="user-details">
+                                    <div class="user-name">${escapeHtml(request.user_name || 'Unknown')}</div>
+                                    <div class="user-email">${escapeHtml(request.user_email || '')}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="ebook-info">
+                                ${request.ebook_cover ? 
+                                    `<img src="${request.ebook_cover}" class="ebook-cover" onerror="this.style.display='none'">` : 
+                                    `<div class="user-avatar" style="background: var(--electric-blue);"><i class="fas fa-book"></i></div>`
+                                }
+                                <div>
+                                    <div class="ebook-title">${escapeHtml(request.ebook_title || 'Unknown')}</div>
+                                    <div class="ebook-price">⭐ ${request.ebook_price || 0} Stars</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="payment-method payment-${paymentMethod === 'telegram_stars' ? 'telegram' : 'whatsapp'}">
+                                <i class="fab fa-${paymentMethod === 'telegram_stars' ? 'telegram' : 'whatsapp'}"></i>
+                                ${paymentMethod === 'telegram_stars' ? 'Telegram Stars' : 'WhatsApp'}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="date-time">
+                                <div class="date">${date}</div>
+                                <div class="time">${time}</div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge status-${request.status}">
+                                ${request.status}
+                            </span>
+                            ${request.admin_notes ? `
+                                <div style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.3rem;">
+                                    <i class="fas fa-sticky-note"></i> ${escapeHtml(request.admin_notes)}
+                                </div>
+                            ` : ''}
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                ${request.status === 'pending' ? `
+                                    <button class="action-btn approve-btn" onclick="approveRequest('${request.id}')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </button>
+                                    <button class="action-btn reject-btn" onclick="showRejectModal('${request.id}')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </button>
+                                    <button class="action-btn whatsapp-contact-btn" onclick="contactOnWhatsApp('${request.user_email}')">
+                                        <i class="fab fa-whatsapp"></i> Contact
+                                    </button>
+                                ` : `
+                                    <button class="action-btn view-btn" onclick="viewDetails('${request.id}')">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </button>
+                                `}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // ============================================
+        // CONTACT ON WHATSAPP
+        // ============================================
+        window.contactOnWhatsApp = (userEmail) => {
+            const message = `Hello! I'm from SupremeMotive Support. Regarding your ebook unlock request, please contact us for payment confirmation.`;
+            const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        };
+
+        // ============================================
+        // ESCAPE HTML
+        // ============================================
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ============================================
+        // SHOW ALERT
+        // ============================================
+        function showAlert(message, type = 'success') {
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 3000);
+        }
+
+        // ============================================
+        // APPROVE REQUEST
+        // ============================================
+        window.approveRequest = async (requestId) => {
+            if (!confirm('Are you sure you want to approve this unlock request?')) return;
+
+            try {
+                const result = await callAPI('approveUnlockRequest', { requestId })
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to approve request')
+                }
+
+                showAlert('✅ Request approved successfully! User has been granted access.');
+                await loadRequests();
+
+            } catch (error) {
+                console.error('Error approving request:', error);
+                showAlert('❌ Error approving request: ' + error.message, 'error');
+            }
+        };
+
+        // ============================================
+        // SHOW REJECT MODAL
+        // ============================================
+        window.showRejectModal = (requestId) => {
+            selectedRequestId = requestId;
+            rejectReason.value = '';
+            rejectModal.classList.add('show');
+        };
+
+        // ============================================
+        // CONFIRM REJECT
+        // ============================================
+        confirmRejectBtn.addEventListener('click', async () => {
+            if (!selectedRequestId) return;
+
+            try {
+                const result = await callAPI('rejectUnlockRequest', { 
+                    requestId: selectedRequestId,
+                    reason: rejectReason.value 
+                })
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to reject request')
+                }
+
+                showAlert('Request rejected successfully.');
+                rejectModal.classList.remove('show');
+                selectedRequestId = null;
+                await loadRequests();
+
+            } catch (error) {
+                console.error('Error rejecting request:', error);
+                showAlert('❌ Error rejecting request: ' + error.message, 'error');
+            }
+        });
+
+        // ============================================
+        // VIEW DETAILS
+        // ============================================
+        window.viewDetails = (requestId) => {
+            const request = allRequests.find(r => r.id === requestId);
+            if (request) {
+                const date = new Date(request.created_at).toLocaleString();
+                const details = `
+📋 REQUEST DETAILS
+═══════════════════════════
+
+👤 USER:
+Name: ${request.user_name}
+Email: ${request.user_email}
+User ID: ${request.user_id}
+
+📚 EBOOK:
+Title: ${request.ebook_title}
+Price: ${request.ebook_price} ⭐ Stars
+
+💳 PAYMENT:
+Method: ${request.payment_method === 'telegram_stars' ? 'Telegram Stars (Auto)' : 'WhatsApp (Manual)'}
+Payment ID: ${request.payment_id || 'N/A'}
+
+📅 REQUESTED:
+${date}
+
+📊 STATUS:
+${request.status.toUpperCase()}
+
+📝 ADMIN NOTES:
+${request.admin_notes || 'No notes'}
+
+✨ This request is for ${request.ebook_title} ebook.
+${request.status === 'pending' ? '⏳ Please review and approve/reject this request.' : ''}
+                `;
+                alert(details);
+            }
+        };
+
+        // ============================================
+        // CLOSE MODAL
+        // ============================================
+        closeModalBtn.addEventListener('click', () => {
+            rejectModal.classList.remove('show');
+            selectedRequestId = null;
+        });
+
+        cancelModalBtn.addEventListener('click', () => {
+            rejectModal.classList.remove('show');
+            selectedRequestId = null;
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === rejectModal) {
+                rejectModal.classList.remove('show');
+                selectedRequestId = null;
+            }
+        });
+
+        // ============================================
+        // TAB CLICK HANDLERS
+        // ============================================
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentStatus = tab.dataset.status;
+                renderRequests();
+            });
+        });
+
+        // ============================================
+        // SEARCH INPUT
+        // ============================================
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderRequests();
+        });
+
+        // ============================================
+        // EBOOK FILTER
+        // ============================================
+        ebookFilter.addEventListener('change', (e) => {
+            selectedEbookFilter = e.target.value;
+            renderRequests();
+        });
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        logoutBtn.addEventListener('click', async () => {
+            if (confirm('Are you sure you want to logout?')) {
+                await callAuthAPI('signOut')
+                localStorage.removeItem('supabase_session')
+                window.location.href = '../index.html';
+            }
+        });
+
+        // ============================================
+        // REAL-TIME POLLING FOR NEW REQUESTS
+        // ============================================
+        let lastRequestCount = 0;
+        
+        function startRealtimePolling() {
+            setInterval(async () => {
+                const result = await callAPI('getUnlockRequestsCount', {})
+                if (result && result.success && result.data !== undefined) {
+                    if (result.data > lastRequestCount && lastRequestCount > 0) {
+                        showAlert(`🔔 ${result.data - lastRequestCount} new unlock request(s) received!`, 'info');
+                        await loadRequests();
+                    }
+                    lastRequestCount = result.data;
+                }
+            }, 30000); // Check every 30 seconds
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        async function init() {
+            const isAuthed = await checkAuth();
+            if (isAuthed) {
+                await loadEbooks();
+                await loadRequests();
+                startRealtimePolling();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
