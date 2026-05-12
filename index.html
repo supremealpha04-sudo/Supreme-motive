@@ -39,7 +39,6 @@
             padding-bottom: 80px;
         }
 
-        /* Top Navigation */
         .top-nav {
             background: var(--card-bg);
             padding: 1rem 2rem;
@@ -99,7 +98,6 @@
             color: var(--gold);
         }
 
-        /* Install Button */
         .install-btn {
             background: linear-gradient(135deg, var(--gold), var(--electric-blue));
             color: var(--bg-color);
@@ -120,7 +118,6 @@
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
 
-        /* Notification Bell */
         .notification-container {
             position: relative;
             cursor: pointer;
@@ -154,7 +151,6 @@
             text-align: center;
         }
 
-        /* Notification Dropdown */
         .notification-dropdown {
             position: absolute;
             top: 50px;
@@ -294,7 +290,6 @@
             padding: 0.3rem;
         }
 
-        /* Floating Feed Button */
         .floating-feed-btn {
             position: fixed;
             bottom: 100px;
@@ -333,7 +328,6 @@
             }
         }
 
-        /* Floating Feed Menu */
         .feed-menu {
             position: fixed;
             bottom: 170px;
@@ -413,7 +407,6 @@
             margin-bottom: 0.2rem;
         }
 
-        /* Back to Top Button */
         .back-to-top {
             position: fixed;
             bottom: 100px;
@@ -446,7 +439,6 @@
             box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
         }
 
-        /* Install Banner */
         .install-banner {
             position: fixed;
             bottom: 80px;
@@ -775,12 +767,10 @@
             }
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <nav class="top-nav">
         <div class="logo">
-            <img src="file_00000000f25071f5a01e8c22ec168ef4.png" alt="SupremeMotive" onerror="this.style.display='none'">
             <span>SupremeMotive</span>
             <span id="offlineIndicator" class="offline-badge hidden">Offline</span>
         </div>
@@ -800,19 +790,16 @@
             <a href="support.html">Support</a>
             <a href="#" id="adminLink" style="display: none;">Admin</a>
             
-            <!-- Install Button -->
             <button id="installBtn" class="install-btn hidden">
                 <i class="fas fa-download"></i> Install App
             </button>
             
-            <!-- Notification Bell -->
             <div class="notification-container">
                 <button class="notification-bell" id="notificationBell">
                     <i class="fas fa-bell"></i>
                 </button>
                 <span id="notificationBadge" class="notification-badge hidden">0</span>
                 
-                <!-- Notification Dropdown -->
                 <div id="notificationDropdown" class="notification-dropdown hidden">
                     <div class="notification-header">
                         <h3>Notifications</h3>
@@ -829,7 +816,6 @@
                 </div>
             </div>
             
-            <!-- Auth Buttons -->
             <div class="auth-buttons" id="authButtons">
                 <span id="userGreeting" class="user-greeting hidden"></span>
                 <a href="login.html" class="login-btn" id="loginBtn">Login</a>
@@ -889,12 +875,10 @@
         </div>
     </main>
 
-    <!-- Floating Feed Button -->
     <button id="floatingFeedBtn" class="floating-feed-btn" title="Quick Feed">
         <i class="fas fa-rss"></i>
     </button>
 
-    <!-- Feed Menu -->
     <div id="feedMenu" class="feed-menu">
         <div class="feed-menu-item" data-type="quotes">
             <i class="fas fa-quote-left"></i>
@@ -919,12 +903,10 @@
         </div>
     </div>
 
-    <!-- Back to Top Button -->
     <button id="backToTop" class="back-to-top" title="Back to top">
         <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- Install Banner -->
     <div id="installBanner" class="install-banner hidden">
         <div class="install-banner-content">
             <span class="install-banner-icon">📱</span>
@@ -940,7 +922,6 @@
         </div>
     </div>
 
-    <!-- Notification Modal for Large View -->
     <div id="notificationModal" class="modal hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000;">
         <div style="background: var(--card-bg); border-radius: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow: auto; padding: 2rem; border: 2px solid var(--gold); position: relative;">
             <button id="closeNotificationModal" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer;">&times;</button>
@@ -950,206 +931,18 @@
 
     <script>
         // ============================================
-        // ENVIRONMENT VARIABLES (Loaded from Vercel)
+        // SECURE API PROXY - NO KEYS EXPOSED!
         // ============================================
-        // These values should be set in Vercel Environment Variables
-        // For local development, create a .env file with:
-        // VITE_SUPABASE_URL=your_supabase_url
-        // VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-        // ADMIN_EMAILS=comma,separated,emails
         
-        // Using a dynamic configuration - works with Vercel's environment variables
-        const SUPABASE_URL = window._env_?.VITE_SUPABASE_URL || 
-                            (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_URL) || 
-                            'https://dzcykpbfykajhoutzhpf.supabase.co';
-                            
-        const SUPABASE_ANON_KEY = window._env_?.VITE_SUPABASE_ANON_KEY || 
-                                  (typeof process !== 'undefined' && process.env?.VITE_SUPABASE_ANON_KEY) || 
-                                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6Y3lrcGJmeWthamhvdXR6aHBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2MDcxNjQsImV4cCI6MjA4ODE4MzE2NH0.IcuAZj89hwpeRGokawx-V-6BAQtwsiOTBIS_E5-TSMg';
+        const API_BASE = '/api'
         
-        // Admin emails from environment variable
-        const ADMIN_EMAILS_RAW = window._env_?.ADMIN_EMAILS || 
-                                 (typeof process !== 'undefined' && process.env?.ADMIN_EMAILS) || 
-                                 'supremealpha04@gmail.com,suprememotive43@gmail.com,sandrakukk055@gmail.com,emmanuelamer6@gmail.com';
-        
-        const ADMIN_EMAILS = ADMIN_EMAILS_RAW.split(',').map(email => email.trim());
-
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ============================================
-        // PWA INSTALLATION
-        // ============================================
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-        const installBanner = document.getElementById('installBanner');
-        const installBannerBtn = document.getElementById('installBannerBtn');
-        const closeBannerBtn = document.getElementById('closeBannerBtn');
-        const backToTop = document.getElementById('backToTop');
-        const floatingFeedBtn = document.getElementById('floatingFeedBtn');
-        const feedMenu = document.getElementById('feedMenu');
-        const notificationModal = document.getElementById('notificationModal');
-        const closeNotificationModal = document.getElementById('closeNotificationModal');
-        const notificationModalContent = document.getElementById('notificationModalContent');
-
-        // Check if already installed or in standalone mode
-        function isAppInstalled() {
-            return window.matchMedia('(display-mode: standalone)').matches || 
-                   window.navigator.standalone === true;
-        }
-
-        // Hide install UI if already installed
-        if (isAppInstalled()) {
-            if (installBtn) installBtn.classList.add('hidden');
-            if (installBanner) installBanner.classList.add('hidden');
-        }
-
-        // Listen for beforeinstallprompt event
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            if (installBtn && !isAppInstalled()) {
-                installBtn.classList.remove('hidden');
-            }
-            if (installBanner && !isAppInstalled()) {
-                const bannerDismissed = localStorage.getItem('installBannerDismissed');
-                if (!bannerDismissed) {
-                    installBanner.classList.remove('hidden');
-                }
-            }
-        });
-
-        async function installApp() {
-            if (!deferredPrompt) {
-                showInstallInstructions();
-                return;
-            }
-            
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            deferredPrompt = null;
-            
-            if (installBtn) installBtn.classList.add('hidden');
-            if (installBanner) installBanner.classList.add('hidden');
-            localStorage.setItem('installBannerDismissed', 'true');
-            
-            if (outcome === 'accepted') {
-                showAlert('Thank you for installing SupremeMotive! 🎉', 'success');
-            }
-        }
-
-        function showInstallInstructions() {
-            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-            if (isIOS) {
-                showAlert('To install: Tap Share button → Add to Home Screen', 'info');
-            } else {
-                showAlert('To install: Click the menu (⋮) → Install App', 'info');
-            }
-        }
-
-        function closeBanner() {
-            installBanner.classList.add('hidden');
-            localStorage.setItem('installBannerDismissed', 'true');
-        }
-
-        installBtn?.addEventListener('click', installApp);
-        installBannerBtn?.addEventListener('click', installApp);
-        closeBannerBtn?.addEventListener('click', closeBanner);
-
-        // ============================================
-        // FLOATING FEED BUTTON
-        // ============================================
-        floatingFeedBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            feedMenu.classList.toggle('show');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!floatingFeedBtn.contains(e.target) && !feedMenu.contains(e.target)) {
-                feedMenu.classList.remove('show');
-            }
-        });
-
-        document.querySelectorAll('.feed-menu-item').forEach(item => {
-            item.addEventListener('click', () => {
-                const type = item.dataset.type;
-                feedMenu.classList.remove('show');
-                
-                switch(type) {
-                    case 'quotes':
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        break;
-                    case 'posts':
-                        window.location.href = 'post.html';
-                        break;
-                    case 'ebooks':
-                        window.location.href = 'ebooks.html';
-                        break;
-                    case 'videos':
-                        window.location.href = 'videos.html';
-                        break;
-                    case 'refresh':
-                        window.location.reload();
-                        break;
-                }
-            });
-        });
-
-        // ============================================
-        // BACK TO TOP BUTTON
-        // ============================================
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                backToTop.classList.add('show');
-            } else {
-                backToTop.classList.remove('show');
-            }
-        });
-
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // ============================================
-        // PWA & OFFLINE DETECTION
-        // ============================================
-        const offlineIndicator = document.getElementById('offlineIndicator');
-        
-        function updateOnlineStatus() {
-            if (navigator.onLine) {
-                offlineIndicator.classList.add('hidden');
-            } else {
-                offlineIndicator.classList.remove('hidden');
-                showAlert('You are offline. Some features may be limited.', 'warning');
-            }
-        }
-
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-        updateOnlineStatus();
-
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registered successfully:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('ServiceWorker registration failed:', error);
-                    });
-            });
-        }
-
-        // Request notification permission
-        function requestNotificationPermission() {
-            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-                Notification.requestPermission();
-            }
-        }
+        // Admin emails (safe to expose)
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ]
 
         // Sample quotes (fallback for offline)
         const sampleQuotes = [
@@ -1181,101 +974,306 @@
                 category: 'motivation',
                 tag: 'Mv'
             }
-        ];
+        ]
 
         // State
-        let currentUser = null;
-        let currentCategory = 'all';
-        let quotes = [];
-        let userLikes = new Set();
-        let userSaves = new Set();
-        let notifications = [];
-        let unreadCount = 0;
+        let currentUser = null
+        let currentCategory = 'all'
+        let quotes = []
+        let userLikes = new Set()
+        let userSaves = new Set()
+        let notifications = []
+        let unreadCount = 0
+        let deferredPrompt
 
         // DOM Elements
-        const quotesContainer = document.getElementById('quotesContainer');
-        const alertContainer = document.getElementById('alertContainer');
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-        const themeToggle = document.getElementById('themeToggle');
-        const adminLink = document.getElementById('adminLink');
-        const loginBtn = document.getElementById('loginBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userGreeting = document.getElementById('userGreeting');
-        const categoryBtns = document.querySelectorAll('.category-btn');
-        
-        // Notification Elements
-        const notificationBell = document.getElementById('notificationBell');
-        const notificationDropdown = document.getElementById('notificationDropdown');
-        const notificationList = document.getElementById('notificationList');
-        const notificationBadge = document.getElementById('notificationBadge');
-        const markAllReadBtn = document.getElementById('markAllRead');
-        const notificationSettingsBtn = document.getElementById('notificationSettingsBtn');
+        const quotesContainer = document.getElementById('quotesContainer')
+        const alertContainer = document.getElementById('alertContainer')
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+        const categoryBtns = document.querySelectorAll('.category-btn')
+        const notificationBell = document.getElementById('notificationBell')
+        const notificationDropdown = document.getElementById('notificationDropdown')
+        const notificationList = document.getElementById('notificationList')
+        const notificationBadge = document.getElementById('notificationBadge')
+        const markAllReadBtn = document.getElementById('markAllRead')
+        const notificationSettingsBtn = document.getElementById('notificationSettingsBtn')
+        const installBtn = document.getElementById('installBtn')
+        const installBanner = document.getElementById('installBanner')
+        const installBannerBtn = document.getElementById('installBannerBtn')
+        const closeBannerBtn = document.getElementById('closeBannerBtn')
+        const backToTop = document.getElementById('backToTop')
+        const floatingFeedBtn = document.getElementById('floatingFeedBtn')
+        const feedMenu = document.getElementById('feedMenu')
+        const notificationModal = document.getElementById('notificationModal')
+        const closeNotificationModal = document.getElementById('closeNotificationModal')
+        const notificationModalContent = document.getElementById('notificationModalContent')
+        const offlineIndicator = document.getElementById('offlineIndicator')
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // ============================================
+        // PWA INSTALLATION
+        // ============================================
+        function isAppInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches || 
+                   window.navigator.standalone === true
+        }
+
+        if (isAppInstalled()) {
+            if (installBtn) installBtn.classList.add('hidden')
+            if (installBanner) installBanner.classList.add('hidden')
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault()
+            deferredPrompt = e
+            
+            if (installBtn && !isAppInstalled()) {
+                installBtn.classList.remove('hidden')
+            }
+            if (installBanner && !isAppInstalled()) {
+                const bannerDismissed = localStorage.getItem('installBannerDismissed')
+                if (!bannerDismissed) {
+                    installBanner.classList.remove('hidden')
+                }
+            }
+        })
+
+        async function installApp() {
+            if (!deferredPrompt) {
+                showInstallInstructions()
+                return
+            }
+            
+            deferredPrompt.prompt()
+            const { outcome } = await deferredPrompt.userChoice
+            deferredPrompt = null
+            
+            if (installBtn) installBtn.classList.add('hidden')
+            if (installBanner) installBanner.classList.add('hidden')
+            localStorage.setItem('installBannerDismissed', 'true')
+            
+            if (outcome === 'accepted') {
+                showAlert('Thank you for installing SupremeMotive! 🎉', 'success')
+            }
+        }
+
+        function showInstallInstructions() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
+            if (isIOS) {
+                showAlert('To install: Tap Share button → Add to Home Screen', 'info')
+            } else {
+                showAlert('To install: Click the menu (⋮) → Install App', 'info')
+            }
+        }
+
+        function closeBanner() {
+            installBanner.classList.add('hidden')
+            localStorage.setItem('installBannerDismissed', 'true')
+        }
+
+        installBtn?.addEventListener('click', installApp)
+        installBannerBtn?.addEventListener('click', installApp)
+        closeBannerBtn?.addEventListener('click', closeBanner)
+
+        // ============================================
+        // FLOATING FEED BUTTON
+        // ============================================
+        floatingFeedBtn.addEventListener('click', (e) => {
+            e.stopPropagation()
+            feedMenu.classList.toggle('show')
+        })
+
+        document.addEventListener('click', (e) => {
+            if (!floatingFeedBtn.contains(e.target) && !feedMenu.contains(e.target)) {
+                feedMenu.classList.remove('show')
+            }
+        })
+
+        document.querySelectorAll('.feed-menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const type = item.dataset.type
+                feedMenu.classList.remove('show')
+                
+                switch(type) {
+                    case 'quotes':
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
+                        break
+                    case 'posts':
+                        window.location.href = 'post.html'
+                        break
+                    case 'ebooks':
+                        window.location.href = 'ebooks.html'
+                        break
+                    case 'videos':
+                        window.location.href = 'videos.html'
+                        break
+                    case 'refresh':
+                        window.location.reload()
+                        break
+                }
+            })
+        })
+
+        // ============================================
+        // BACK TO TOP BUTTON
+        // ============================================
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show')
+            } else {
+                backToTop.classList.remove('show')
+            }
+        })
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            })
+        })
+
+        // ============================================
+        // OFFLINE DETECTION
+        // ============================================
+        function updateOnlineStatus() {
+            if (navigator.onLine) {
+                offlineIndicator.classList.add('hidden')
+            } else {
+                offlineIndicator.classList.remove('hidden')
+                showAlert('You are offline. Some features may be limited.', 'warning')
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus)
+        window.addEventListener('offline', updateOnlineStatus)
+        updateOnlineStatus()
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered successfully:', registration.scope)
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error)
+                    })
+            })
+        }
+
+        // Request notification permission
+        function requestNotificationPermission() {
+            if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+                Notification.requestPermission()
+            }
+        }
 
         // ============================================
         // THEME TOGGLE
         // ============================================
         function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
+            const savedTheme = localStorage.getItem('theme')
             if (savedTheme === 'light') {
-                document.documentElement.style.setProperty('--bg-color', '#F5F5F5');
-                document.documentElement.style.setProperty('--card-bg', '#FFFFFF');
-                document.documentElement.style.setProperty('--text-color', '#333333');
-                document.documentElement.style.setProperty('--text-secondary', '#666666');
-                document.documentElement.style.setProperty('--border-color', '#DDDDDD');
-                themeToggle.textContent = '☀️';
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
             } else {
-                document.documentElement.style.setProperty('--bg-color', '#0A0A0A');
-                document.documentElement.style.setProperty('--card-bg', '#1A1A1A');
-                document.documentElement.style.setProperty('--text-color', '#FFFFFF');
-                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0');
-                document.documentElement.style.setProperty('--border-color', '#333333');
-                themeToggle.textContent = '🌙';
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
             }
         }
 
         themeToggle.addEventListener('click', () => {
-            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5';
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
             if (isLight) {
-                document.documentElement.style.setProperty('--bg-color', '#0A0A0A');
-                document.documentElement.style.setProperty('--card-bg', '#1A1A1A');
-                document.documentElement.style.setProperty('--text-color', '#FFFFFF');
-                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0');
-                document.documentElement.style.setProperty('--border-color', '#333333');
-                themeToggle.textContent = '🌙';
-                localStorage.setItem('theme', 'dark');
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+                localStorage.setItem('theme', 'dark')
             } else {
-                document.documentElement.style.setProperty('--bg-color', '#F5F5F5');
-                document.documentElement.style.setProperty('--card-bg', '#FFFFFF');
-                document.documentElement.style.setProperty('--text-color', '#333333');
-                document.documentElement.style.setProperty('--text-secondary', '#666666');
-                document.documentElement.style.setProperty('--border-color', '#DDDDDD');
-                themeToggle.textContent = '☀️';
-                localStorage.setItem('theme', 'light');
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+                localStorage.setItem('theme', 'light')
             }
-        });
+        })
 
         // ============================================
         // MOBILE MENU
         // ============================================
         menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
+            navLinks.classList.toggle('active')
+        })
 
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
+                navLinks.classList.remove('active')
+            })
+        })
 
         // ============================================
         // SHOW ALERT
         // ============================================
         function showAlert(message, type = 'success') {
-            alertContainer.innerHTML = `<div class="alert">${message}</div>`;
+            alertContainer.innerHTML = `<div class="alert">${message}</div>`
             setTimeout(() => {
-                alertContainer.innerHTML = '';
-            }, 2000);
+                alertContainer.innerHTML = ''
+            }, 2000)
         }
 
         // ============================================
@@ -1283,417 +1281,187 @@
         // ============================================
         function updateAuthUI(user) {
             if (user) {
-                loginBtn.classList.add('hidden');
-                logoutBtn.classList.remove('hidden');
-                userGreeting.classList.remove('hidden');
-                userGreeting.textContent = `Hi, ${user.email.split('@')[0]}!`;
+                loginBtn.classList.add('hidden')
+                logoutBtn.classList.remove('hidden')
+                userGreeting.classList.remove('hidden')
+                userGreeting.textContent = `Hi, ${user.email.split('@')[0]}!`
                 
                 if (ADMIN_EMAILS.includes(user.email)) {
-                    adminLink.style.display = 'block';
-                    adminLink.href = 'admin/admin-dashboard.html';
+                    adminLink.style.display = 'block'
+                    adminLink.href = 'admin/admin-dashboard.html'
                 } else {
-                    adminLink.style.display = 'none';
+                    adminLink.style.display = 'none'
                 }
             } else {
-                loginBtn.classList.remove('hidden');
-                logoutBtn.classList.add('hidden');
-                userGreeting.classList.add('hidden');
-                adminLink.style.display = 'none';
+                loginBtn.classList.remove('hidden')
+                logoutBtn.classList.add('hidden')
+                userGreeting.classList.add('hidden')
+                adminLink.style.display = 'none'
             }
         }
 
         // ============================================
-        // CHECK AUTH
+        // AUTH FUNCTIONS
         // ============================================
         async function checkAuth() {
             try {
-                const { data: { user } } = await supabaseClient.auth.getUser();
-                currentUser = user;
-                updateAuthUI(user);
-                if (user) {
-                    await loadUserInteractions();
-                    await loadNotifications();
-                    subscribeToNotifications();
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (result?.user) {
+                    currentUser = result.user
+                    updateAuthUI(currentUser)
+                    await loadUserInteractions()
+                    await loadNotifications()
+                    subscribeToNotifications()
+                } else {
+                    updateAuthUI(null)
                 }
             } catch (error) {
-                console.error('Auth error:', error);
-                updateAuthUI(null);
+                console.error('Auth error:', error)
+                updateAuthUI(null)
             }
         }
 
-        // ============================================
-        // LOGOUT FUNCTION
-        // ============================================
         async function handleLogout() {
             try {
-                await supabaseClient.auth.signOut();
-                currentUser = null;
-                userLikes.clear();
-                userSaves.clear();
-                updateAuthUI(null);
-                renderQuotes();
-                showAlert('Logged out successfully');
+                await callAuthAPI('signOut')
+                localStorage.removeItem('supabase_session')
+                currentUser = null
+                userLikes.clear()
+                userSaves.clear()
+                updateAuthUI(null)
+                renderQuotes()
+                showAlert('Logged out successfully')
             } catch (error) {
-                console.error('Logout error:', error);
-                showAlert('Error logging out');
+                console.error('Logout error:', error)
+                showAlert('Error logging out')
             }
         }
 
-        logoutBtn.addEventListener('click', handleLogout);
+        logoutBtn.addEventListener('click', handleLogout)
 
         // ============================================
         // LOAD USER INTERACTIONS
         // ============================================
         async function loadUserInteractions() {
-            if (!currentUser) return;
+            if (!currentUser) return
 
             try {
-                const { data: likes } = await supabaseClient
-                    .from('quote_likes')
-                    .select('quote_id')
-                    .eq('user_id', currentUser.id);
-
-                if (likes) {
-                    userLikes = new Set(likes.map(l => l.quote_id));
+                const likesData = await callAPI('getUserLikes', { userId: currentUser.id })
+                if (likesData && likesData.data) {
+                    userLikes = new Set(likesData.data.map(l => l.quote_id))
                 }
 
-                const { data: saves } = await supabaseClient
-                    .from('quote_saves')
-                    .select('quote_id')
-                    .eq('user_id', currentUser.id);
-
-                if (saves) {
-                    userSaves = new Set(saves.map(s => s.quote_id));
+                const savesData = await callAPI('getUserSaves', { userId: currentUser.id })
+                if (savesData && savesData.data) {
+                    userSaves = new Set(savesData.data.map(s => s.quote_id))
                 }
             } catch (error) {
-                console.error('Error loading interactions:', error);
+                console.error('Error loading interactions:', error)
             }
         }
-
-        // ============================================
-        // NOTIFICATION FUNCTIONS
-        // ============================================
-        
-        async function loadNotifications() {
-            if (!currentUser) return;
-            
-            try {
-                const { data, error } = await supabaseClient
-                    .from('notifications')
-                    .select('*')
-                    .eq('user_id', currentUser.id)
-                    .order('created_at', { ascending: false })
-                    .limit(50);
-                    
-                if (error) throw error;
-                
-                notifications = data || [];
-                updateNotificationUI();
-                
-            } catch (error) {
-                console.error('Error loading notifications:', error);
-            }
-        }
-
-        function updateNotificationUI() {
-            unreadCount = notifications.filter(n => !n.is_read).length;
-            
-            if (unreadCount > 0) {
-                notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-                notificationBadge.classList.remove('hidden');
-            } else {
-                notificationBadge.classList.add('hidden');
-            }
-            
-            if (notifications.length === 0) {
-                notificationList.innerHTML = '<div class="loading-notifications">No notifications yet</div>';
-                return;
-            }
-            
-            notificationList.innerHTML = notifications.map(notification => `
-                <div class="notification-item ${!notification.is_read ? 'unread' : ''}" 
-                     data-id="${notification.id}" 
-                     data-content-id="${notification.content_id}"
-                     data-type="${notification.type}"
-                     data-title="${escapeHtml(notification.title)}"
-                     data-message="${escapeHtml(notification.message)}">
-                    <div class="notification-title">${escapeHtml(notification.title)}</div>
-                    <div class="notification-message">${escapeHtml(notification.message)}</div>
-                    <div class="notification-time">${formatTimeAgo(notification.created_at)}</div>
-                </div>
-            `).join('');
-            
-            document.querySelectorAll('.notification-item').forEach(item => {
-                item.addEventListener('click', () => handleNotificationClick(item));
-            });
-        }
-
-        function showNotificationModal(notification) {
-            notificationModalContent.innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--gold);">
-                        <i class="fas fa-bell"></i>
-                    </div>
-                    <h2 style="color: var(--gold); margin-bottom: 1rem;">${notification.title}</h2>
-                    <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
-                        ${notification.message}
-                    </p>
-                    <div style="display: flex; gap: 1rem; justify-content: center;">
-                        <button id="viewNotificationBtn" class="install-btn" style="padding: 0.8rem 2rem;">
-                            View Details
-                        </button>
-                        <button id="dismissNotificationBtn" class="logout-btn" style="padding: 0.8rem 2rem;">
-                            Dismiss
-                        </button>
-                    </div>
-                </div>
-            `;
-            
-            notificationModal.style.display = 'flex';
-            
-            document.getElementById('viewNotificationBtn').addEventListener('click', async () => {
-                await markNotificationAsRead(notification.id);
-                notificationModal.style.display = 'none';
-                
-                // Navigate based on notification type
-                if (notification.content_id) {
-                    switch(notification.type) {
-                        case 'new_quote':
-                            // Scroll to quote
-                            window.location.href = `index.html?quote=${notification.content_id}`;
-                            break;
-                        case 'new_post':
-                            window.location.href = `post.html?id=${notification.content_id}`;
-                            break;
-                        case 'new_ebook':
-                            window.location.href = `ebooks.html?id=${notification.content_id}`;
-                            break;
-                        case 'comment_reply':
-                        case 'like':
-                            window.location.href = `post.html?id=${notification.content_id}`;
-                            break;
-                        case 'unlock_approved':
-                            window.location.href = `ebooks.html?id=${notification.content_id}`;
-                            break;
-                        default:
-                            window.location.reload();
-                    }
-                }
-            });
-            
-            document.getElementById('dismissNotificationBtn').addEventListener('click', () => {
-                notificationModal.style.display = 'none';
-                markNotificationAsRead(notification.id);
-            });
-        }
-
-        async function handleNotificationClick(element) {
-            const notificationId = element.dataset.id;
-            const notification = notifications.find(n => n.id === notificationId);
-            
-            if (notification) {
-                showNotificationModal(notification);
-            }
-        }
-
-        async function markNotificationAsRead(notificationId) {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ is_read: true })
-                    .eq('id', notificationId);
-                    
-                const notification = notifications.find(n => n.id === notificationId);
-                if (notification) notification.is_read = true;
-                updateNotificationUI();
-                
-            } catch (error) {
-                console.error('Error marking notification as read:', error);
-            }
-        }
-
-        async function markAllAsRead() {
-            try {
-                await supabaseClient
-                    .from('notifications')
-                    .update({ is_read: true })
-                    .eq('user_id', currentUser.id);
-                    
-                notifications.forEach(n => n.is_read = true);
-                updateNotificationUI();
-                showAlert('All notifications marked as read');
-                
-            } catch (error) {
-                console.error('Error marking all as read:', error);
-                showAlert('Error marking notifications', 'error');
-            }
-        }
-
-        function subscribeToNotifications() {
-            if (!currentUser) return;
-            
-            const subscription = supabaseClient
-                .channel('notifications')
-                .on('postgres_changes', {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'notifications',
-                    filter: `user_id=eq.${currentUser.id}`
-                }, (payload) => {
-                    notifications.unshift(payload.new);
-                    updateNotificationUI();
-                    
-                    if (Notification.permission === 'granted') {
-                        new Notification(payload.new.title, {
-                            body: payload.new.message,
-                            icon: '/logo.png'
-                        });
-                    }
-                    
-                    // Show modal for new notification
-                    showNotificationModal(payload.new);
-                })
-                .subscribe();
-                
-            return subscription;
-        }
-
-        function formatTimeAgo(timestamp) {
-            const date = new Date(timestamp);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-            
-            if (diffMins < 1) return 'Just now';
-            if (diffMins < 60) return `${diffMins} min ago`;
-            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-            return date.toLocaleDateString();
-        }
-
-        // Close notification modal
-        closeNotificationModal.addEventListener('click', () => {
-            notificationModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === notificationModal) {
-                notificationModal.style.display = 'none';
-            }
-        });
 
         // ============================================
         // QUOTE FUNCTIONS
         // ============================================
-        
         async function loadQuotes() {
             try {
-                const { data, error } = await supabaseClient
-                    .from('quotes')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-
-                if (data && data.length > 0) {
-                    quotes = data;
-                    localStorage.setItem('cachedQuotes', JSON.stringify(data));
+                const quotesData = await callAPI('getQuotes')
+                
+                if (quotesData && quotesData.data && quotesData.data.length > 0) {
+                    quotes = quotesData.data
+                    localStorage.setItem('cachedQuotes', JSON.stringify(quotesData.data))
                 } else {
-                    const cached = localStorage.getItem('cachedQuotes');
+                    const cached = localStorage.getItem('cachedQuotes')
                     if (cached) {
-                        quotes = JSON.parse(cached);
+                        quotes = JSON.parse(cached)
                     } else {
-                        quotes = sampleQuotes;
+                        quotes = sampleQuotes
                     }
                 }
 
-                renderQuotes();
-
+                renderQuotes()
             } catch (error) {
-                console.error('Error loading quotes:', error);
-                const cached = localStorage.getItem('cachedQuotes');
+                console.error('Error loading quotes:', error)
+                const cached = localStorage.getItem('cachedQuotes')
                 if (cached) {
-                    quotes = JSON.parse(cached);
+                    quotes = JSON.parse(cached)
                 } else {
-                    quotes = sampleQuotes;
+                    quotes = sampleQuotes
                 }
-                renderQuotes();
+                renderQuotes()
                 
                 if (!navigator.onLine) {
-                    showAlert('You are offline. Showing cached quotes.', 'warning');
+                    showAlert('You are offline. Showing cached quotes.', 'warning')
                 }
             }
         }
 
         async function getLikeCount(quoteId) {
             try {
-                const { count } = await supabaseClient
-                    .from('quote_likes')
-                    .select('*', { count: 'exact', head: true })
-                    .eq('quote_id', quoteId);
-                return count || 0;
+                const result = await callAPI('getLikeCount', { quoteId })
+                return result?.count || 0
             } catch (error) {
-                return 0;
+                return 0
             }
         }
 
         window.shareQuote = (quoteId) => {
-            const quote = quotes.find(q => q.id === quoteId);
-            const shareText = `"${quote.text}" — ${quote.author}`;
-            const shareUrl = window.location.href;
+            const quote = quotes.find(q => q.id === quoteId)
+            const shareText = `"${quote.text}" — ${quote.author}`
+            const shareUrl = window.location.href
             
             if (navigator.share) {
                 navigator.share({
                     title: 'SupremeMotive Quote',
                     text: shareText,
                     url: shareUrl
-                }).catch(() => copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`));
+                }).catch(() => copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`))
             } else {
-                copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`);
+                copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`)
             }
-        };
+        }
 
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                showAlert('Quote copied to clipboard!');
+                showAlert('Quote copied to clipboard!')
             }).catch(() => {
-                showAlert('Could not copy quote');
-            });
+                showAlert('Could not copy quote')
+            })
         }
 
         async function renderQuotes() {
-            let filteredQuotes = [...quotes];
+            let filteredQuotes = [...quotes]
 
             if (currentCategory !== 'all') {
-                filteredQuotes = filteredQuotes.filter(q => q.category === currentCategory);
+                filteredQuotes = filteredQuotes.filter(q => q.category === currentCategory)
             }
 
             if (filteredQuotes.length === 0) {
-                quotesContainer.innerHTML = `<div class="loading"><p>No quotes in this category</p></div>`;
-                return;
+                quotesContainer.innerHTML = `<div class="loading"><p>No quotes in this category</p></div>`
+                return
             }
 
-            let quotesWithLikes = filteredQuotes;
+            let quotesWithLikes = filteredQuotes
             if (navigator.onLine) {
                 quotesWithLikes = await Promise.all(filteredQuotes.map(async (quote) => {
-                    const likeCount = await getLikeCount(quote.id);
-                    return { ...quote, likeCount };
-                }));
+                    const likeCount = await getLikeCount(quote.id)
+                    return { ...quote, likeCount }
+                }))
             } else {
-                quotesWithLikes = filteredQuotes.map(quote => ({ ...quote, likeCount: 0 }));
+                quotesWithLikes = filteredQuotes.map(quote => ({ ...quote, likeCount: 0 }))
             }
 
             quotesContainer.innerHTML = quotesWithLikes.map(quote => {
-                const isLiked = userLikes.has(quote.id);
-                const isSaved = userSaves.has(quote.id);
-                const displayLikeCount = quote.likeCount + (isLiked ? 1 : 0);
+                const isLiked = userLikes.has(quote.id)
+                const isSaved = userSaves.has(quote.id)
+                const displayLikeCount = quote.likeCount + (isLiked ? 1 : 0)
 
                 return `
                     <div class="quote-card">
-                        <div class="quote-text">${quote.text}</div>
-                        <div class="quote-tag"><span>${quote.tag}</span> ${quote.category.charAt(0).toUpperCase() + quote.category.slice(1)} Quotes</div>
+                        <div class="quote-text">${escapeHtml(quote.text)}</div>
+                        <div class="quote-tag"><span>${escapeHtml(quote.tag)}</span> ${quote.category.charAt(0).toUpperCase() + quote.category.slice(1)} Quotes</div>
                         <div class="quote-actions">
                             <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" onclick="handleLike('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
                                 <span>❤️</span>
@@ -1713,206 +1481,402 @@
                             </button>
                         </div>
                     </div>
-                `;
-            }).join('');
+                `
+            }).join('')
         }
 
         window.handleLike = async (quoteId) => {
             if (!currentUser) {
                 if (confirm('Please login to like quotes')) {
-                    window.location.href = 'login.html';
+                    window.location.href = 'login.html'
                 }
-                return;
+                return
             }
 
             if (!navigator.onLine) {
-                showAlert('You need to be online to like quotes', 'warning');
-                return;
+                showAlert('You need to be online to like quotes', 'warning')
+                return
             }
 
             try {
                 if (userLikes.has(quoteId)) {
-                    await supabaseClient
-                        .from('quote_likes')
-                        .delete()
-                        .eq('quote_id', quoteId)
-                        .eq('user_id', currentUser.id);
-                    userLikes.delete(quoteId);
+                    await callAPI('unlikeQuote', { 
+                        quote_id: quoteId, 
+                        user_id: currentUser.id 
+                    })
+                    userLikes.delete(quoteId)
                 } else {
-                    await supabaseClient
-                        .from('quote_likes')
-                        .insert([{ quote_id: quoteId, user_id: currentUser.id }]);
-                    userLikes.add(quoteId);
+                    await callAPI('likeQuote', { 
+                        quote_id: quoteId, 
+                        user_id: currentUser.id 
+                    })
+                    userLikes.add(quoteId)
                 }
-                renderQuotes();
+                renderQuotes()
             } catch (error) {
-                showAlert('Error updating like');
+                showAlert('Error updating like')
             }
-        };
+        }
 
         window.handleSave = async (quoteId) => {
             if (!currentUser) {
                 if (confirm('Please login to save quotes')) {
-                    window.location.href = 'login.html';
+                    window.location.href = 'login.html'
                 }
-                return;
+                return
             }
 
             if (!navigator.onLine) {
-                showAlert('You need to be online to save quotes', 'warning');
-                return;
+                showAlert('You need to be online to save quotes', 'warning')
+                return
             }
 
             try {
                 if (userSaves.has(quoteId)) {
-                    await supabaseClient
-                        .from('quote_saves')
-                        .delete()
-                        .eq('quote_id', quoteId)
-                        .eq('user_id', currentUser.id);
-                    userSaves.delete(quoteId);
-                    showAlert('Quote removed from saved');
+                    await callAPI('unsaveQuote', { 
+                        quote_id: quoteId, 
+                        user_id: currentUser.id 
+                    })
+                    userSaves.delete(quoteId)
+                    showAlert('Quote removed from saved')
                 } else {
-                    await supabaseClient
-                        .from('quote_saves')
-                        .insert([{ quote_id: quoteId, user_id: currentUser.id }]);
-                    userSaves.add(quoteId);
-                    showAlert('Quote saved!');
+                    await callAPI('saveQuote', { 
+                        quote_id: quoteId, 
+                        user_id: currentUser.id 
+                    })
+                    userSaves.add(quoteId)
+                    showAlert('Quote saved!')
                 }
-                renderQuotes();
+                renderQuotes()
             } catch (error) {
-                showAlert('Error saving quote');
+                showAlert('Error saving quote')
             }
-        };
+        }
 
         window.downloadQuote = (quoteId) => {
-            const quote = quotes.find(q => q.id === quoteId);
-            const canvas = document.createElement('canvas');
-            canvas.width = 380;
-            canvas.height = 380;
-            const ctx = canvas.getContext('2d');
+            const quote = quotes.find(q => q.id === quoteId)
+            const canvas = document.createElement('canvas')
+            canvas.width = 380
+            canvas.height = 380
+            const ctx = canvas.getContext('2d')
 
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#000000'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-            ctx.font = 'bold 50px Georgia, serif';
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillText('“', 25, 20);
+            ctx.font = 'bold 50px Georgia, serif'
+            ctx.fillStyle = '#FFFFFF'
+            ctx.fillText('“', 25, 20)
 
-            ctx.font = 'bold 28px Arial, Helvetica, sans-serif';
-            ctx.fillStyle = '#FFFFFF';
-            ctx.textAlign = 'center';
+            ctx.font = 'bold 28px Arial, Helvetica, sans-serif'
+            ctx.fillStyle = '#FFFFFF'
+            ctx.textAlign = 'center'
             
-            const words = quote.text.split(' ');
-            let line = '';
-            let lines = [];
-            let y = 100;
+            const words = quote.text.split(' ')
+            let line = ''
+            let lines = []
+            let y = 100
 
             for (let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + ' ';
-                let metrics = ctx.measureText(testLine);
+                let testLine = line + words[n] + ' '
+                let metrics = ctx.measureText(testLine)
                 if (metrics.width > 300 && n > 0) {
-                    lines.push(line);
-                    line = words[n] + ' ';
+                    lines.push(line)
+                    line = words[n] + ' '
                 } else {
-                    line = testLine;
+                    line = testLine
                 }
             }
-            lines.push(line);
+            lines.push(line)
 
             lines.forEach((line, index) => {
-                ctx.fillText(line, 190, y + (index * 40));
-            });
+                ctx.fillText(line, 190, y + (index * 40))
+            })
 
-            ctx.font = 'bold 50px Georgia, serif';
-            ctx.fillStyle = '#FFFFFF';
-            ctx.textAlign = 'right';
-            ctx.fillText('”', 355, 300);
+            ctx.font = 'bold 50px Georgia, serif'
+            ctx.fillStyle = '#FFFFFF'
+            ctx.textAlign = 'right'
+            ctx.fillText('”', 355, 300)
 
-            const tagText = 'supreme motive';
-            ctx.font = '14px Arial, Helvetica, sans-serif';
-            const textWidth = ctx.measureText(tagText).width;
-            const rectX = 380 - textWidth - 30;
-            const rectY = 340;
-            const rectWidth = textWidth + 24;
-            const rectHeight = 30;
+            const tagText = 'supreme motive'
+            ctx.font = '14px Arial, Helvetica, sans-serif'
+            const textWidth = ctx.measureText(tagText).width
+            const rectX = 380 - textWidth - 30
+            const rectY = 340
+            const rectWidth = textWidth + 24
+            const rectHeight = 30
             
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.setLineDash([5, 5]);
-            ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
-            ctx.fillStyle = '#FFFFFF';
-            ctx.fillText(tagText, rectX + 12, rectY + 15);
+            ctx.strokeStyle = '#FFFFFF'
+            ctx.setLineDash([5, 5])
+            ctx.strokeRect(rectX, rectY, rectWidth, rectHeight)
+            ctx.fillStyle = '#FFFFFF'
+            ctx.fillText(tagText, rectX + 12, rectY + 15)
 
-            const link = document.createElement('a');
-            link.download = `suprememotive-${quote.category}-quote.jpg`;
-            link.href = canvas.toDataURL('image/jpeg', 0.95);
-            link.click();
-            showAlert('Quote downloaded!');
-        };
+            const link = document.createElement('a')
+            link.download = `suprememotive-${quote.category}-quote.jpg`
+            link.href = canvas.toDataURL('image/jpeg', 0.95)
+            link.click()
+            showAlert('Quote downloaded!')
+        }
+
+        // ============================================
+        // NOTIFICATION FUNCTIONS
+        // ============================================
+        async function loadNotifications() {
+            if (!currentUser) return
+            
+            try {
+                const data = await callAPI('getNotifications', { userId: currentUser.id })
+                
+                if (data && data.data) {
+                    notifications = data.data
+                    updateNotificationUI()
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error)
+            }
+        }
+
+        function updateNotificationUI() {
+            unreadCount = notifications.filter(n => !n.is_read).length
+            
+            if (unreadCount > 0) {
+                notificationBadge.textContent = unreadCount > 99 ? '99+' : unreadCount
+                notificationBadge.classList.remove('hidden')
+            } else {
+                notificationBadge.classList.add('hidden')
+            }
+            
+            if (notifications.length === 0) {
+                notificationList.innerHTML = '<div class="loading-notifications">No notifications yet</div>'
+                return
+            }
+            
+            notificationList.innerHTML = notifications.map(notification => `
+                <div class="notification-item ${!notification.is_read ? 'unread' : ''}" 
+                     data-id="${notification.id}" 
+                     data-content-id="${notification.content_id}"
+                     data-type="${notification.type}"
+                     data-title="${escapeHtml(notification.title)}"
+                     data-message="${escapeHtml(notification.message)}">
+                    <div class="notification-title">${escapeHtml(notification.title)}</div>
+                    <div class="notification-message">${escapeHtml(notification.message)}</div>
+                    <div class="notification-time">${formatTimeAgo(notification.created_at)}</div>
+                </div>
+            `).join('')
+            
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', () => handleNotificationClick(item))
+            })
+        }
+
+        function showNotificationModal(notification) {
+            notificationModalContent.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; color: var(--gold);">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h2 style="color: var(--gold); margin-bottom: 1rem;">${escapeHtml(notification.title)}</h2>
+                    <p style="color: var(--text-secondary); font-size: 1.1rem; line-height: 1.6; margin-bottom: 2rem;">
+                        ${escapeHtml(notification.message)}
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button id="viewNotificationBtn" class="install-btn" style="padding: 0.8rem 2rem;">
+                            View Details
+                        </button>
+                        <button id="dismissNotificationBtn" class="logout-btn" style="padding: 0.8rem 2rem;">
+                            Dismiss
+                        </button>
+                    </div>
+                </div>
+            `
+            
+            notificationModal.style.display = 'flex'
+            
+            document.getElementById('viewNotificationBtn').addEventListener('click', async () => {
+                await markNotificationAsRead(notification.id)
+                notificationModal.style.display = 'none'
+                
+                if (notification.content_id) {
+                    switch(notification.type) {
+                        case 'new_quote':
+                            window.location.href = `index.html?quote=${notification.content_id}`
+                            break
+                        case 'new_post':
+                            window.location.href = `post.html?id=${notification.content_id}`
+                            break
+                        case 'new_ebook':
+                            window.location.href = `ebooks.html?id=${notification.content_id}`
+                            break
+                        case 'comment_reply':
+                        case 'like':
+                            window.location.href = `post.html?id=${notification.content_id}`
+                            break
+                        case 'unlock_approved':
+                            window.location.href = `ebooks.html?id=${notification.content_id}`
+                            break
+                        default:
+                            window.location.reload()
+                    }
+                }
+            })
+            
+            document.getElementById('dismissNotificationBtn').addEventListener('click', () => {
+                notificationModal.style.display = 'none'
+                markNotificationAsRead(notification.id)
+            })
+        }
+
+        async function handleNotificationClick(element) {
+            const notificationId = element.dataset.id
+            const notification = notifications.find(n => n.id === notificationId)
+            
+            if (notification) {
+                showNotificationModal(notification)
+            }
+        }
+
+        async function markNotificationAsRead(notificationId) {
+            try {
+                await callAPI('markNotificationRead', { notificationId })
+                const notification = notifications.find(n => n.id === notificationId)
+                if (notification) notification.is_read = true
+                updateNotificationUI()
+            } catch (error) {
+                console.error('Error marking notification as read:', error)
+            }
+        }
+
+        async function markAllAsRead() {
+            try {
+                await callAPI('markAllNotificationsRead', { userId: currentUser.id })
+                notifications.forEach(n => n.is_read = true)
+                updateNotificationUI()
+                showAlert('All notifications marked as read')
+            } catch (error) {
+                console.error('Error marking all as read:', error)
+                showAlert('Error marking notifications', 'error')
+            }
+        }
+
+        function subscribeToNotifications() {
+            if (!currentUser) return
+            
+            // Poll for new notifications every 30 seconds
+            setInterval(async () => {
+                const data = await callAPI('getNotifications', { userId: currentUser.id })
+                if (data && data.data && data.data.length > notifications.length) {
+                    const newNotifications = data.data.filter(n => !notifications.find(existing => existing.id === n.id))
+                    if (newNotifications.length > 0) {
+                        notifications = data.data
+                        updateNotificationUI()
+                        
+                        if (Notification.permission === 'granted') {
+                            newNotifications.forEach(notification => {
+                                new Notification(notification.title, {
+                                    body: notification.message,
+                                    icon: '/logo.png'
+                                })
+                            })
+                        }
+                        
+                        // Show modal for the newest notification
+                        if (newNotifications[0]) {
+                            showNotificationModal(newNotifications[0])
+                        }
+                    }
+                }
+            }, 30000)
+        }
+
+        function formatTimeAgo(timestamp) {
+            const date = new Date(timestamp)
+            const now = new Date()
+            const diffMs = now - date
+            const diffMins = Math.floor(diffMs / 60000)
+            const diffHours = Math.floor(diffMs / 3600000)
+            const diffDays = Math.floor(diffMs / 86400000)
+            
+            if (diffMins < 1) return 'Just now'
+            if (diffMins < 60) return `${diffMins} min ago`
+            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`
+            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+            return date.toLocaleDateString()
+        }
+
+        // Close notification modal
+        closeNotificationModal.addEventListener('click', () => {
+            notificationModal.style.display = 'none'
+        })
+
+        window.addEventListener('click', (e) => {
+            if (e.target === notificationModal) {
+                notificationModal.style.display = 'none'
+            }
+        })
 
         // ============================================
         // CATEGORY FILTERING
         // ============================================
         categoryBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                categoryBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.dataset.category;
-                renderQuotes();
-            });
-        });
+                categoryBtns.forEach(b => b.classList.remove('active'))
+                btn.classList.add('active')
+                currentCategory = btn.dataset.category
+                renderQuotes()
+            })
+        })
 
         // ============================================
         // NOTIFICATION EVENT HANDLERS
         // ============================================
         notificationBell.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notificationDropdown.classList.toggle('hidden');
+            e.stopPropagation()
+            notificationDropdown.classList.toggle('hidden')
             if (!notificationDropdown.classList.contains('hidden')) {
-                loadNotifications();
+                loadNotifications()
             }
-        });
+        })
 
         document.addEventListener('click', (e) => {
             if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
-                notificationDropdown.classList.add('hidden');
+                notificationDropdown.classList.add('hidden')
             }
-        });
+        })
 
         if (markAllReadBtn) {
-            markAllReadBtn.addEventListener('click', markAllAsRead);
+            markAllReadBtn.addEventListener('click', markAllAsRead)
         }
 
         if (notificationSettingsBtn) {
             notificationSettingsBtn.addEventListener('click', () => {
-                window.location.href = 'profile.html?tab=notifications';
-            });
+                window.location.href = 'profile.html?tab=notifications'
+            })
         }
 
         // ============================================
         // ESCAPE HTML
         // ============================================
         function escapeHtml(unsafe) {
-            if (!unsafe) return '';
+            if (!unsafe) return ''
             return unsafe
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
                 .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+                .replace(/'/g, '&#039;')
         }
 
         // ============================================
         // INITIALIZE
         // ============================================
         async function init() {
-            initTheme();
-            await checkAuth();
-            await loadQuotes();
-            requestNotificationPermission();
+            initTheme()
+            await checkAuth()
+            await loadQuotes()
+            requestNotificationPermission()
         }
 
-        init();
+        init()
     </script>
 </body>
 </html>
