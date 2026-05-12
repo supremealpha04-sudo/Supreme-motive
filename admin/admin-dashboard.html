@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Admin Dashboard</title>
+    <link rel="icon" type="image/png" href="../logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FFC107;
+            --info: #2196F3;
+            --purple: #9C27B0;
+            --cyan: #00BCD4;
+            --pink: #E91E63;
+            --orange: #FF9800;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Admin Layout */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Modern Glass Effect */
+        .sidebar {
+            width: 280px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--gold);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-email {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .sidebar-nav a:hover::before {
+            width: 100%;
+        }
+
+        .sidebar-nav a:hover {
+            transform: translateX(5px);
+            color: var(--bg-color);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .sidebar-nav a i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--error);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .content-header h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .date-display {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            background: var(--card-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.15);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-trend {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .trend-up { color: var(--success); }
+        .trend-down { color: var(--error); }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.1);
+        }
+
+        .chart-title {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+
+        canvas {
+            max-height: 250px;
+        }
+
+        /* Country List */
+        .country-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 0.8rem;
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .country-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .country-list::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        .country-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .country-item {
+            background: var(--bg-color);
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .country-item:hover {
+            border-color: var(--gold);
+            transform: translateX(3px);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .country-name {
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .country-count {
+            background: var(--gold);
+            color: var(--bg-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Quick Stats Grid */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+        }
+
+        .quick-stat-item {
+            background: var(--bg-color);
+            padding: 0.8rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .quick-stat-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .quick-stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quick-stat-value {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        /* Tables */
+        .table-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .table-section:hover {
+            border-color: var(--gold);
+        }
+
+        .section-title {
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--gold);
+            font-weight: 600;
+            border-bottom: 2px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .status-approved {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-rejected {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            background: linear-gradient(135deg, var(--electric-blue), var(--cyan));
+            color: var(--bg-color);
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .alert-info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--info);
+            color: var(--info);
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem;
+            }
+
+            .sidebar-logo {
+                font-size: 0;
+            }
+
+            .sidebar-logo::before {
+                content: 'SM';
+                font-size: 1.5rem;
+                background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .role-badge,
+            .admin-email,
+            .sidebar-nav a span {
+                display: none;
+            }
+
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 0.9rem;
+            }
+
+            .sidebar-nav a i {
+                margin: 0;
+                font-size: 1.3rem;
+            }
+
+            .sidebar-footer {
+                left: 1rem;
+                right: 1rem;
+            }
+
+            .logout-btn span {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SupremeMotive</div>
+                <div id="role-badge" class="role-badge">Loading...</div>
+                <div id="admin-email" class="admin-email"></div>
+            </div>
+
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="admin-dashboard.html" class="active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li id="posts-menu">
+                    <a href="post-admin.html">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Post Management</span>
+                    </a>
+                </li>
+                <li id="quotes-menu">
+                    <a href="admin-quotes.html">
+                        <i class="fas fa-quote-right"></i>
+                        <span>Quote Management</span>
+                    </a>
+                </li>
+                <li id="videos-menu">
+                    <a href="admin-videos.html">
+                        <i class="fas fa-video"></i>
+                        <span>Video Management</span>
+                    </a>
+                </li>
+                <li id="ebooks-menu">
+                    <a href="ebook-admin.html">
+                        <i class="fas fa-book"></i>
+                        <span>Ebook Management</span>
+                    </a>
+                </li>
+                <li id="unlocks-menu">
+                    <a href="unlock-admin.html">
+                        <i class="fas fa-unlock-alt"></i>
+                        <span>Unlock Requests</span>
+                    </a>
+                </li>
+                <li id="users-menu">
+                    <a href="users-admin.html">
+                        <i class="fas fa-users"></i>
+                        <span>User Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../index.html">
+                        <i class="fas fa-home"></i>
+                        <span>View Site</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>
+                    <i class="fas fa-chart-line"></i>
+                    Dashboard Overview
+                </h1>
+                <div id="current-date" class="date-display"></div>
+            </div>
+
+            <div id="alert-container"></div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid" id="stats-container">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading statistics...</p>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <i class="fas fa-globe-africa"></i>
+                        Users by Country
+                    </h3>
+                    <div id="country-list" class="country-list">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3 class="chart-title">
+                        <i class="fas fa-chart-simple"></i>
+                        Platform Statistics
+                    </h3>
+                    <div class="quick-stats" id="quick-stats">
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-quote-right"></i> Total Quotes:</span>
+                            <span class="quick-stat-value" id="total-quotes">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-newspaper"></i> Total Posts:</span>
+                            <span class="quick-stat-value" id="total-posts">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-video"></i> Total Videos:</span>
+                            <span class="quick-stat-value" id="total-videos">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-book"></i> Total Ebooks:</span>
+                            <span class="quick-stat-value" id="total-ebooks">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-heart"></i> Total Likes:</span>
+                            <span class="quick-stat-value" id="total-likes">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-comment"></i> Total Comments:</span>
+                            <span class="quick-stat-value" id="total-comments">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-clock"></i> Pending Unlocks:</span>
+                            <span class="quick-stat-value" id="pending-unlocks">0</span>
+                        </div>
+                        <div class="quick-stat-item">
+                            <span class="quick-stat-label"><i class="fas fa-check-circle"></i> Approved Unlocks:</span>
+                            <span class="quick-stat-value" id="approved-unlocks">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Chart -->
+            <div class="chart-card" style="margin-bottom: 2rem;">
+                <h3 class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    30-Day Activity Overview
+                </h3>
+                <div class="chart-container">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Unlock Requests -->
+            <div class="table-section">
+                <h3 class="section-title">
+                    <i class="fas fa-unlock-alt"></i>
+                    Recent Unlock Requests
+                </h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Ebook</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="unlocks-table-body">
+                        <tr><td colspan="5" class="loading">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recent Comments -->
+            <div class="table-section">
+                <h3 class="section-title">
+                    <i class="fas fa-comment-dots"></i>
+                    Recent Comments
+                </h3>
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Content</th>
+                            <th>Post</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comments-table-body">
+                        <tr><td colspan="5" class="loading">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin role mapping with ALL admin types
+        const ADMIN_ROLES = {
+            'supremealpha04@gmail.com': {
+                role: 'super_admin',
+                name: '👑 Super Admin',
+                color: '#FFD700',
+                menus: ['posts', 'quotes', 'videos', 'ebooks', 'unlocks', 'users']
+            },
+            'suprememotive43@gmail.com': {
+                role: 'post_admin',
+                name: '📝 Post Admin',
+                color: '#4CAF50',
+                menus: ['posts', 'quotes']
+            },
+            'sandrakukk055@gmail.com': {
+                role: 'ebook_admin',
+                name: '📚 Ebook Admin',
+                color: '#00F0FF',
+                menus: ['ebooks']
+            },
+            'emmanuelamer6@gmail.com': {
+                role: 'unlock_admin',
+                name: '🔓 Unlock Admin',
+                color: '#FFC107',
+                menus: ['unlocks']
+            }
+        };
+
+        let currentUser = null;
+        let userRole = null;
+        let activityChart = null;
+
+        // DOM Elements
+        const roleBadge = document.getElementById('role-badge');
+        const adminEmail = document.getElementById('admin-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        const alertContainer = document.getElementById('alert-container');
+        const currentDate = document.getElementById('current-date');
+        
+        // Menu elements
+        const postsMenu = document.getElementById('posts-menu');
+        const quotesMenu = document.getElementById('quotes-menu');
+        const videosMenu = document.getElementById('videos-menu');
+        const ebooksMenu = document.getElementById('ebooks-menu');
+        const unlocksMenu = document.getElementById('unlocks-menu');
+        const usersMenu = document.getElementById('users-menu');
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // Set current date
+        currentDate.textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Show alert
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'} ${message}</div>`;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 3000);
+        }
+
+        // Escape HTML
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // Check authentication and admin status
+        async function checkAdmin() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (!result?.user) {
+                    window.location.href = '../login.html';
+                    return false;
+                }
+
+                currentUser = result.user;
+
+                // Check if user is admin
+                const adminConfig = ADMIN_ROLES[currentUser.email];
+                
+                if (!adminConfig) {
+                    window.location.href = '../index.html';
+                    return false;
+                }
+
+                userRole = adminConfig.role;
+
+                // Display admin info with color
+                roleBadge.innerHTML = `<i class="fas ${getRoleIcon(userRole)}"></i> ${adminConfig.name}`;
+                roleBadge.style.background = `linear-gradient(135deg, ${adminConfig.color}, ${adminConfig.color}80)`;
+                adminEmail.textContent = currentUser.email;
+
+                // Show appropriate menus based on role
+                postsMenu.style.display = adminConfig.menus.includes('posts') ? 'block' : 'none';
+                quotesMenu.style.display = adminConfig.menus.includes('quotes') ? 'block' : 'none';
+                videosMenu.style.display = adminConfig.menus.includes('videos') ? 'block' : 'none';
+                ebooksMenu.style.display = adminConfig.menus.includes('ebooks') ? 'block' : 'none';
+                unlocksMenu.style.display = adminConfig.menus.includes('unlocks') ? 'block' : 'none';
+                usersMenu.style.display = adminConfig.menus.includes('users') ? 'block' : 'none';
+
+                return true;
+            } catch (error) {
+                console.error('Auth error:', error);
+                window.location.href = '../login.html';
+                return false;
+            }
+        }
+
+        // Get role icon
+        function getRoleIcon(role) {
+            const icons = {
+                'super_admin': 'fa-crown',
+                'post_admin': 'fa-newspaper',
+                'ebook_admin': 'fa-book',
+                'unlock_admin': 'fa-unlock-alt'
+            };
+            return icons[role] || 'fa-user-shield';
+        }
+
+        // Load dashboard statistics
+        async function loadStats() {
+            try {
+                const result = await callAPI('getAdminStats', {})
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load stats')
+                }
+
+                const stats = result.data
+
+                const statsContainer = document.getElementById('stats-container');
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-value">${stats.totalUsers || 0}</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +${stats.newUsersLastMonth || 0} this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+                        <div class="stat-value">${stats.totalPosts || 0}</div>
+                        <div class="stat-label">Total Posts</div>
+                        <div class="stat-trend trend-up"><i class="fas fa-arrow-up"></i> +${stats.newPostsLastMonth || 0} this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-quote-right"></i></div>
+                        <div class="stat-value">${stats.totalQuotes || 0}</div>
+                        <div class="stat-label">Total Quotes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-video"></i></div>
+                        <div class="stat-value">${stats.totalVideos || 0}</div>
+                        <div class="stat-label">Total Videos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-book"></i></div>
+                        <div class="stat-value">${stats.totalEbooks || 0}</div>
+                        <div class="stat-label">Total Ebooks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                        <div class="stat-value">${stats.totalLikes || 0}</div>
+                        <div class="stat-label">Total Likes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-comment"></i></div>
+                        <div class="stat-value">${stats.totalComments || 0}</div>
+                        <div class="stat-label">Total Comments</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">${stats.pendingUnlocks || 0}</div>
+                        <div class="stat-label">Pending Unlocks</div>
+                    </div>
+                `;
+
+                // Update quick stats
+                document.getElementById('total-quotes').textContent = stats.totalQuotes || 0;
+                document.getElementById('total-posts').textContent = stats.totalPosts || 0;
+                document.getElementById('total-videos').textContent = stats.totalVideos || 0;
+                document.getElementById('total-ebooks').textContent = stats.totalEbooks || 0;
+                document.getElementById('total-likes').textContent = stats.totalLikes || 0;
+                document.getElementById('total-comments').textContent = stats.totalComments || 0;
+                document.getElementById('pending-unlocks').textContent = stats.pendingUnlocks || 0;
+                document.getElementById('approved-unlocks').textContent = stats.approvedUnlocks || 0;
+
+                // Load users by country
+                await loadUsersByCountry();
+                
+                // Load recent unlocks
+                await loadRecentUnlocks();
+                
+                // Load recent comments
+                await loadRecentComments();
+
+                // Load activity chart
+                await loadActivityChart();
+
+            } catch (error) {
+                console.error('Stats error:', error);
+                showAlert('Error loading statistics: ' + error.message, 'error');
+            }
+        }
+
+        // Load users by country
+        async function loadUsersByCountry() {
+            try {
+                const result = await callAPI('getUsersByCountry', {})
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load country stats')
+                }
+
+                const countryCount = result.data
+                const sortedCountries = Object.entries(countryCount)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 15);
+
+                const countryList = document.getElementById('country-list');
+                
+                if (sortedCountries.length === 0) {
+                    countryList.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">No user data available</p>';
+                    return;
+                }
+
+                countryList.innerHTML = sortedCountries.map(([country, count]) => `
+                    <div class="country-item">
+                        <span class="country-name">${escapeHtml(country)}</span>
+                        <span class="country-count">${count}</span>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Country stats error:', error);
+            }
+        }
+
+        // Load recent unlock requests
+        async function loadRecentUnlocks() {
+            try {
+                const result = await callAPI('getRecentUnlocks', { limit: 5 })
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load unlocks')
+                }
+
+                const unlocks = result.data
+                const tableBody = document.getElementById('unlocks-table-body');
+                
+                if (!unlocks || unlocks.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No unlock requests</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = unlocks.map(unlock => `
+                    <tr>
+                        <td><strong>${escapeHtml(unlock.user_name || 'Unknown')}</strong></td>
+                        <td>${escapeHtml(unlock.user_email || 'Unknown')}</td>
+                        <td>${escapeHtml(unlock.ebook_title || 'Unknown')}</td>
+                        <td>${new Date(unlock.created_at).toLocaleString()}</td>
+                        <td>
+                            <span class="status-badge status-${unlock.status}">
+                                ${unlock.status}
+                            </span>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Unlocks error:', error);
+            }
+        }
+
+        // Load recent comments
+        async function loadRecentComments() {
+            try {
+                const result = await callAPI('getRecentComments', { limit: 5 })
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load comments')
+                }
+
+                const comments = result.data
+                const tableBody = document.getElementById('comments-table-body');
+                
+                if (!comments || comments.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem;">No comments yet</td></tr>';
+                    return;
+                }
+
+                tableBody.innerHTML = comments.map(comment => `
+                    <tr>
+                        <td><strong>${escapeHtml(comment.user_name || 'Unknown')}</strong><br><small>${escapeHtml(comment.user_email || '')}</small></td>
+                        <td style="max-width: 300px;">${escapeHtml(comment.content.substring(0, 100))}${comment.content.length > 100 ? '...' : ''}</td>
+                        <td>${escapeHtml(comment.post_title || 'Unknown')}</td>
+                        <td>${new Date(comment.created_at).toLocaleString()}</td>
+                        <td>
+                            <button class="action-btn" onclick="viewComment('${comment.id}')">
+                                <i class="fas fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Comments error:', error);
+            }
+        }
+
+        // Load activity chart
+        async function loadActivityChart() {
+            try {
+                const result = await callAPI('getActivityData', { days: 30 })
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load activity data')
+                }
+
+                const activityData = result.data
+                const ctx = document.getElementById('activityChart').getContext('2d');
+                
+                if (activityChart) {
+                    activityChart.destroy();
+                }
+
+                activityChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: activityData.labels,
+                        datasets: [
+                            {
+                                label: 'New Users',
+                                data: activityData.users,
+                                borderColor: '#00F0FF',
+                                backgroundColor: 'rgba(0, 240, 255, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'New Posts',
+                                data: activityData.posts,
+                                borderColor: '#FFD700',
+                                backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            },
+                            {
+                                label: 'Comments',
+                                data: activityData.comments,
+                                borderColor: '#E91E63',
+                                backgroundColor: 'rgba(233, 30, 99, 0.1)',
+                                fill: true,
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    color: '#FFFFFF'
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#B0B0B0'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.1)'
+                                },
+                                ticks: {
+                                    color: '#B0B0B0',
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Chart error:', error);
+            }
+        }
+
+        // View comment
+        window.viewComment = (commentId) => {
+            showAlert(`Comment ID: ${commentId}`, 'info');
+        };
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await callAuthAPI('signOut')
+                localStorage.removeItem('supabase_session')
+                window.location.href = '../index.html';
+            } catch (error) {
+                showAlert('Error logging out: ' + error.message, 'error');
+            }
+        });
+
+        // Initialize
+        async function init() {
+            const isAdmin = await checkAdmin();
+            if (isAdmin) {
+                await loadStats();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
