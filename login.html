@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --error: #F44336;
+            --success: #4CAF50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mt-10 {
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .loading-message {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--electric-blue);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        a {
+            color: var(--gold);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--electric-blue);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+                margin: 40px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">SupremeMotive</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="ebooks.html">Ebooks</a>
+            <a href="register.html">Register</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="card" style="max-width: 400px; margin: 60px auto;">
+            <h1 class="text-center" style="color: var(--gold); margin-bottom: 32px;">
+                Welcome Back
+            </h1>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <div id="error-message" class="error-message" style="display: none;"></div>
+                <div id="loading-message" class="loading-message" style="display: none;">Processing...</div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;" id="login-button">
+                    Login
+                </button>
+            </form>
+            
+            <p class="text-center mt-20">
+                Don't have an account? 
+                <a href="register.html">Register here</a>
+            </p>
+            
+            <p class="text-center mt-10">
+                <a href="#" id="forgot-password">Forgot Password?</a>
+            </p>
+        </div>
+    </main>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // API Helper Functions
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // Login function using secure API
+        async function loginUser(email, password) {
+            try {
+                const result = await callAuthAPI('login', { email, password })
+                
+                if (result && result.success) {
+                    // Store session for subsequent API calls
+                    if (result.session) {
+                        localStorage.setItem('supabase_session', result.session)
+                    }
+                    
+                    return { 
+                        success: true, 
+                        user: result.user, 
+                        profile: result.profile 
+                    }
+                } else {
+                    return { 
+                        success: false, 
+                        error: result?.error || 'Login failed' 
+                    }
+                }
+            } catch (error) {
+                console.error('Login error:', error)
+                return { success: false, error: error.message }
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const errorDiv = document.getElementById('error-message')
+            const loadingDiv = document.getElementById('loading-message')
+            const loginButton = document.getElementById('login-button')
+            
+            errorDiv.style.display = 'none'
+            loadingDiv.style.display = 'block'
+            loginButton.disabled = true
+            
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            
+            // Validate inputs
+            if (!email || !password) {
+                errorDiv.textContent = 'Please fill in all fields'
+                errorDiv.style.display = 'block'
+                loadingDiv.style.display = 'none'
+                loginButton.disabled = false
+                return
+            }
+            
+            const result = await loginUser(email, password)
+            
+            loadingDiv.style.display = 'none'
+            loginButton.disabled = false
+            
+            if (result.success) {
+                // Store user info in sessionStorage for quick access
+                sessionStorage.setItem('user', JSON.stringify({
+                    id: result.user.id,
+                    email: result.user.email
+                }))
+                
+                // Redirect to home page
+                window.location.href = 'index.html'
+            } else {
+                errorDiv.textContent = result.error || 'Login failed. Please check your credentials.'
+                errorDiv.style.display = 'block'
+            }
+        })
+
+        // Forgot password handler
+        document.getElementById('forgot-password').addEventListener('click', async (e) => {
+            e.preventDefault()
+            const email = prompt('Enter your email address:')
+            
+            if (email) {
+                try {
+                    const result = await callAuthAPI('resetPassword', { email })
+                    
+                    if (result && result.success) {
+                        alert('Password reset email sent! Check your inbox.')
+                    } else {
+                        throw new Error(result?.error || 'Failed to send reset email')
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message)
+                }
+            }
+        })
+
+        // Check if already logged in
+        async function checkExistingSession() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                if (session) {
+                    const result = await callAuthAPI('getUser', { session })
+                    if (result && result.user) {
+                        window.location.href = 'index.html'
+                    } else {
+                        // Session invalid, clear it
+                        localStorage.removeItem('supabase_session')
+                    }
+                }
+            } catch (error) {
+                console.error('Session check error:', error)
+            }
+        }
+        
+        checkExistingSession()
+    </script>
+</body>
+</html>
