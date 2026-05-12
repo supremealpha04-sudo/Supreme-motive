@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>SupremeMotive - Profile</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --telegram-blue: #27A5E7;
+            --telegram-bg: #17212B;
+            --telegram-card: #1F2A3A;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--telegram-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        body.light-mode {
+            --bg-color: #FFFFFF;
+            --card-bg: #FFFFFF;
+            --text-color: #222222;
+            --text-secondary: #666666;
+            --border-color: #E0E0E0;
+            --telegram-bg: #F0F2F5;
+            --telegram-card: #FFFFFF;
+        }
+
+        /* Navigation */
+        .top-nav {
+            background: var(--telegram-card);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--telegram-card);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.6rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            transition: color 0.3s ease;
+            padding: 0.3rem 0;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* Profile Header */
+        .profile-cover {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            height: 160px;
+            position: relative;
+        }
+
+        .profile-avatar-wrapper {
+            position: absolute;
+            bottom: -50px;
+            left: 24px;
+        }
+
+        .profile-avatar {
+            width: 110px;
+            height: 110px;
+            background: var(--telegram-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            border: 4px solid var(--telegram-card);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.02);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar .avatar-placeholder {
+            font-size: 3rem;
+            font-weight: 500;
+        }
+
+        .edit-avatar-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: var(--gold);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--bg-color);
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .edit-avatar-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-info {
+            padding: 60px 20px 20px;
+            background: var(--telegram-card);
+            border-radius: 20px 20px 0 0;
+            margin-top: -10px;
+        }
+
+        .profile-name-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .profile-username {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 12px 0;
+            padding: 8px 0;
+            background: rgba(255, 215, 0, 0.05);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .edit-profile-btn {
+            background: rgba(255, 215, 0, 0.15);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            color: var(--gold);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .edit-profile-btn:hover {
+            background: rgba(255, 215, 0, 0.3);
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: flex;
+            gap: 16px;
+            padding: 20px;
+            background: var(--telegram-card);
+            margin-top: 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-item-telegram {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: rgba(39, 165, 231, 0.1);
+            border-radius: 16px;
+        }
+
+        .stat-value-telegram {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .stat-label-telegram {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 20px 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Ebooks Grid */
+        .ebooks-grid-telegram {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            padding: 12px 16px;
+            scrollbar-width: thin;
+        }
+
+        .ebooks-grid-telegram::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .ebook-card-telegram {
+            min-width: 140px;
+            background: var(--bg-color);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .ebook-card-telegram img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .ebook-card-telegram .info {
+            padding: 10px;
+        }
+
+        .ebook-card-telegram .title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .read-btn-sm {
+            background: var(--gold);
+            border: none;
+            padding: 6px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        /* Payment History */
+        .payments-list {
+            padding: 0 12px 20px;
+        }
+
+        .payment-item {
+            background: var(--bg-color);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--telegram-card);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 480px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: none;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        .form-field label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .form-field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* Avatar Upload Section */
+        .avatar-upload-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid var(--gold);
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-preview .preview-placeholder {
+            font-size: 3rem;
+        }
+
+        .upload-btn {
+            background: var(--gold);
+            color: var(--bg-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: var(--gold);
+            color: var(--bg-color);
+            border: none;
+            padding: 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 12px;
+            border-radius: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Alert */
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--telegram-card);
+            border-left: 4px solid var(--gold);
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--telegram-card);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                z-index: 99;
+                border-bottom: 2px solid var(--gold);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .profile-name {
+                font-size: 1.4rem;
+            }
+            
+            .stats-container {
+                flex-wrap: wrap;
+            }
+
+            .profile-avatar {
+                width: 90px;
+                height: 90px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="ebooks.html">Ebooks</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon">📚</span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div id="alertContainer"></div>
+        <div id="profileContent">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading profile...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="avatar-upload-section">
+                    <div class="avatar-preview" id="avatarPreview">
+                        <div class="preview-placeholder">👤</div>
+                    </div>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                    <button class="upload-btn" id="uploadAvatarBtn">Change Photo</button>
+                </div>
+                <div class="form-field">
+                    <label>Full Name</label>
+                    <input type="text" id="editName" placeholder="Your name">
+                </div>
+                <div class="form-field">
+                    <label>Telegram Username</label>
+                    <input type="text" id="editTelegram" placeholder="@username">
+                </div>
+                <div class="form-field">
+                    <label>Bio</label>
+                    <textarea id="editBio" placeholder="Tell something about yourself..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelEditBtn">Cancel</button>
+                <button class="btn-primary" id="saveEditBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails (safe to expose)
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ]
+
+        let currentUser = null
+        let userProfile = null
+        let userUnlocks = []
+        let userSavedEbooks = []
+        let paymentHistory = []
+        let selectedAvatarFile = null
+        let currentAvatarUrl = null
+
+        const profileContent = document.getElementById('profileContent')
+        const alertContainer = document.getElementById('alertContainer')
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+        const editModal = document.getElementById('editModal')
+        const closeModalBtn = document.getElementById('closeModalBtn')
+        const cancelEditBtn = document.getElementById('cancelEditBtn')
+        const saveEditBtn = document.getElementById('saveEditBtn')
+        const editName = document.getElementById('editName')
+        const editTelegram = document.getElementById('editTelegram')
+        const editBio = document.getElementById('editBio')
+        const avatarInput = document.getElementById('avatarInput')
+        const uploadAvatarBtn = document.getElementById('uploadAvatarBtn')
+        const avatarPreview = document.getElementById('avatarPreview')
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // Upload avatar function using API
+        async function uploadAvatar(file, userId) {
+            try {
+                const formData = new FormData()
+                formData.append('avatar', file)
+                formData.append('userId', userId)
+
+                const response = await fetch(`${API_BASE}/upload-avatar`, {
+                    method: 'POST',
+                    body: formData
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Upload failed')
+                return result.publicUrl
+            } catch (error) {
+                console.error('Upload error:', error)
+                throw error
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode')
+                themeToggle.textContent = '☀️'
+            } else {
+                document.body.classList.remove('light-mode')
+                themeToggle.textContent = '🌙'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode')
+            const isLight = document.body.classList.contains('light-mode')
+            localStorage.setItem('theme', isLight ? 'light' : 'dark')
+            themeToggle.textContent = isLight ? '☀️' : '🌙'
+        })
+
+        menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'))
+        navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')))
+
+        function showAlert(message, isError = false) {
+            alertContainer.innerHTML = `<div class="alert" style="border-left-color: ${isError ? '#F44336' : 'var(--gold)'}">${message}</div>`
+            setTimeout(() => alertContainer.innerHTML = '', 3000)
+        }
+
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+                    
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-dashboard.html'
+                    }
+                    
+                    await loadProfile()
+                    await loadUserData()
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                    profileContent.innerHTML = `
+                        <div class="empty-state">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">👤</div>
+                            <h3>Please Login</h3>
+                            <p style="margin: 1rem 0;">You need to be logged in to view your profile.</p>
+                            <a href="login.html" class="btn-primary" style="display: inline-block; text-decoration: none; padding: 12px 24px;">Login Now</a>
+                        </div>
+                    `
+                }
+            } catch (error) {
+                console.error('Auth error:', error)
+            }
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.reload()
+        })
+
+        async function loadProfile() {
+            try {
+                const result = await callAPI('getProfile', { userId: currentUser.id })
+                
+                if (result && result.data) {
+                    userProfile = result.data
+                } else {
+                    // Create profile if doesn't exist
+                    const newProfileData = {
+                        user_id: currentUser.id,
+                        email: currentUser.email,
+                        name: currentUser.email.split('@')[0],
+                        full_name: currentUser.email.split('@')[0],
+                        bio: 'No bio yet. Tap edit to add one!',
+                        total_purchases: 0,
+                        total_spent_stars: 0,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString()
+                    }
+                    
+                    const createResult = await callAPI('createProfile', newProfileData)
+                    if (createResult && createResult.data) {
+                        userProfile = createResult.data
+                    } else {
+                        userProfile = newProfileData
+                    }
+                }
+                currentAvatarUrl = userProfile?.avatar_url
+            } catch (error) {
+                console.error('Error loading profile:', error)
+                userProfile = { user_id: currentUser?.id, email: currentUser?.email, name: currentUser?.email?.split('@')[0], bio: 'No bio yet' }
+            }
+        }
+
+        async function loadUserData() {
+            try {
+                const unlocksResult = await callAPI('getUserUnlocks', { userId: currentUser.id })
+                userUnlocks = (unlocksResult && unlocksResult.data) || []
+                
+                const savedResult = await callAPI('getUserSavedEbooks', { userId: currentUser.id })
+                userSavedEbooks = (savedResult && savedResult.data) || []
+                
+                const paymentsResult = await callAPI('getUserPayments', { userId: currentUser.id })
+                paymentHistory = (paymentsResult && paymentsResult.data) || []
+                
+                renderProfile()
+            } catch (error) {
+                console.error('Error loading user data:', error)
+                renderProfile()
+            }
+        }
+
+        async function updateProfile(updates) {
+            try {
+                const result = await callAPI('updateProfile', {
+                    userId: currentUser.id,
+                    updates: { ...updates, updated_at: new Date().toISOString() }
+                })
+                if (!result || !result.success) throw new Error(result?.error || 'Update failed')
+                showAlert('Profile updated successfully!')
+                await loadProfile()
+                renderProfile()
+            } catch (error) {
+                showAlert('Error updating profile: ' + error.message, true)
+            }
+        }
+
+        async function saveProfileChanges() {
+            const updates = {
+                name: editName.value,
+                full_name: editName.value,
+                telegram_username: editTelegram.value,
+                bio: editBio.value || 'No bio yet. Tap edit to add one!'
+            }
+
+            if (selectedAvatarFile) {
+                try {
+                    const avatarUrl = await uploadAvatar(selectedAvatarFile, currentUser.id)
+                    updates.avatar_url = avatarUrl
+                } catch (error) {
+                    showAlert('Failed to upload avatar', true)
+                }
+            }
+
+            await updateProfile(updates)
+            closeEditModal()
+            selectedAvatarFile = null
+        }
+
+        function openEditModal() {
+            editName.value = userProfile?.name || userProfile?.full_name || ''
+            editTelegram.value = userProfile?.telegram_username || ''
+            editBio.value = userProfile?.bio || ''
+            
+            if (userProfile?.avatar_url) {
+                avatarPreview.innerHTML = `<img src="${userProfile.avatar_url}" alt="Preview">`
+            } else {
+                avatarPreview.innerHTML = `<div class="preview-placeholder">👤</div>`
+            }
+            selectedAvatarFile = null
+            editModal.classList.add('show')
+        }
+
+        function closeEditModal() {
+            editModal.classList.remove('show')
+        }
+
+        uploadAvatarBtn.addEventListener('click', () => avatarInput.click())
+        avatarInput.addEventListener('change', (e) => {
+            const file = e.target.files[0]
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) {
+                    showAlert('Image too large. Max 2MB.', true)
+                    return
+                }
+                selectedAvatarFile = file
+                const reader = new FileReader()
+                reader.onload = (event) => {
+                    avatarPreview.innerHTML = `<img src="${event.target.result}" alt="Preview">`
+                }
+                reader.readAsDataURL(file)
+            }
+        })
+
+        saveEditBtn.addEventListener('click', saveProfileChanges)
+        closeModalBtn.addEventListener('click', closeEditModal)
+        cancelEditBtn.addEventListener('click', closeEditModal)
+        window.addEventListener('click', (e) => { if (e.target === editModal) closeEditModal() })
+
+        window.readEbook = (ebookId) => window.open(`ebook-reader.html?id=${ebookId}`, '_blank')
+        window.openEditModal = openEditModal
+
+        function escapeHtml(text) {
+            if (!text) return ''
+            const div = document.createElement('div')
+            div.textContent = text
+            return div.innerHTML
+        }
+
+        function renderProfile() {
+            if (!userProfile && !currentUser) {
+                profileContent.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading...</p></div>'
+                return
+            }
+
+            const displayName = userProfile?.name || userProfile?.full_name || currentUser?.email?.split('@')[0] || 'User'
+            const username = userProfile?.telegram_username || currentUser?.email?.split('@')[0]
+            const bio = userProfile?.bio || 'No bio yet. Tap edit to add one!'
+            const totalStarsSpent = userProfile?.total_spent_stars || 0
+            const totalPurchases = userProfile?.total_purchases || 0
+            const totalUnlocked = userUnlocks.length
+            const totalSaved = userSavedEbooks.length
+            const avatarUrl = userProfile?.avatar_url
+
+            profileContent.innerHTML = `
+                <div class="profile-cover">
+                    <div class="profile-avatar-wrapper">
+                        <div class="profile-avatar" onclick="openEditModal()">
+                            ${avatarUrl ? `<img src="${avatarUrl}" alt="Avatar">` : `<div class="avatar-placeholder">${displayName.charAt(0).toUpperCase()}</div>`}
+                        </div>
+                        <button class="edit-avatar-btn" onclick="openEditModal()">📷</button>
+                    </div>
+                </div>
+                
+                <div class="profile-info">
+                    <div class="profile-name-section">
+                        <h1 class="profile-name">${escapeHtml(displayName)}</h1>
+                        <button class="edit-profile-btn" onclick="openEditModal()">Edit Profile</button>
+                    </div>
+                    <div class="profile-username">@${escapeHtml(username)}</div>
+                    <div class="profile-bio">${escapeHtml(bio)}</div>
+                </div>
+
+                <div class="stats-container">
+                    <div class="stat-item-telegram">
+                        <div class="stat-value-telegram">${totalUnlocked}</div>
+                        <div class="stat-label-telegram">Ebooks</div>
+                    </div>
+                    <div class="stat-item-telegram">
+                        <div class="stat-value-telegram">${totalStarsSpent}</div>
+                        <div class="stat-label-telegram">Stars Spent</div>
+                    </div>
+                    <div class="stat-item-telegram">
+                        <div class="stat-value-telegram">${totalPurchases}</div>
+                        <div class="stat-label-telegram">Purchases</div>
+                    </div>
+                    <div class="stat-item-telegram">
+                        <div class="stat-value-telegram">${totalSaved}</div>
+                        <div class="stat-label-telegram">Saved</div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <i>📖</i> My Ebooks
+                </div>
+                ${userUnlocks.length === 0 ? `
+                    <div class="empty-state">
+                        <p>No ebooks unlocked yet.</p>
+                        <a href="ebooks.html" style="color: var(--gold);">Browse library →</a>
+                    </div>
+                ` : `
+                    <div class="ebooks-grid-telegram">
+                        ${userUnlocks.slice(0, 6).map(unlock => `
+                            <div class="ebook-card-telegram">
+                                <img src="${unlock.ebook?.cover_url || 'https://via.placeholder.com/140x100'}" onerror="this.src='https://via.placeholder.com/140x100'">
+                                <div class="info">
+                                    <div class="title">${escapeHtml(unlock.ebook?.title?.substring(0, 20) || 'Unknown')}</div>
+                                    <button class="read-btn-sm" onclick="readEbook('${unlock.ebook_id}')">Read →</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${userUnlocks.length > 6 ? `<div style="text-align: center; padding: 8px;"><a href="ebooks.html" style="color: var(--gold); font-size: 0.85rem;">+${userUnlocks.length - 6} more →</a></div>` : ''}
+                `}
+
+                <div class="section-header">
+                    <i>⭐</i> Recent Payments
+                </div>
+                <div class="payments-list">
+                    ${paymentHistory.length === 0 ? `
+                        <div class="empty-state">
+                            <p>No payment history yet.</p>
+                        </div>
+                    ` : paymentHistory.slice(0, 5).map(payment => `
+                        <div class="payment-item">
+                            <div>
+                                <div style="font-weight: 500;">${escapeHtml(payment.ebook_title || 'Unknown')}</div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary);">${new Date(payment.created_at).toLocaleDateString()}</div>
+                            </div>
+                            <div style="color: var(--gold); font-weight: 600;">⭐ ${payment.stars_amount}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="section-header">
+                    <i>🔖</i> Saved for Later
+                </div>
+                ${userSavedEbooks.length === 0 ? `
+                    <div class="empty-state">
+                        <p>No saved ebooks.</p>
+                    </div>
+                ` : `
+                    <div class="ebooks-grid-telegram">
+                        ${userSavedEbooks.slice(0, 6).map(saved => `
+                            <div class="ebook-card-telegram">
+                                <img src="${saved.ebook?.cover_url || 'https://via.placeholder.com/140x100'}" onerror="this.src='https://via.placeholder.com/140x100'">
+                                <div class="info">
+                                    <div class="title">${escapeHtml(saved.ebook?.title?.substring(0, 20) || 'Unknown')}</div>
+                                    <button class="read-btn-sm" onclick="readEbook('${saved.ebook_id}')">Read →</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `}
+            `
+        }
+
+        async function init() {
+            initTheme()
+            await checkAuth()
+        }
+
+        init()
+    </script>
+</body>
+</html>
