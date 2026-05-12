@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Create Account</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --error: #F44336;
+            --success: #4CAF50;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-nav {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .register-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            z-index: 1;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 3rem;
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23B0B0B0'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5rem;
+            padding-right: 2.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar {
+            display: flex;
+            gap: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .strength-segment {
+            height: 4px;
+            flex: 1;
+            background: var(--border-color);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-segment.active {
+            background: var(--gold);
+        }
+
+        .strength-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .strength-text.weak { color: var(--error); }
+        .strength-text.medium { color: #FFC107; }
+        .strength-text.strong { color: var(--success); }
+
+        .password-match {
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .match-success {
+            color: var(--success);
+        }
+
+        .match-error {
+            color: var(--error);
+        }
+
+        .terms-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1.5rem 0;
+        }
+
+        .terms-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .terms-group label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .terms-group a {
+            color: var(--electric-blue);
+            text-decoration: none;
+        }
+
+        .terms-group a:hover {
+            color: var(--gold);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-link {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-link a {
+            color: var(--electric-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            color: var(--gold);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--bg-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .age-hint {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 0.3rem;
+        }
+
+        @media (max-width: 768px) {
+            .register-card {
+                padding: 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="login.html">Login</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="register-card">
+            <div class="header">
+                <h1>Create Account</h1>
+                <p>Join the SupremeMotive community</p>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <form id="registerForm">
+                <!-- Full Name -->
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="name" class="form-control" placeholder="Enter your full name" required>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📧</span>
+                        <input type="email" id="email" class="form-control" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <!-- Password Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🔒</span>
+                            <input type="password" id="password" class="form-control" placeholder="Min. 6 characters" minlength="6" required>
+                        </div>
+                        <div class="password-strength" id="passwordStrength">
+                            <div class="strength-bar">
+                                <div class="strength-segment"></div>
+                                <div class="strength-segment"></div>
+                                <div class="strength-segment"></div>
+                                <div class="strength-segment"></div>
+                            </div>
+                            <div class="strength-text" id="strengthText">Enter a password</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password *</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">✓</span>
+                            <input type="password" id="confirmPassword" class="form-control" placeholder="Re-enter password" minlength="6" required>
+                        </div>
+                        <div class="password-match" id="passwordMatch">
+                            <span>🤷</span>
+                            <span>Re-enter your password</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Country and Age Row -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="country">Country *</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🌍</span>
+                            <select id="country" class="form-control" required>
+                                <option value="">Select your country</option>
+                                <option value="United States">🇺🇸 United States</option>
+                                <option value="United Kingdom">🇬🇧 United Kingdom</option>
+                                <option value="Canada">🇨🇦 Canada</option>
+                                <option value="Australia">🇦🇺 Australia</option>
+                                <option value="Germany">🇩🇪 Germany</option>
+                                <option value="France">🇫🇷 France</option>
+                                <option value="Spain">🇪🇸 Spain</option>
+                                <option value="Italy">🇮🇹 Italy</option>
+                                <option value="Japan">🇯🇵 Japan</option>
+                                <option value="China">🇨🇳 China</option>
+                                <option value="India">🇮🇳 India</option>
+                                <option value="Brazil">🇧🇷 Brazil</option>
+                                <option value="Mexico">🇲🇽 Mexico</option>
+                                <option value="South Africa">🇿🇦 South Africa</option>
+                                <option value="Nigeria">🇳🇬 Nigeria</option>
+                                <option value="Egypt">🇪🇬 Egypt</option>
+                                <option value="Saudi Arabia">🇸🇦 Saudi Arabia</option>
+                                <option value="UAE">🇦🇪 UAE</option>
+                                <option value="Singapore">🇸🇬 Singapore</option>
+                                <option value="Malaysia">🇲🇾 Malaysia</option>
+                                <option value="Indonesia">🇮🇩 Indonesia</option>
+                                <option value="Pakistan">🇵🇰 Pakistan</option>
+                                <option value="Bangladesh">🇧🇩 Bangladesh</option>
+                                <option value="Russia">🇷🇺 Russia</option>
+                                <option value="Turkey">🇹🇷 Turkey</option>
+                                <option value="South Korea">🇰🇷 South Korea</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age *</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">🎂</span>
+                            <input type="number" id="age" class="form-control" placeholder="Your age" min="13" max="120" required>
+                        </div>
+                        <div class="age-hint">Must be 13 or older</div>
+                    </div>
+                </div>
+
+                <!-- Bio (Optional) -->
+                <div class="form-group">
+                    <label for="bio">Bio (Optional)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">📝</span>
+                        <textarea id="bio" class="form-control" placeholder="Tell us a little about yourself..." rows="3"></textarea>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="terms-group">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and 
+                        <a href="privacy.html" target="_blank">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    Create Account
+                </button>
+
+                <!-- Login Link -->
+                <div class="login-link">
+                    Already have an account? <a href="login.html">Sign In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails for automatic role assignment (safe to expose)
+        const ADMIN_EMAILS = {
+            'supremealpha04@gmail.com': 'super_admin',
+            'suprememotive43@gmail.com': 'post_admin',
+            'sandrakukk055@gmail.com': 'ebook_admin',
+            'emmanuelamer6@gmail.com': 'unlock_admin'
+        }
+
+        // DOM Elements
+        const registerForm = document.getElementById('registerForm')
+        const registerBtn = document.getElementById('registerBtn')
+        const password = document.getElementById('password')
+        const confirmPassword = document.getElementById('confirmPassword')
+        const alertContainer = document.getElementById('alertContainer')
+        const termsCheckbox = document.getElementById('terms')
+
+        // API Helper Functions
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // ============================================
+        // PASSWORD STRENGTH CHECKER
+        // ============================================
+        function checkPasswordStrength(passwordValue) {
+            const strengthSegments = document.querySelectorAll('.strength-segment')
+            const strengthText = document.getElementById('strengthText')
+            
+            if (!passwordValue) {
+                strengthSegments.forEach(s => s.classList.remove('active'))
+                strengthText.textContent = 'Enter a password'
+                strengthText.className = 'strength-text'
+                return 0
+            }
+
+            let strength = 0
+            
+            // Length check
+            if (passwordValue.length >= 6) strength++
+            if (passwordValue.length >= 8) strength++
+            
+            // Complexity checks
+            if (/[A-Z]/.test(passwordValue)) strength++
+            if (/[0-9]/.test(passwordValue)) strength++
+            if (/[^A-Za-z0-9]/.test(passwordValue)) strength++
+
+            // Update segments (max 4 segments)
+            strengthSegments.forEach((s, i) => {
+                if (i < Math.min(strength, 4)) {
+                    s.classList.add('active')
+                } else {
+                    s.classList.remove('active')
+                }
+            })
+
+            // Update text
+            if (strength <= 2) {
+                strengthText.textContent = 'Weak password'
+                strengthText.className = 'strength-text weak'
+            } else if (strength <= 4) {
+                strengthText.textContent = 'Medium password'
+                strengthText.className = 'strength-text medium'
+            } else {
+                strengthText.textContent = 'Strong password'
+                strengthText.className = 'strength-text strong'
+            }
+
+            return strength
+        }
+
+        // ============================================
+        // PASSWORD MATCH CHECKER
+        // ============================================
+        function checkPasswordMatch() {
+            const pass = password.value
+            const confirm = confirmPassword.value
+            const matchDiv = document.getElementById('passwordMatch')
+            
+            if (!pass && !confirm) {
+                matchDiv.innerHTML = '<span>🤷</span><span>Re-enter your password</span>'
+                matchDiv.className = 'password-match'
+                return false
+            }
+
+            if (pass === confirm) {
+                matchDiv.innerHTML = '<span>✓</span><span>Passwords match</span>'
+                matchDiv.className = 'password-match match-success'
+                return true
+            } else {
+                matchDiv.innerHTML = '<span>✗</span><span>Passwords do not match</span>'
+                matchDiv.className = 'password-match match-error'
+                return false
+            }
+        }
+
+        // ============================================
+        // VALIDATE EMAIL FORMAT
+        // ============================================
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+            return re.test(email)
+        }
+
+        // ============================================
+        // VALIDATE AGE
+        // ============================================
+        function validateAge(age) {
+            return age >= 13 && age <= 120
+        }
+
+        // ============================================
+        // CHECK IF FORM IS VALID
+        // ============================================
+        function isFormValid() {
+            const name = document.getElementById('name').value.trim()
+            const email = document.getElementById('email').value.trim()
+            const pass = password.value
+            const confirm = confirmPassword.value
+            const country = document.getElementById('country').value
+            const age = parseInt(document.getElementById('age').value)
+            const terms = termsCheckbox.checked
+
+            if (!name) return false
+            if (!validateEmail(email)) return false
+            if (pass.length < 6) return false
+            if (pass !== confirm) return false
+            if (!country) return false
+            if (!validateAge(age)) return false
+            if (!terms) return false
+
+            return true
+        }
+
+        // ============================================
+        // UPDATE REGISTER BUTTON STATE
+        // ============================================
+        function updateRegisterButton() {
+            registerBtn.disabled = !isFormValid()
+        }
+
+        // ============================================
+        // SHOW ALERT
+        // ============================================
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `<div class="alert alert-${type}">${message}</div>`
+            setTimeout(() => {
+                alertContainer.innerHTML = ''
+            }, 5000)
+        }
+
+        // ============================================
+        // EVENT LISTENERS FOR REAL-TIME VALIDATION
+        // ============================================
+        password.addEventListener('input', () => {
+            checkPasswordStrength(password.value)
+            checkPasswordMatch()
+            updateRegisterButton()
+        })
+
+        confirmPassword.addEventListener('input', () => {
+            checkPasswordMatch()
+            updateRegisterButton()
+        })
+
+        document.getElementById('name').addEventListener('input', updateRegisterButton)
+        document.getElementById('email').addEventListener('input', updateRegisterButton)
+        document.getElementById('country').addEventListener('change', updateRegisterButton)
+        document.getElementById('age').addEventListener('input', updateRegisterButton)
+        termsCheckbox.addEventListener('change', updateRegisterButton)
+
+        // ============================================
+        // FORM SUBMISSION HANDLER - SECURE API VERSION
+        // ============================================
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            // Final validation
+            if (!isFormValid()) {
+                showAlert('Please fill all fields correctly', 'error')
+                return
+            }
+
+            const name = document.getElementById('name').value.trim()
+            const email = document.getElementById('email').value.trim().toLowerCase()
+            const passwordValue = password.value
+            const country = document.getElementById('country').value
+            const age = parseInt(document.getElementById('age').value)
+            const bio = document.getElementById('bio').value.trim()
+
+            try {
+                // Disable button and show loading
+                registerBtn.disabled = true
+                registerBtn.innerHTML = '<span class="spinner"></span> Creating Account...'
+
+                // Determine role based on email
+                let role = 'user'
+                if (ADMIN_EMAILS[email]) {
+                    role = ADMIN_EMAILS[email]
+                }
+
+                // Register via secure API
+                const result = await callAuthAPI('register', {
+                    email: email,
+                    password: passwordValue,
+                    name: name,
+                    country: country,
+                    age: age,
+                    bio: bio || null,
+                    role: role
+                })
+
+                if (result && result.success) {
+                    showAlert('Registration successful! Please check your email to verify your account.', 'success')
+                    
+                    // Clear form
+                    registerForm.reset()
+                    
+                    // Redirect to verify page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = `verify.html?email=${encodeURIComponent(email)}`
+                    }, 2000)
+                } else {
+                    throw new Error(result?.error || 'Registration failed')
+                }
+
+            } catch (error) {
+                console.error('Registration error:', error)
+                
+                // Handle specific error messages
+                let errorMessage = error.message
+                if (error.message.includes('User already registered')) {
+                    errorMessage = 'An account with this email already exists. Please login instead.'
+                } else if (error.message.includes('password')) {
+                    errorMessage = 'Password is too weak. Please use a stronger password.'
+                } else if (error.message.includes('email')) {
+                    errorMessage = 'Invalid email address. Please check and try again.'
+                }
+                
+                showAlert(errorMessage, 'error')
+                
+                // Re-enable button
+                registerBtn.disabled = false
+                registerBtn.innerHTML = 'Create Account'
+            }
+        })
+
+        // ============================================
+        // CHECK IF USER IS ALREADY LOGGED IN
+        // ============================================
+        async function checkExistingSession() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                if (session) {
+                    const result = await callAuthAPI('getUser', { session })
+                    if (result && result.user) {
+                        window.location.href = 'index.html'
+                    }
+                }
+            } catch (error) {
+                console.error('Session check error:', error)
+            }
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        checkExistingSession()
+        updateRegisterButton()
+    </script>
+</body>
+</html>
