@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Video Hub</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+        }
+
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .category-filters {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1.2rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .sort-select {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .video-thumbnail-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 215, 0, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--bg-color);
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .video-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .stat-btn:hover {
+            color: var(--gold);
+        }
+
+        .stat-btn.liked {
+            color: var(--gold);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90vw;
+            width: 1000px;
+            max-height: 90vh;
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow-y: auto;
+            border: 1px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 10;
+        }
+
+        .modal-header h2 {
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            color: var(--error);
+        }
+
+        .modal-body {
+            padding: 1rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .video-player-container {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .video-player {
+            width: 100%;
+            max-height: 500px;
+            outline: none;
+        }
+
+        .video-info-section {
+            margin-bottom: 1rem;
+        }
+
+        .video-info-section h3 {
+            color: var(--gold);
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.6rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .action-btn.liked {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .comments-section {
+            margin-top: 1.5rem;
+            background: var(--bg-color);
+            border-radius: 16px;
+            padding: 1rem;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .comments-header h4 {
+            color: var(--gold);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comment-count-badge {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--gold);
+        }
+
+        .comment-form {
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 0.8rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+        }
+
+        .comment-form button {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            padding: 0.7rem 2rem;
+            border-radius: 30px;
+            cursor: pointer;
+            float: right;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .comment-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .comments-list {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.8rem;
+        }
+
+        .comments-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .comments-list::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        .comments-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .comment {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .comment:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .comment-author {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .comment-date {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-left: auto;
+        }
+
+        .comment-content {
+            color: var(--text-color);
+            margin-left: 3rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+        }
+
+        .comment-actions {
+            margin-left: 3rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .reply-btn {
+            background: none;
+            border: none;
+            color: var(--electric-blue);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .reply-btn:hover {
+            color: var(--gold);
+            background: rgba(255, 215, 0, 0.1);
+        }
+
+        .reply-form {
+            margin-top: 1rem;
+            margin-left: 3rem;
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .reply-form input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            color: var(--text-color);
+            font-size: 0.9rem;
+        }
+
+        .reply-form input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .reply-form button {
+            background: var(--electric-blue);
+            color: var(--bg-color);
+            border: none;
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .reply-form button:hover {
+            background: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .replies {
+            margin-left: 3rem;
+            margin-top: 1rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--gold);
+        }
+
+        .replies .comment {
+            background: var(--bg-color);
+            border-left: 3px solid var(--electric-blue);
+            margin-bottom: 1rem;
+            padding: 1rem;
+        }
+
+        .replies .comment .comment-avatar {
+            width: 32px;
+            height: 32px;
+            font-size: 0.8rem;
+        }
+
+        .replies .comment .comment-content {
+            margin-left: 2.5rem;
+            font-size: 0.9rem;
+        }
+
+        .replies .comment .comment-actions {
+            margin-left: 2.5rem;
+        }
+
+        .replies .reply-form {
+            margin-left: 2.5rem;
+        }
+
+        .empty-comments {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            background: var(--card-bg);
+            border-radius: 16px;
+        }
+
+        .empty-comments i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .videos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .replies {
+                margin-left: 1rem;
+                padding-left: 0.5rem;
+            }
+
+            .comment-content,
+            .comment-actions,
+            .reply-form {
+                margin-left: 0.5rem;
+            }
+
+            .comment-avatar {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="videos.html" class="active">Videos</a>
+            <a href="support.html">Support</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon">📚</span>
+            <span>Ebooks</span>
+        </a>
+        <a href="videos.html" class="nav-item active">
+            <span class="nav-icon">🎬</span>
+            <span>Videos</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div class="page-header">
+            <h1 class="page-title">🎬 Motivational Videos</h1>
+            <p class="page-subtitle">Watch, learn, and grow with our collection of inspiring videos</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="filters-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search videos...">
+            </div>
+            <div class="category-filters" id="categoryFilters">
+                <button class="category-btn active" data-category="all">All</button>
+                <button class="category-btn" data-category="motivation">Motivation</button>
+                <button class="category-btn" data-category="success">Success</button>
+                <button class="category-btn" data-category="life">Life</button>
+                <button class="category-btn" data-category="wisdom">Wisdom</button>
+            </div>
+            <select class="sort-select" id="sortSelect">
+                <option value="latest">Latest</option>
+                <option value="popular">Most Viewed</option>
+                <option value="most_liked">Most Liked</option>
+            </select>
+        </div>
+
+        <div class="videos-grid" id="videosGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading videos...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Video Title</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="video-player-container">
+                    <video id="videoPlayer" class="video-player" controls></video>
+                </div>
+                
+                <div class="video-info-section">
+                    <h3 id="modalVideoTitle"></h3>
+                    <p id="modalVideoDescription" class="video-description"></p>
+                </div>
+                
+                <div class="video-actions">
+                    <button class="action-btn" id="likeBtn">
+                        <i class="fas fa-heart"></i> <span id="likeCount">0</span>
+                    </button>
+                    <button class="action-btn" id="shareBtn">
+                        <i class="fas fa-share-alt"></i> Share
+                    </button>
+                    <button class="action-btn" id="downloadBtn">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+                
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h4>
+                            <i class="fas fa-comments"></i> Comments
+                            <span class="comment-count-badge" id="commentCount">0</span>
+                        </h4>
+                    </div>
+                    
+                    <div class="comment-form" id="commentFormArea">
+                        <textarea id="commentInput" placeholder="Share your thoughts..."></textarea>
+                        <button onclick="submitMainComment()">Post Comment</button>
+                    </div>
+                    
+                    <div id="commentsList" class="comments-list">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Loading comments...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails (safe to expose)
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ]
+
+        // State
+        let currentUser = null
+        let allVideos = []
+        let currentVideo = null
+        let currentCategory = 'all'
+        let searchTerm = ''
+        let sortBy = 'latest'
+        let userLikes = new Set()
+
+        // DOM Elements
+        const videosGrid = document.getElementById('videosGrid')
+        const alertContainer = document.getElementById('alertContainer')
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+        const searchInput = document.getElementById('searchInput')
+        const sortSelect = document.getElementById('sortSelect')
+        const categoryBtns = document.querySelectorAll('.category-btn')
+        const videoModal = document.getElementById('videoModal')
+        const closeModalBtn = document.getElementById('closeModalBtn')
+        const videoPlayer = document.getElementById('videoPlayer')
+        const modalTitle = document.getElementById('modalTitle')
+        const modalVideoTitle = document.getElementById('modalVideoTitle')
+        const modalVideoDescription = document.getElementById('modalVideoDescription')
+        const likeBtn = document.getElementById('likeBtn')
+        const shareBtn = document.getElementById('shareBtn')
+        const downloadBtn = document.getElementById('downloadBtn')
+        const likeCountSpan = document.getElementById('likeCount')
+        const commentCountSpan = document.getElementById('commentCount')
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active')
+        })
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active')
+            })
+        })
+
+        // ============================================
+        // SHOW ALERT
+        // ============================================
+        function showAlert(message, type = 'success') {
+            alertContainer.innerHTML = `<div class="alert">${type === 'success' ? '✅' : '❌'} ${message}</div>`
+            setTimeout(() => {
+                alertContainer.innerHTML = ''
+            }, 3000)
+        }
+
+        // ============================================
+        // ESCAPE HTML
+        // ============================================
+        function escapeHtml(unsafe) {
+            if (!unsafe) return ''
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+        }
+
+        // ============================================
+        // CHECK AUTH
+        // ============================================
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+                    
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-videos.html'
+                    }
+                    
+                    await loadUserLikes()
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                }
+            } catch (error) {
+                console.error('Auth error:', error)
+            }
+        }
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.reload()
+        })
+
+        // ============================================
+        // LOAD USER LIKES
+        // ============================================
+        async function loadUserLikes() {
+            if (!currentUser) return
+            try {
+                const result = await callAPI('getUserVideoLikes', { userId: currentUser.id })
+                if (result && result.data) {
+                    userLikes = new Set(result.data.map(l => l.video_id))
+                }
+            } catch (error) {
+                console.error('Error loading likes:', error)
+            }
+        }
+
+        // ============================================
+        // LOAD VIDEOS
+        // ============================================
+        async function loadVideos() {
+            try {
+                videosGrid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading videos...</p></div>`
+                
+                const result = await callAPI('getVideos')
+                    
+                if (!result || !result.data || result.data.length === 0) {
+                    videosGrid.innerHTML = `<div class="loading"><p>No videos yet. Check back soon!</p></div>`
+                    return
+                }
+
+                allVideos = result.data
+                filterAndRenderVideos()
+
+            } catch (error) {
+                console.error('Error loading videos:', error)
+                videosGrid.innerHTML = `<div class="loading"><p>Error loading videos: ${error.message}</p></div>`
+            }
+        }
+
+        // ============================================
+        // FILTER AND RENDER VIDEOS
+        // ============================================
+        function filterAndRenderVideos() {
+            let filtered = [...allVideos]
+            if (currentCategory !== 'all') filtered = filtered.filter(v => v.category === currentCategory)
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase()
+                filtered = filtered.filter(v => v.title.toLowerCase().includes(term) || (v.description && v.description.toLowerCase().includes(term)))
+            }
+            switch(sortBy) {
+                case 'popular': filtered.sort((a, b) => (b.views_count || 0) - (a.views_count || 0)); break
+                case 'most_liked': filtered.sort((a, b) => (b.likes_count || 0) - (a.likes_count || 0)); break
+                default: filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            }
+            renderVideos(filtered)
+        }
+
+        // ============================================
+        // RENDER VIDEOS
+        // ============================================
+        function renderVideos(videos) {
+            if (videos.length === 0) {
+                videosGrid.innerHTML = `<div class="loading"><p>No videos match your filters.</p></div>`
+                return
+            }
+
+            videosGrid.innerHTML = videos.map(video => {
+                const isLiked = userLikes.has(video.id)
+                const date = new Date(video.created_at).toLocaleDateString()
+
+                return `
+                    <div class="video-card" onclick="openVideo('${video.id}')">
+                        <div class="video-thumbnail-container">
+                            <img src="${video.thumbnail_url || 'https://via.placeholder.com/400x225?text=No+Thumbnail'}" class="video-thumbnail" onerror="this.src='https://via.placeholder.com/400x225?text=Video'">
+                            <div class="play-overlay">
+                                <div class="play-icon"><i class="fas fa-play"></i></div>
+                            </div>
+                        </div>
+                        <div class="video-info">
+                            <h3 class="video-title">${escapeHtml(video.title)}</h3>
+                            <div class="video-meta">
+                                <span><i class="fas fa-eye"></i> ${video.views_count || 0}</span>
+                                <span><i class="fas fa-calendar"></i> ${date}</span>
+                            </div>
+                            <div class="video-stats">
+                                <button class="stat-btn ${isLiked ? 'liked' : ''}" onclick="event.stopPropagation(); toggleLike('${video.id}')">
+                                    <i class="fas fa-heart"></i> ${video.likes_count}
+                                </button>
+                                <button class="stat-btn" onclick="event.stopPropagation(); openVideo('${video.id}')">
+                                    <i class="fas fa-comment"></i> ${video.comments_count}
+                                </button>
+                                <button class="stat-btn" onclick="event.stopPropagation(); shareVideo('${video.id}')">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }).join('')
+        }
+
+        // ============================================
+        // OPEN VIDEO
+        // ============================================
+        window.openVideo = async (videoId) => {
+            const video = allVideos.find(v => v.id === videoId)
+            if (!video) return
+            currentVideo = video
+
+            // Record view
+            if (currentUser) {
+                await callAPI('recordVideoView', { videoId, userId: currentUser.id })
+            }
+            video.views_count = (video.views_count || 0) + 1
+
+            modalTitle.textContent = video.title
+            modalVideoTitle.textContent = video.title
+            modalVideoDescription.textContent = video.description || 'No description available.'
+            videoPlayer.src = video.video_url
+            
+            likeCountSpan.textContent = video.likes_count
+            const isLiked = userLikes.has(video.id)
+            likeBtn.classList.toggle('liked', isLiked)
+            
+            await loadComments(videoId)
+            filterAndRenderVideos()
+            videoModal.classList.add('show')
+        }
+
+        // ============================================
+        // TOGGLE LIKE
+        // ============================================
+        window.toggleLike = async (videoId) => {
+            if (!currentUser) {
+                if (confirm('Please login to like videos')) window.location.href = 'login.html'
+                return
+            }
+            const video = allVideos.find(v => v.id === videoId)
+            if (!video) return
+
+            try {
+                if (userLikes.has(videoId)) {
+                    await callAPI('unlikeVideo', { videoId, userId: currentUser.id })
+                    userLikes.delete(videoId)
+                    video.likes_count--
+                } else {
+                    await callAPI('likeVideo', { videoId, userId: currentUser.id })
+                    userLikes.add(videoId)
+                    video.likes_count++
+                }
+                filterAndRenderVideos()
+                if (currentVideo && currentVideo.id === videoId) {
+                    likeCountSpan.textContent = video.likes_count
+                    likeBtn.classList.toggle('liked', userLikes.has(videoId))
+                }
+            } catch (error) {
+                showAlert('Error updating like', 'error')
+            }
+        }
+
+        // ============================================
+        // SHARE VIDEO
+        // ============================================
+        window.shareVideo = (videoId) => {
+            const video = allVideos.find(v => v.id === videoId)
+            if (!video) return
+            const url = `${window.location.origin}/videos.html?id=${videoId}`
+            if (navigator.share) {
+                navigator.share({ title: video.title, text: 'Check out this video!', url: url })
+            } else {
+                navigator.clipboard.writeText(url)
+                showAlert('Link copied to clipboard!')
+            }
+        }
+
+        // ============================================
+        // DOWNLOAD VIDEO
+        // ============================================
+        downloadBtn.addEventListener('click', () => {
+            if (!currentVideo) return
+            const link = document.createElement('a')
+            link.href = currentVideo.video_url
+            link.download = `${currentVideo.title}.mp4`
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+            showAlert('Download started!')
+        })
+
+        // ============================================
+        // LOAD COMMENTS
+        // ============================================
+        async function loadComments(videoId) {
+            try {
+                const commentsList = document.getElementById('commentsList')
+                commentsList.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading comments...</p></div>'
+                
+                const result = await callAPI('getVideoComments', { videoId })
+                
+                if (!result || !result.data || result.data.length === 0) {
+                    commentsList.innerHTML = `
+                        <div class="empty-comments">
+                            <i class="fas fa-comment-dots"></i>
+                            <p>No comments yet. Be the first to share your thoughts!</p>
+                        </div>
+                    `
+                    commentCountSpan.textContent = 0
+                    return
+                }
+
+                const comments = result.data
+                const commentMap = new Map()
+                const rootComments = []
+
+                comments.forEach(comment => {
+                    commentMap.set(comment.id, { ...comment, children: [] })
+                })
+
+                comments.forEach(comment => {
+                    const node = commentMap.get(comment.id)
+                    if (comment.parent_id && commentMap.has(comment.parent_id)) {
+                        commentMap.get(comment.parent_id).children.push(node)
+                    } else {
+                        rootComments.push(node)
+                    }
+                })
+
+                renderComments(rootComments)
+                commentCountSpan.textContent = comments.length
+
+            } catch (error) {
+                console.error('Error loading comments:', error)
+                document.getElementById('commentsList').innerHTML = '<div class="loading"><p>Error loading comments. Please refresh.</p></div>'
+            }
+        }
+
+        // ============================================
+        // RENDER COMMENTS
+        // ============================================
+        function renderComments(comments, container = null, level = 0) {
+            const commentsList = container || document.getElementById('commentsList')
+            if (!commentsList) return
+
+            if (level === 0) {
+                if (comments.length === 0) {
+                    commentsList.innerHTML = `
+                        <div class="empty-comments">
+                            <i class="fas fa-comment-dots"></i>
+                            <p>No comments yet. Be the first to share your thoughts!</p>
+                        </div>
+                    `
+                    return
+                }
+                commentsList.innerHTML = ''
+            }
+
+            comments.forEach(comment => {
+                const commentDate = new Date(comment.created_at).toLocaleString()
+                const authorName = comment.author_name || 'User'
+                const authorInitial = authorName.charAt(0).toUpperCase()
+                const marginLeft = level * 20
+
+                const commentDiv = document.createElement('div')
+                commentDiv.className = 'comment'
+                commentDiv.setAttribute('data-comment-id', comment.id)
+                if (marginLeft) commentDiv.style.marginLeft = `${marginLeft}px`
+                
+                commentDiv.innerHTML = `
+                    <div class="comment-header">
+                        <div class="comment-avatar">${authorInitial}</div>
+                        <span class="comment-author">${escapeHtml(authorName)}</span>
+                        <span class="comment-date">${commentDate}</span>
+                    </div>
+                    <div class="comment-content">${escapeHtml(comment.content)}</div>
+                    <div class="comment-actions">
+                        ${currentUser ? `<button class="reply-btn" onclick="showReplyForm('${comment.id}')"><i class="fas fa-reply"></i> Reply</button>` : ''}
+                    </div>
+                    <div id="replyForm-${comment.id}" class="reply-form hidden">
+                        <input type="text" id="replyInput-${comment.id}" placeholder="Write a reply...">
+                        <button onclick="submitReply('${comment.id}')">Reply</button>
+                    </div>
+                `
+                
+                commentsList.appendChild(commentDiv)
+
+                if (comment.children && comment.children.length > 0) {
+                    const repliesContainer = document.createElement('div')
+                    repliesContainer.className = 'replies'
+                    commentsList.appendChild(repliesContainer)
+                    renderComments(comment.children, repliesContainer, level + 1)
+                }
+            })
+        }
+
+        // ============================================
+        // SUBMIT MAIN COMMENT
+        // ============================================
+        window.submitMainComment = async () => {
+            if (!currentUser) {
+                showAlert('Please login to comment')
+                return
+            }
+            if (!currentVideo) return
+
+            const input = document.getElementById('commentInput')
+            const content = input.value.trim()
+            if (!content) { showAlert('Please enter a comment'); return }
+
+            try {
+                await callAPI('addVideoComment', {
+                    videoId: currentVideo.id,
+                    userId: currentUser.id,
+                    content: content
+                })
+                input.value = ''
+                await loadComments(currentVideo.id)
+                currentVideo.comments_count = (currentVideo.comments_count || 0) + 1
+                filterAndRenderVideos()
+                showAlert('Comment posted!')
+            } catch (error) {
+                showAlert('Error posting comment', 'error')
+            }
+        }
+
+        // ============================================
+        // SHOW REPLY FORM
+        // ============================================
+        window.showReplyForm = (commentId) => {
+            const form = document.getElementById(`replyForm-${commentId}`)
+            if (form) {
+                form.classList.toggle('hidden')
+                if (!form.classList.contains('hidden')) {
+                    document.getElementById(`replyInput-${commentId}`).focus()
+                }
+            }
+        }
+
+        // ============================================
+        // SUBMIT REPLY
+        // ============================================
+        window.submitReply = async (commentId) => {
+            if (!currentUser) {
+                showAlert('Please login to reply')
+                return
+            }
+            if (!currentVideo) return
+
+            const input = document.getElementById(`replyInput-${commentId}`)
+            const content = input.value.trim()
+            if (!content) { showAlert('Please enter a reply'); return }
+
+            try {
+                await callAPI('addVideoReply', {
+                    videoId: currentVideo.id,
+                    userId: currentUser.id,
+                    content: content,
+                    parentCommentId: commentId
+                })
+                input.value = ''
+                document.getElementById(`replyForm-${commentId}`).classList.add('hidden')
+                await loadComments(currentVideo.id)
+                currentVideo.comments_count = (currentVideo.comments_count || 0) + 1
+                filterAndRenderVideos()
+                showAlert('Reply posted!')
+            } catch (error) {
+                showAlert('Error posting reply', 'error')
+            }
+        }
+
+        // ============================================
+        // MODAL CONTROLS
+        // ============================================
+        likeBtn.addEventListener('click', () => {
+            if (currentVideo) toggleLike(currentVideo.id)
+        })
+        shareBtn.addEventListener('click', () => {
+            if (currentVideo) shareVideo(currentVideo.id)
+        })
+        closeModalBtn.addEventListener('click', () => {
+            videoModal.classList.remove('show')
+            videoPlayer.pause()
+        })
+        window.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                videoModal.classList.remove('show')
+                videoPlayer.pause()
+            }
+        })
+
+        // ============================================
+        // FILTERS
+        // ============================================
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'))
+                btn.classList.add('active')
+                currentCategory = btn.dataset.category
+                filterAndRenderVideos()
+            })
+        })
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value
+            filterAndRenderVideos()
+        })
+        sortSelect.addEventListener('change', (e) => {
+            sortBy = e.target.value
+            filterAndRenderVideos()
+        })
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        async function init() {
+            initTheme()
+            await checkAuth()
+            await loadVideos()
+        }
+        init()
+    </script>
+</body>
+</html>
