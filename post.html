@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Articles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .post-card::after {
+            content: 'SUPREME MOTIVE';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: rgba(255, 215, 0, 0.15);
+            transform: rotate(-5deg);
+            pointer-events: none;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .post-author {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .post-date {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .post-title {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .post-content-wrapper {
+            position: relative;
+        }
+
+        .post-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .post-content.collapsed {
+            max-height: 150px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .post-content.collapsed::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(transparent, var(--card-bg));
+            pointer-events: none;
+        }
+
+        .read-more-btn {
+            background: none;
+            border: none;
+            color: var(--electric-blue);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            padding: 0.3rem 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: color 0.3s ease;
+        }
+
+        .read-more-btn:hover {
+            color: var(--gold);
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin: 1rem 0;
+            padding: 0.8rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .stat-btn:hover {
+            color: var(--gold);
+        }
+
+        .stat-btn.liked {
+            color: var(--gold);
+        }
+
+        .comments-section {
+            margin-top: 1rem;
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .comments-header h3 {
+            color: var(--gold);
+            font-size: 1rem;
+        }
+
+        .comment-count {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .comment-form {
+            margin-bottom: 1rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-color);
+            resize: vertical;
+            min-height: 70px;
+            margin-bottom: 0.5rem;
+            font-family: inherit;
+        }
+
+        .comment-form textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .comment-form button {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .comments-list {
+            margin-top: 1rem;
+        }
+
+        .comment {
+            background: var(--bg-color);
+            border-radius: 10px;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid var(--gold);
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-color);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .comment-author {
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .comment-date {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            margin-left: auto;
+        }
+
+        .comment-content {
+            color: var(--text-color);
+            margin-left: 2.5rem;
+            line-height: 1.5;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .comment-actions {
+            margin-left: 2.5rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .reply-btn {
+            background: none;
+            border: none;
+            color: var(--electric-blue);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .reply-btn:hover {
+            color: var(--gold);
+        }
+
+        .reply-form {
+            margin-top: 0.5rem;
+            margin-left: 2.5rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .reply-form input {
+            flex: 1;
+            padding: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 0.8rem;
+        }
+
+        .reply-form button {
+            background: var(--electric-blue);
+            color: var(--bg-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .reply {
+            margin-left: 2.5rem;
+            margin-top: 0.5rem;
+            padding-left: 0.8rem;
+            border-left: 2px solid var(--gold);
+        }
+
+        .no-comments {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: var(--text-color);
+            z-index: 1000;
+            font-size: 0.85rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .reply {
+                margin-left: 1rem;
+            }
+
+            .reply-form {
+                margin-left: 1rem;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">SupremeMotive</div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon">📚</span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+        <a href="post.html" class="nav-item active">
+            <span class="nav-icon">📰</span>
+            <span>Articles</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div id="alertContainer"></div>
+        <div id="postsContainer"></div>
+    </main>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails (safe to expose)
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ]
+
+        // State
+        let currentUser = null
+        let allPosts = []
+        let userLikes = new Set()
+
+        // DOM Elements
+        const postsContainer = document.getElementById('postsContainer')
+        const alertContainer = document.getElementById('alertContainer')
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // Theme toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        // Mobile menu
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active')
+        })
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active')
+            })
+        })
+
+        function showAlert(message) {
+            alertContainer.innerHTML = `<div class="alert">${message}</div>`
+            setTimeout(() => {
+                alertContainer.innerHTML = ''
+            }, 2000)
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return ''
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;')
+        }
+
+        // Check auth
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-dashboard.html'
+                    }
+
+                    await loadUserLikes()
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                }
+            } catch (error) {
+                console.error('Auth error:', error)
+            }
+        }
+
+        // Load user likes
+        async function loadUserLikes() {
+            if (!currentUser) return
+
+            try {
+                const result = await callAPI('getUserPostLikes', { userId: currentUser.id })
+                if (result && result.data) {
+                    userLikes = new Set(result.data.map(l => l.post_id))
+                }
+            } catch (error) {
+                console.error('Error loading likes:', error)
+            }
+        }
+
+        // Logout
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.reload()
+        })
+
+        // ============================================
+        // LOAD POSTS
+        // ============================================
+        async function loadPosts() {
+            try {
+                postsContainer.innerHTML = `
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Loading articles...</p>
+                    </div>
+                `
+
+                const result = await callAPI('getPosts')
+                
+                if (!result || !result.data || result.data.length === 0) {
+                    postsContainer.innerHTML = `
+                        <div class="loading">
+                            <p>No articles yet. Check back soon!</p>
+                        </div>
+                    `
+                    return
+                }
+
+                allPosts = result.data
+                renderPosts()
+
+            } catch (error) {
+                console.error('Error loading posts:', error)
+                postsContainer.innerHTML = `
+                    <div class="loading">
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `
+            }
+        }
+
+        // ============================================
+        // RENDER POSTS
+        // ============================================
+        function renderPosts() {
+            postsContainer.innerHTML = allPosts.map(post => {
+                const date = new Date(post.created_at).toLocaleDateString()
+                const authorName = post.profiles?.name || 'Admin'
+                const authorInitial = authorName.charAt(0).toUpperCase()
+                const isLiked = userLikes.has(post.id)
+                const needsReadMore = post.content && post.content.length > 400
+                const collapsedClass = needsReadMore ? 'collapsed' : ''
+                const likeCount = (post.likes_count || 0) + (isLiked ? 1 : 0)
+
+                return `
+                    <div class="post-card" data-post-id="${post.id}">
+                        <div class="post-header">
+                            <div class="post-avatar">${authorInitial}</div>
+                            <div class="post-info">
+                                <div class="post-author">${escapeHtml(authorName)}</div>
+                                <div class="post-date">📅 ${date}</div>
+                            </div>
+                        </div>
+
+                        <h2 class="post-title">${escapeHtml(post.title)}</h2>
+
+                        ${post.image_url ? `
+                            <img src="${post.image_url}" class="post-image" onerror="this.style.display='none'">
+                        ` : ''}
+
+                        <div class="post-content-wrapper">
+                            <div id="postContent-${post.id}" class="post-content ${collapsedClass}">
+                                ${escapeHtml(post.content || '').replace(/\n/g, '<br>')}
+                            </div>
+                            ${needsReadMore ? `
+                                <button class="read-more-btn" onclick="toggleReadMore('${post.id}')">
+                                    <span>Read More</span> <span>▼</span>
+                                </button>
+                            ` : ''}
+                        </div>
+
+                        <div class="post-stats">
+                            <button class="stat-btn like-btn ${isLiked ? 'liked' : ''}" onclick="handleLike('${post.id}')">
+                                <span>❤️</span>
+                                <span>${likeCount}</span>
+                            </button>
+                            <button class="stat-btn" onclick="loadAndShowComments('${post.id}')">
+                                <span>💬</span>
+                                <span>${post.comments_count || 0}</span>
+                            </button>
+                        </div>
+
+                        <div id="comments-${post.id}" class="comments-section hidden">
+                            <div class="comments-header">
+                                <h3>Comments</h3>
+                                <span class="comment-count">${post.comments_count || 0}</span>
+                            </div>
+
+                            ${currentUser ? `
+                                <div class="comment-form">
+                                    <textarea id="commentInput-${post.id}" placeholder="Write a comment..."></textarea>
+                                    <button onclick="addComment('${post.id}')">Post Comment</button>
+                                </div>
+                            ` : `
+                                <p style="color: var(--text-secondary); text-align: center;">
+                                    <a href="login.html" style="color: var(--gold);">Login</a> to comment
+                                </p>
+                            `}
+
+                            <div id="commentsList-${post.id}" class="comments-list">
+                                <div class="loading"><div class="spinner"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }).join('')
+        }
+
+        // ============================================
+        // TOGGLE READ MORE
+        // ============================================
+        window.toggleReadMore = (postId) => {
+            const contentDiv = document.getElementById(`postContent-${postId}`)
+            const btn = contentDiv.parentElement.querySelector('.read-more-btn')
+
+            if (contentDiv.classList.contains('collapsed')) {
+                contentDiv.classList.remove('collapsed')
+                btn.innerHTML = '<span>Show Less</span> <span>▲</span>'
+            } else {
+                contentDiv.classList.add('collapsed')
+                btn.innerHTML = '<span>Read More</span> <span>▼</span>'
+            }
+        }
+
+        // ============================================
+        // HANDLE LIKE
+        // ============================================
+        window.handleLike = async (postId) => {
+            if (!currentUser) {
+                if (confirm('Please login to like posts')) {
+                    window.location.href = 'login.html'
+                }
+                return
+            }
+
+            try {
+                const post = allPosts.find(p => p.id === postId)
+                const isLiked = userLikes.has(postId)
+
+                if (isLiked) {
+                    await callAPI('unlikePost', { 
+                        postId, 
+                        userId: currentUser.id 
+                    })
+                    userLikes.delete(postId)
+                    post.likes_count--
+                } else {
+                    await callAPI('likePost', { 
+                        postId, 
+                        userId: currentUser.id 
+                    })
+                    userLikes.add(postId)
+                    post.likes_count++
+                }
+
+                // Update UI
+                const likeBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .like-btn`)
+                const likeCountSpan = likeBtn.querySelector('span:last-child')
+                likeBtn.classList.toggle('liked', userLikes.has(postId))
+                likeCountSpan.textContent = post.likes_count
+
+            } catch (error) {
+                console.error('Like error:', error)
+                showAlert('Error updating like')
+            }
+        }
+
+        // ============================================
+        // LOAD AND SHOW COMMENTS
+        // ============================================
+        window.loadAndShowComments = async (postId) => {
+            const commentsDiv = document.getElementById(`comments-${postId}`)
+            if (commentsDiv.classList.contains('hidden')) {
+                await loadComments(postId)
+                commentsDiv.classList.remove('hidden')
+            } else {
+                commentsDiv.classList.add('hidden')
+            }
+        }
+
+        // ============================================
+        // LOAD COMMENTS
+        // ============================================
+        async function loadComments(postId) {
+            try {
+                const commentsListDiv = document.getElementById(`commentsList-${postId}`)
+                commentsListDiv.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading comments...</p></div>'
+
+                const result = await callAPI('getComments', { postId })
+                
+                if (!result || !result.data || result.data.length === 0) {
+                    commentsListDiv.innerHTML = '<p class="no-comments">No comments yet. Be the first!</p>'
+                    return
+                }
+
+                // Build comment tree
+                const commentMap = new Map()
+                const rootComments = []
+
+                result.data.forEach(comment => {
+                    const commentWithUser = {
+                        ...comment,
+                        replies: []
+                    }
+                    commentMap.set(comment.id, commentWithUser)
+                })
+
+                result.data.forEach(comment => {
+                    if (comment.parent_comment_id) {
+                        const parent = commentMap.get(comment.parent_comment_id)
+                        if (parent) {
+                            parent.replies.push(commentMap.get(comment.id))
+                        }
+                    } else {
+                        rootComments.push(commentMap.get(comment.id))
+                    }
+                })
+
+                renderComments(rootComments, postId)
+
+            } catch (error) {
+                console.error('Error loading comments:', error)
+                document.getElementById(`commentsList-${postId}`).innerHTML = 
+                    '<p class="no-comments">Error loading comments. Please refresh.</p>'
+            }
+        }
+
+        // ============================================
+        // RENDER COMMENTS
+        // ============================================
+        function renderComments(comments, postId) {
+            const container = document.getElementById(`commentsList-${postId}`)
+            if (!container) return
+
+            if (comments.length === 0) {
+                container.innerHTML = '<p class="no-comments">No comments yet. Be the first!</p>'
+                return
+            }
+
+            container.innerHTML = comments.map(comment => {
+                const date = new Date(comment.created_at).toLocaleString()
+                const authorName = comment.author_name || 'User'
+                const authorInitial = authorName.charAt(0).toUpperCase()
+
+                return `
+                    <div class="comment" data-comment-id="${comment.id}">
+                        <div class="comment-header">
+                            <div class="comment-avatar">${authorInitial}</div>
+                            <span class="comment-author">${escapeHtml(authorName)}</span>
+                            <span class="comment-date">${date}</span>
+                        </div>
+                        <div class="comment-content">${escapeHtml(comment.content)}</div>
+                        
+                        ${currentUser ? `
+                            <div class="comment-actions">
+                                <button class="reply-btn" onclick="showReplyForm('${comment.id}', '${postId}')">💬 Reply</button>
+                            </div>
+                            <div id="replyForm-${comment.id}" class="reply-form hidden">
+                                <input type="text" id="replyInput-${comment.id}" placeholder="Write a reply...">
+                                <button onclick="submitReply('${comment.id}', '${postId}')">Reply</button>
+                            </div>
+                        ` : ''}
+                        
+                        ${comment.replies && comment.replies.length > 0 ? `
+                            <div class="replies">
+                                ${comment.replies.map(reply => {
+                                    const replyDate = new Date(reply.created_at).toLocaleString()
+                                    const replyAuthor = reply.author_name || 'User'
+                                    const replyInitial = replyAuthor.charAt(0).toUpperCase()
+                                    return `
+                                        <div class="reply">
+                                            <div class="comment-header">
+                                                <div class="comment-avatar" style="width: 25px; height: 25px;">${replyInitial}</div>
+                                                <span class="comment-author" style="font-size: 0.8rem;">${escapeHtml(replyAuthor)}</span>
+                                                <span class="comment-date">${replyDate}</span>
+                                            </div>
+                                            <div class="comment-content">${escapeHtml(reply.content)}</div>
+                                        </div>
+                                    `
+                                }).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `
+            }).join('')
+        }
+
+        // ============================================
+        // ADD COMMENT
+        // ============================================
+        window.addComment = async (postId) => {
+            if (!currentUser) {
+                showAlert('Please login to comment')
+                return
+            }
+
+            const input = document.getElementById(`commentInput-${postId}`)
+            const content = input.value.trim()
+
+            if (!content) {
+                showAlert('Please enter a comment')
+                return
+            }
+
+            try {
+                const result = await callAPI('addComment', {
+                    postId,
+                    userId: currentUser.id,
+                    content
+                })
+
+                if (result && result.success) {
+                    input.value = ''
+                    await loadComments(postId)
+
+                    // Update comment count
+                    const post = allPosts.find(p => p.id === postId)
+                    post.comments_count = (post.comments_count || 0) + 1
+                    const commentBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .stat-btn:last-child span:last-child`)
+                    if (commentBtn) commentBtn.textContent = post.comments_count
+
+                    showAlert('Comment posted!')
+                } else {
+                    throw new Error(result?.error || 'Failed to post comment')
+                }
+
+            } catch (error) {
+                console.error('Error posting comment:', error)
+                showAlert('Error posting comment')
+            }
+        }
+
+        // ============================================
+        // SHOW REPLY FORM
+        // ============================================
+        window.showReplyForm = (commentId, postId) => {
+            const form = document.getElementById(`replyForm-${commentId}`)
+            if (form) {
+                form.classList.toggle('hidden')
+                if (!form.classList.contains('hidden')) {
+                    document.getElementById(`replyInput-${commentId}`).focus()
+                }
+            }
+        }
+
+        // ============================================
+        // SUBMIT REPLY
+        // ============================================
+        window.submitReply = async (commentId, postId) => {
+            if (!currentUser) {
+                showAlert('Please login to reply')
+                return
+            }
+
+            const input = document.getElementById(`replyInput-${commentId}`)
+            const content = input.value.trim()
+
+            if (!content) {
+                showAlert('Please enter a reply')
+                return
+            }
+
+            try {
+                const result = await callAPI('addReply', {
+                    postId,
+                    userId: currentUser.id,
+                    content,
+                    parentCommentId: commentId
+                })
+
+                if (result && result.success) {
+                    input.value = ''
+                    document.getElementById(`replyForm-${commentId}`).classList.add('hidden')
+                    await loadComments(postId)
+
+                    // Update comment count
+                    const post = allPosts.find(p => p.id === postId)
+                    post.comments_count = (post.comments_count || 0) + 1
+                    const commentBtn = document.querySelector(`.post-card[data-post-id="${postId}"] .stat-btn:last-child span:last-child`)
+                    if (commentBtn) commentBtn.textContent = post.comments_count
+
+                    showAlert('Reply posted!')
+                } else {
+                    throw new Error(result?.error || 'Failed to post reply')
+                }
+
+            } catch (error) {
+                console.error('Error posting reply:', error)
+                showAlert('Error posting reply')
+            }
+        }
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        async function init() {
+            initTheme()
+            await checkAuth()
+            await loadPosts()
+        }
+
+        init()
+    </script>
+</body>
+</html>
