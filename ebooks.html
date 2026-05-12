@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Ebook Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --telegram: #27A5E7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: var(--card-bg);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .categories {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .category-btn {
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover,
+        .category-btn.active {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .search-container {
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-item span:first-child {
+            font-size: 1.2rem;
+        }
+
+        .stat-item span:last-child {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .ebooks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .ebook-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ebook-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .ebook-card::after {
+            content: 'SUPREME MOTIVE';
+            position: absolute;
+            bottom: 60px;
+            right: 10px;
+            font-size: 0.7rem;
+            color: rgba(255, 215, 0, 0.15);
+            transform: rotate(-5deg);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .ebook-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+        }
+
+        .ebook-info {
+            padding: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .ebook-tag {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .ebook-tag span {
+            color: var(--gold);
+            margin-right: 0.3rem;
+        }
+
+        .ebook-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .ebook-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ebook-price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .ebook-price.free {
+            color: var(--success);
+        }
+
+        .ebook-actions {
+            display: flex;
+            gap: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .action-btn {
+            flex: 1;
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            padding: 0.6rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .action-btn.saved {
+            background: var(--electric-blue);
+            color: var(--bg-color);
+            border-color: var(--electric-blue);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border: 2px solid var(--gold);
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            border: 1px solid var(--gold);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h3 {
+            color: var(--gold);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .telegram-payment-info {
+            background: rgba(39, 165, 231, 0.1);
+            border: 1px solid var(--telegram);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .telegram-icon {
+            font-size: 2rem;
+            color: var(--telegram);
+        }
+
+        .stars-amount {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-size: 1.3rem;
+            text-align: center;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .payment-status {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 0.8rem;
+            background: var(--telegram);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 0.8rem;
+            background: var(--border-color);
+            border: none;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .ebooks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-row {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">SupremeMotive</div>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="support.html">Support</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item active">
+            <span class="nav-icon">📚</span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon">📰</span>
+            <span>Articles</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div class="header">
+            <h1>Ebook Library</h1>
+            <p>Expand your mind with our collection — Pay with Telegram Stars ⭐</p>
+        </div>
+
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search ebooks...">
+        </div>
+
+        <div class="categories" id="categories">
+            <button class="category-btn active" data-category="all">All</button>
+            <button class="category-btn" data-category="free">Free</button>
+            <button class="category-btn" data-category="paid">Paid</button>
+            <button class="category-btn" data-category="motivation">Motivation</button>
+            <button class="category-btn" data-category="success">Success</button>
+            <button class="category-btn" data-category="mindset">Mindset</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-item">
+                <span>📚</span>
+                <span id="totalEbooks">0</span> Total Ebooks
+            </div>
+            <div class="stat-item">
+                <span>🎁</span>
+                <span id="freeEbooks">0</span> Free
+            </div>
+            <div class="stat-item">
+                <span>💰</span>
+                <span id="paidEbooks">0</span> Paid
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="ebooks-grid" id="ebooksGrid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading ebooks...</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⭐ Telegram Stars Payment</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            
+            <div id="modalEbookInfo" style="margin-bottom: 1rem;"></div>
+
+            <div class="telegram-payment-info">
+                <span class="telegram-icon">⭐</span>
+                <span>Secure payment with Telegram Stars</span>
+            </div>
+
+            <div class="stars-amount" id="starsAmount"></div>
+            
+            <div class="payment-status" id="paymentStatusMsg">
+                🔹 Click the button below to pay with Telegram Stars.<br>
+                ✅ After successful payment, your ebook will unlock automatically.
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-primary" id="payWithStarsBtn">
+                    <span>⭐</span>
+                    Pay with Telegram Stars
+                </button>
+                <button class="btn-secondary" id="cancelModalBtn">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+        
+        // Telegram Bot Configuration
+        const TELEGRAM_BOT_USERNAME = 'suprememotive_netwok_bot'
+        
+        // Admin emails (safe to expose)
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ]
+
+        // Sample ebooks (fallback for offline)
+        const sampleEbooks = [
+            {
+                id: '1',
+                title: 'The Motivation Manifesto',
+                description: 'A powerful guide to reclaiming your life and pursuing your purpose with unwavering determination.',
+                cover_url: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400',
+                category: 'motivation',
+                stars_price: 150,
+                is_paid: true,
+                tag: 'Mm'
+            },
+            {
+                id: '2',
+                title: 'Mindset Mastery',
+                description: 'Transform your thinking and unlock your full potential with proven psychological strategies.',
+                cover_url: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400',
+                category: 'mindset',
+                stars_price: 250,
+                is_paid: true,
+                tag: 'Mm'
+            },
+            {
+                id: '3',
+                title: 'Success Habits',
+                description: 'Daily routines of the worlds most successful people — FREE ebook!',
+                cover_url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400',
+                category: 'success',
+                stars_price: 0,
+                is_paid: false,
+                tag: 'Free'
+            }
+        ]
+
+        // State
+        let currentUser = null
+        let currentCategory = 'all'
+        let searchTerm = ''
+        let ebooks = []
+        let userUnlocks = new Set()
+        let selectedEbook = null
+        let activePaymentCheck = null
+
+        // DOM Elements
+        const ebooksGrid = document.getElementById('ebooksGrid')
+        const alertContainer = document.getElementById('alertContainer')
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+        const categoryBtns = document.querySelectorAll('.category-btn')
+        const searchInput = document.getElementById('searchInput')
+        const totalEbooksSpan = document.getElementById('totalEbooks')
+        const freeEbooksSpan = document.getElementById('freeEbooks')
+        const paidEbooksSpan = document.getElementById('paidEbooks')
+        const paymentModal = document.getElementById('paymentModal')
+        const closeModalBtn = document.getElementById('closeModalBtn')
+        const cancelModalBtn = document.getElementById('cancelModalBtn')
+        const payWithStarsBtn = document.getElementById('payWithStarsBtn')
+        const modalEbookInfo = document.getElementById('modalEbookInfo')
+        const starsAmountSpan = document.getElementById('starsAmount')
+        const paymentStatusMsgSpan = document.getElementById('paymentStatusMsg')
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        // ============================================
+        // THEME TOGGLE
+        // ============================================
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.textContent = '🌙'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.textContent = '☀️'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        // ============================================
+        // MOBILE MENU
+        // ============================================
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active')
+        })
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active')
+            })
+        })
+
+        // ============================================
+        // SHOW ALERT
+        // ============================================
+        function showAlert(message, isError = false) {
+            alertContainer.innerHTML = `<div class="alert" style="border-color: ${isError ? '#F44336' : 'var(--gold)'}">${message}</div>`
+            setTimeout(() => {
+                alertContainer.innerHTML = ''
+            }, 4000)
+        }
+
+        // ============================================
+        // CHECK AUTH
+        // ============================================
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-dashboard.html'
+                    }
+
+                    await loadUserUnlocks()
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                }
+            } catch (error) {
+                console.error('Auth error:', error)
+            }
+        }
+
+        // ============================================
+        // LOGOUT
+        // ============================================
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.reload()
+        })
+
+        // ============================================
+        // LOAD USER UNLOCKS
+        // ============================================
+        async function loadUserUnlocks() {
+            if (!currentUser) return
+
+            try {
+                const result = await callAPI('getUserUnlocks', { userId: currentUser.id })
+                if (result && result.data) {
+                    userUnlocks = new Set(result.data.map(u => u.ebook_id))
+                }
+                renderEbooks()
+            } catch (error) {
+                console.error('Error loading unlocks:', error)
+            }
+        }
+
+        // ============================================
+        // LOAD EBOOKS
+        // ============================================
+        async function loadEbooks() {
+            try {
+                const result = await callAPI('getEbooks')
+                
+                if (result && result.data && result.data.length > 0) {
+                    ebooks = result.data
+                } else {
+                    ebooks = sampleEbooks
+                }
+
+                updateStats()
+                renderEbooks()
+            } catch (error) {
+                console.error('Error loading ebooks:', error)
+                ebooks = sampleEbooks
+                updateStats()
+                renderEbooks()
+            }
+        }
+
+        // ============================================
+        // UPDATE STATS
+        // ============================================
+        function updateStats() {
+            totalEbooksSpan.textContent = ebooks.length
+            freeEbooksSpan.textContent = ebooks.filter(e => !e.is_paid).length
+            paidEbooksSpan.textContent = ebooks.filter(e => e.is_paid).length
+        }
+
+        // ============================================
+        // RENDER EBOOKS
+        // ============================================
+        function renderEbooks() {
+            let filteredEbooks = [...ebooks]
+
+            if (currentCategory === 'free') {
+                filteredEbooks = filteredEbooks.filter(e => !e.is_paid)
+            } else if (currentCategory === 'paid') {
+                filteredEbooks = filteredEbooks.filter(e => e.is_paid)
+            } else if (currentCategory !== 'all') {
+                filteredEbooks = filteredEbooks.filter(e => e.category === currentCategory)
+            }
+
+            if (searchTerm) {
+                filteredEbooks = filteredEbooks.filter(e => 
+                    e.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    e.description.toLowerCase().includes(searchTerm.toLowerCase())
+                )
+            }
+
+            if (filteredEbooks.length === 0) {
+                ebooksGrid.innerHTML = `
+                    <div class="loading">
+                        <p>No ebooks found</p>
+                    </div>
+                `
+                return
+            }
+
+            ebooksGrid.innerHTML = filteredEbooks.map(ebook => {
+                const isUnlocked = !ebook.is_paid || userUnlocks.has(ebook.id)
+                const priceDisplay = ebook.is_paid ? `${ebook.stars_price || 100} ⭐ Stars` : 'FREE'
+                const priceClass = ebook.is_paid ? '' : 'free'
+                
+                return `
+                    <div class="ebook-card">
+                        <img src="${ebook.cover_url}" alt="${ebook.title}" class="ebook-cover"
+                             onerror="this.src='https://via.placeholder.com/300x200?text=No+Cover'">
+                        
+                        <div class="ebook-info">
+                            <div class="ebook-tag">
+                                <span>${escapeHtml(ebook.tag || 'Eb')}</span> ${ebook.category ? ebook.category.charAt(0).toUpperCase() + ebook.category.slice(1) : 'Ebook'}
+                            </div>
+                            
+                            <h3 class="ebook-title">${escapeHtml(ebook.title)}</h3>
+                            <p class="ebook-description">${escapeHtml(ebook.description)}</p>
+                            
+                            <div class="ebook-price ${priceClass}">
+                                ${priceDisplay}
+                            </div>
+
+                            <div class="ebook-actions">
+                                ${isUnlocked ? `
+                                    <button class="action-btn primary" onclick="readEbook('${ebook.id}')">
+                                        <span>📖</span>
+                                        Read Now
+                                    </button>
+                                ` : `
+                                    <button class="action-btn primary" onclick="initiateStarsPayment('${ebook.id}')">
+                                        <span>⭐</span>
+                                        Unlock with Stars
+                                    </button>
+                                `}
+                                <button class="action-btn" onclick="saveEbook('${ebook.id}')">
+                                    <span>🔖</span>
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }).join('')
+        }
+
+        // ============================================
+        // ESCAPE HTML
+        // ============================================
+        function escapeHtml(text) {
+            if (!text) return ''
+            const div = document.createElement('div')
+            div.textContent = text
+            return div.innerHTML
+        }
+
+        // ============================================
+        // READ EBOOK
+        // ============================================
+        window.readEbook = (ebookId) => {
+            window.open(`ebook-reader.html?id=${ebookId}`, '_blank')
+        }
+
+        // ============================================
+        // SAVE EBOOK
+        // ============================================
+        window.saveEbook = async (ebookId) => {
+            if (!currentUser) {
+                if (confirm('Please login to save ebooks')) {
+                    window.location.href = 'login.html'
+                }
+                return
+            }
+
+            try {
+                const result = await callAPI('checkSavedEbook', { 
+                    ebookId, 
+                    userId: currentUser.id 
+                })
+
+                if (result && result.exists) {
+                    await callAPI('unsaveEbook', { 
+                        ebookId, 
+                        userId: currentUser.id 
+                    })
+                    showAlert('Ebook removed from your library')
+                } else {
+                    await callAPI('saveEbook', { 
+                        ebookId, 
+                        userId: currentUser.id 
+                    })
+                    showAlert('Ebook saved to your library!')
+                }
+            } catch (error) {
+                console.error('Error saving ebook:', error)
+                showAlert('Error saving ebook', true)
+            }
+        }
+
+        // ============================================
+        // INITIATE TELEGRAM STARS PAYMENT
+        // ============================================
+        window.initiateStarsPayment = async (ebookId) => {
+            if (!currentUser) {
+                if (confirm('Please login to unlock ebooks')) {
+                    window.location.href = 'login.html'
+                }
+                return
+            }
+
+            const ebook = ebooks.find(e => e.id === ebookId)
+            if (!ebook || !ebook.is_paid) return
+
+            selectedEbook = ebook
+            const starsCost = ebook.stars_price || 100
+            
+            modalEbookInfo.innerHTML = `
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <img src="${ebook.cover_url}" alt="${ebook.title}" 
+                         style="width: 60px; height: 80px; object-fit: cover; border-radius: 8px;">
+                    <div>
+                        <h4 style="color: var(--gold);">${escapeHtml(ebook.title)}</h4>
+                        <p style="color: var(--text-secondary);">${starsCost} ⭐ Stars</p>
+                    </div>
+                </div>
+            `
+            
+            starsAmountSpan.innerHTML = `💰 ${starsCost} Telegram Stars`
+            paymentStatusMsgSpan.innerHTML = '🔹 Click the button below to pay with Telegram Stars.<br>✅ After successful payment, your ebook will unlock automatically.'
+            paymentModal.classList.add('show')
+        }
+
+        // ============================================
+        // PROCESS TELEGRAM STARS PAYMENT
+        // ============================================
+        payWithStarsBtn.addEventListener('click', async () => {
+            if (!selectedEbook || !currentUser) return
+            
+            const starsCost = selectedEbook.stars_price || 100
+            const paymentId = `pay_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            
+            // Create payment record in database via API
+            const result = await callAPI('createStarsPayment', {
+                paymentId,
+                userId: currentUser.id,
+                userEmail: currentUser.email,
+                ebookId: selectedEbook.id,
+                ebookTitle: selectedEbook.title,
+                starsAmount: starsCost
+            })
+            
+            if (!result || !result.success) {
+                showAlert('Failed to initiate payment. Please try again.', true)
+                return
+            }
+            
+            // Create Telegram Stars invoice link
+            const invoiceLink = `https://t.me/${TELEGRAM_BOT_USERNAME}?start=payment_${paymentId}`
+            
+            paymentStatusMsgSpan.innerHTML = '🔄 Opening Telegram... Please complete the payment in the Telegram app.'
+            payWithStarsBtn.disabled = true
+            payWithStarsBtn.textContent = 'Opening Telegram...'
+            
+            // Open Telegram
+            window.open(invoiceLink, '_blank')
+            
+            // Start polling for payment confirmation
+            if (activePaymentCheck) clearInterval(activePaymentCheck)
+            
+            let attempts = 0
+            const maxAttempts = 40
+            
+            activePaymentCheck = setInterval(async () => {
+                attempts++
+                
+                const paymentResult = await callAPI('checkPaymentStatus', { paymentId })
+                
+                if (paymentResult && paymentResult.status === 'completed') {
+                    clearInterval(activePaymentCheck)
+                    activePaymentCheck = null
+                    
+                    paymentStatusMsgSpan.innerHTML = '✅ Payment confirmed! Unlocking ebook...'
+                    
+                    // Auto unlock ebook
+                    const unlockResult = await callAPI('createUnlock', {
+                        userId: currentUser.id,
+                        ebookId: selectedEbook.id,
+                        paymentId
+                    })
+                    
+                    if (unlockResult && unlockResult.success) {
+                        userUnlocks.add(selectedEbook.id)
+                        renderEbooks()
+                        showAlert(`✅ Payment confirmed! "${selectedEbook.title}" has been unlocked automatically!`)
+                        paymentModal.classList.remove('show')
+                    } else {
+                        showAlert('Unlock failed: ' + (unlockResult?.error || 'Unknown error'), true)
+                    }
+                    
+                    payWithStarsBtn.disabled = false
+                    payWithStarsBtn.textContent = 'Pay with Telegram Stars'
+                    
+                } else if (paymentResult && paymentResult.status === 'failed') {
+                    clearInterval(activePaymentCheck)
+                    activePaymentCheck = null
+                    showAlert('Payment failed or was cancelled.', true)
+                    paymentStatusMsgSpan.innerHTML = '❌ Payment failed. Please try again.'
+                    payWithStarsBtn.disabled = false
+                    payWithStarsBtn.textContent = 'Pay with Telegram Stars'
+                    
+                } else if (attempts >= maxAttempts) {
+                    clearInterval(activePaymentCheck)
+                    activePaymentCheck = null
+                    paymentStatusMsgSpan.innerHTML = '⏰ Payment verification timeout. If you completed payment, please contact support.'
+                    payWithStarsBtn.disabled = false
+                    payWithStarsBtn.textContent = 'Pay with Telegram Stars'
+                    showAlert('Payment verification timeout. Please contact support if you completed payment.', true)
+                } else if (attempts % 5 === 0) {
+                    paymentStatusMsgSpan.innerHTML = `⏳ Waiting for payment confirmation... (${Math.floor(attempts * 3 / 60)} min ${(attempts * 3) % 60} sec)`
+                }
+            }, 3000)
+        })
+
+        // ============================================
+        // CLOSE MODAL
+        // ============================================
+        closeModalBtn.addEventListener('click', () => {
+            if (activePaymentCheck) {
+                clearInterval(activePaymentCheck)
+                activePaymentCheck = null
+            }
+            paymentModal.classList.remove('show')
+            payWithStarsBtn.disabled = false
+            payWithStarsBtn.textContent = 'Pay with Telegram Stars'
+        })
+
+        cancelModalBtn.addEventListener('click', () => {
+            if (activePaymentCheck) {
+                clearInterval(activePaymentCheck)
+                activePaymentCheck = null
+            }
+            paymentModal.classList.remove('show')
+            payWithStarsBtn.disabled = false
+            payWithStarsBtn.textContent = 'Pay with Telegram Stars'
+        })
+
+        window.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                if (activePaymentCheck) {
+                    clearInterval(activePaymentCheck)
+                    activePaymentCheck = null
+                }
+                paymentModal.classList.remove('show')
+                payWithStarsBtn.disabled = false
+                payWithStarsBtn.textContent = 'Pay with Telegram Stars'
+            }
+        })
+
+        // ============================================
+        // CATEGORY FILTERING
+        // ============================================
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                categoryBtns.forEach(b => b.classList.remove('active'))
+                btn.classList.add('active')
+                currentCategory = btn.dataset.category
+                renderEbooks()
+            })
+        })
+
+        // ============================================
+        // SEARCH
+        // ============================================
+        searchInput.addEventListener('input', (e) => {
+            searchTerm = e.target.value
+            renderEbooks()
+        })
+
+        // ============================================
+        // INITIALIZE
+        // ============================================
+        async function init() {
+            initTheme()
+            await checkAuth()
+            await loadEbooks()
+        }
+
+        init()
+    </script>
+</body>
+</html>
