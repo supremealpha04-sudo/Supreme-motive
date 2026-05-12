@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Support Tickets Admin</title>
+    <link rel="icon" type="image/png" href="../logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FFC107;
+            --info: #2196F3;
+            --purple: #9C27B0;
+            --cyan: #00BCD4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--gold);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-email {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .sidebar-nav a:hover::before {
+            width: 100%;
+        }
+
+        .sidebar-nav a:hover {
+            transform: translateX(5px);
+            color: var(--bg-color);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .sidebar-nav a i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--error);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .content-header h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border-color: var(--gold);
+        }
+
+        .tickets-container {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .ticket-item {
+            background: var(--bg-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--gold);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ticket-item::after {
+            content: 'SUPREME MOTIVE';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.6rem;
+            color: rgba(255, 215, 0, 0.1);
+            transform: rotate(-5deg);
+            pointer-events: none;
+        }
+
+        .ticket-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .ticket-subject {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .ticket-status {
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        .status-pending { background: rgba(255, 193, 7, 0.15); color: var(--warning); border: 1px solid var(--warning); }
+        .status-in_progress { background: rgba(0, 240, 255, 0.15); color: var(--electric-blue); border: 1px solid var(--electric-blue); }
+        .status-resolved { background: rgba(76, 175, 80, 0.15); color: var(--success); border: 1px solid var(--success); }
+
+        .ticket-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+
+        .ticket-meta i {
+            margin-right: 0.3rem;
+            color: var(--gold);
+        }
+
+        .ticket-message {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+        }
+
+        .admin-response {
+            background: rgba(0, 240, 255, 0.08);
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--electric-blue);
+        }
+
+        .admin-response strong {
+            color: var(--electric-blue);
+        }
+
+        .response-form {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .response-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            margin-bottom: 0.5rem;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .response-textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+
+        .response-buttons {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .response-btn {
+            padding: 0.5rem 1.2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .response-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-progress { 
+            background: linear-gradient(135deg, var(--electric-blue), var(--cyan));
+            color: var(--bg-color);
+        }
+
+        .btn-resolve { 
+            background: linear-gradient(135deg, var(--success), #6BBF6B);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border-left: 4px solid var(--gold);
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translate(-50%, -20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        .hidden { display: none !important; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem;
+            }
+
+            .sidebar-logo {
+                font-size: 0;
+            }
+
+            .sidebar-logo::before {
+                content: 'SM';
+                font-size: 1.5rem;
+                background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .role-badge,
+            .admin-email,
+            .sidebar-nav a span {
+                display: none;
+            }
+
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 0.9rem;
+            }
+
+            .sidebar-nav a i {
+                margin: 0;
+                font-size: 1.3rem;
+            }
+
+            .sidebar-footer {
+                left: 1rem;
+                right: 1rem;
+            }
+
+            .logout-btn span:last-child {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ticket-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .ticket-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .response-buttons {
+                flex-direction: column;
+            }
+
+            .response-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SupremeMotive</div>
+                <div id="roleBadge" class="role-badge">Support Admin</div>
+                <div id="adminEmail" class="admin-email"></div>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="admin-dashboard.html"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                <li><a href="admin-tickets.html" class="active"><i class="fas fa-ticket-alt"></i><span>Support Tickets</span></a></li>
+                <li><a href="../index.html"><i class="fas fa-home"></i><span>View Site</span></a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-header">
+                <h1>
+                    <i class="fas fa-ticket-alt"></i>
+                    Support Tickets
+                </h1>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <div class="stats-grid" id="statsGrid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-ticket-alt"></i></div>
+                    <div class="stat-value" id="totalTickets">0</div>
+                    <div class="stat-label">Total Tickets</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value" id="pendingTickets">0</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                    <div class="stat-value" id="inProgressTickets">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-value" id="resolvedTickets">0</div>
+                    <div class="stat-label">Resolved</div>
+                </div>
+            </div>
+
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="fas fa-list"></i> All
+                </button>
+                <button class="filter-btn" data-filter="pending">
+                    <i class="fas fa-clock"></i> Pending
+                </button>
+                <button class="filter-btn" data-filter="in_progress">
+                    <i class="fas fa-spinner"></i> In Progress
+                </button>
+                <button class="filter-btn" data-filter="resolved">
+                    <i class="fas fa-check-circle"></i> Resolved
+                </button>
+            </div>
+
+            <div class="tickets-container" id="ticketsContainer">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading tickets...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails for support access
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ];
+
+        let allTickets = [];
+        let currentFilter = 'all';
+        let currentUser = null;
+
+        const ticketsContainer = document.getElementById('ticketsContainer');
+        const alertContainer = document.getElementById('alertContainer');
+        const totalTicketsSpan = document.getElementById('totalTickets');
+        const pendingTicketsSpan = document.getElementById('pendingTickets');
+        const inProgressTicketsSpan = document.getElementById('inProgressTickets');
+        const resolvedTicketsSpan = document.getElementById('resolvedTickets');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const roleBadge = document.getElementById('roleBadge');
+        const adminEmailSpan = document.getElementById('adminEmail');
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        function showAlert(message, type = 'success') {
+            alertContainer.innerHTML = `
+                <div class="alert">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => alertContainer.innerHTML = '', 3000);
+        }
+
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (!result?.user) {
+                    window.location.href = '../login.html';
+                    return false;
+                }
+                
+                currentUser = result.user;
+                adminEmailSpan.textContent = currentUser.email;
+
+                if (!ADMIN_EMAILS.includes(currentUser.email)) {
+                    window.location.href = '../index.html';
+                    return false;
+                }
+                
+                roleBadge.innerHTML = '<i class="fas fa-headset"></i> Support Admin';
+                return true;
+            } catch (error) {
+                window.location.href = '../login.html';
+                return false;
+            }
+        }
+
+        async function loadTickets() {
+            try {
+                ticketsContainer.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading tickets...</p></div>`;
+
+                const result = await callAPI('getSupportTickets')
+                
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to load tickets');
+                }
+
+                allTickets = result.data || [];
+                updateStats();
+                renderTickets();
+
+            } catch (error) {
+                console.error('Error loading tickets:', error);
+                ticketsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-ticket-alt"></i>
+                        <p>Error loading tickets: ${error.message}</p>
+                        <p style="margin-top: 1rem;">Please refresh the page or contact support.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats() {
+            const total = allTickets.length;
+            const pending = allTickets.filter(t => t.status === 'pending').length;
+            const inProgress = allTickets.filter(t => t.status === 'in_progress').length;
+            const resolved = allTickets.filter(t => t.status === 'resolved').length;
+
+            totalTicketsSpan.textContent = total;
+            pendingTicketsSpan.textContent = pending;
+            inProgressTicketsSpan.textContent = inProgress;
+            resolvedTicketsSpan.textContent = resolved;
+        }
+
+        function renderTickets() {
+            let filtered = [...allTickets];
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(t => t.status === currentFilter);
+            }
+
+            if (filtered.length === 0) {
+                ticketsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>No tickets found</p>
+                        <p style="font-size: 0.85rem;">Tickets will appear here when users submit support requests.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            ticketsContainer.innerHTML = filtered.map(ticket => `
+                <div class="ticket-item" data-id="${ticket.id}">
+                    <div class="ticket-header">
+                        <span class="ticket-subject">
+                            <i class="fas fa-tag"></i> ${escapeHtml(ticket.subject)}
+                        </span>
+                        <span class="ticket-status status-${ticket.status}">
+                            ${getStatusIcon(ticket.status)} ${ticket.status.replace('_', ' ').toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="ticket-meta">
+                        <span><i class="fas fa-user"></i> ${escapeHtml(ticket.user_email)}</span>
+                        <span><i class="fas fa-flag"></i> Priority: ${getPriorityIcon(ticket.priority)} ${ticket.priority?.toUpperCase() || 'MEDIUM'}</span>
+                        <span><i class="far fa-calendar"></i> ${new Date(ticket.created_at).toLocaleString()}</span>
+                    </div>
+                    <div class="ticket-message">
+                        <strong><i class="fas fa-envelope"></i> Message:</strong><br>
+                        ${escapeHtml(ticket.message)}
+                    </div>
+                    ${ticket.admin_response ? `
+                        <div class="admin-response">
+                            <strong><i class="fas fa-reply-all"></i> Admin Response:</strong><br>
+                            ${escapeHtml(ticket.admin_response)}
+                        </div>
+                    ` : ''}
+                    <div class="response-form">
+                        <textarea id="response-${ticket.id}" class="response-textarea" 
+                                  placeholder="Write your response to the user..." rows="3"></textarea>
+                        <div class="response-buttons">
+                            ${ticket.status === 'pending' ? `
+                                <button class="response-btn btn-progress" onclick="updateTicketStatus('${ticket.id}', 'in_progress')">
+                                    <i class="fas fa-play"></i> Start Working
+                                </button>
+                            ` : ''}
+                            ${ticket.status !== 'resolved' ? `
+                                <button class="response-btn btn-resolve" onclick="resolveTicketWithResponse('${ticket.id}')">
+                                    <i class="fas fa-check"></i> Resolve & Respond
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'pending': '⏳',
+                'in_progress': '🔄',
+                'resolved': '✅'
+            };
+            return icons[status] || '📝';
+        }
+
+        function getPriorityIcon(priority) {
+            const icons = {
+                'low': '🟢',
+                'medium': '🟡',
+                'high': '🔴',
+                'urgent': '⚠️'
+            };
+            return icons[priority?.toLowerCase()] || '🟡';
+        }
+
+        // Update ticket status only
+        window.updateTicketStatus = async (ticketId, newStatus) => {
+            try {
+                const result = await callAPI('updateTicketStatus', {
+                    ticketId,
+                    status: newStatus
+                })
+
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to update ticket');
+                }
+
+                showAlert(`Ticket marked as ${newStatus.replace('_', ' ')}!`);
+                await loadTickets();
+            } catch (error) {
+                showAlert('Error updating ticket: ' + error.message, 'error');
+            }
+        };
+
+        // Resolve ticket with response
+        window.resolveTicketWithResponse = async (ticketId) => {
+            const responseTextarea = document.getElementById(`response-${ticketId}`);
+            const response = responseTextarea ? responseTextarea.value.trim() : '';
+            
+            try {
+                const result = await callAPI('resolveTicket', {
+                    ticketId,
+                    response: response || "Your ticket has been resolved. Thank you for contacting support!"
+                })
+
+                if (!result || !result.success) {
+                    throw new Error(result?.error || 'Failed to resolve ticket');
+                }
+
+                showAlert('Ticket resolved successfully! Response sent to user.');
+                await loadTickets();
+            } catch (error) {
+                showAlert('Error resolving ticket: ' + error.message, 'error');
+            }
+        };
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderTickets();
+            });
+        });
+
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.href = '../index.html';
+        });
+
+        async function init() {
+            const isAuthed = await checkAuth();
+            if (isAuthed) await loadTickets();
+        }
+        
+        init();
+    </script>
+</body>
+</html>
