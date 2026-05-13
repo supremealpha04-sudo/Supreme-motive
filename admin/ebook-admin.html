@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Manage Ebooks</title>
+    <link rel="icon" type="image/png" href="../logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FFC107;
+            --info: #2196F3;
+            --purple: #9C27B0;
+            --cyan: #00BCD4;
+            --telegram: #27A5E7;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        /* Admin Layout */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar - Modern Glass Effect */
+        .sidebar {
+            width: 280px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid var(--gold);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-email {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1.2rem;
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-nav a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold), transparent);
+            transition: width 0.3s ease;
+            z-index: -1;
+        }
+
+        .sidebar-nav a:hover::before {
+            width: 100%;
+        }
+
+        .sidebar-nav a:hover {
+            transform: translateX(5px);
+            color: var(--bg-color);
+        }
+
+        .sidebar-nav a.active {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .sidebar-nav a i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 1.5rem;
+            right: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--error);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gold);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .content-header h1 {
+            color: var(--gold);
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .create-btn {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--gold);
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+
+        .filter-select {
+            padding: 0.8rem 2rem 0.8rem 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23B0B0B0'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.2rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        /* Ebooks Grid */
+        .ebooks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .ebook-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .ebook-card::after {
+            content: 'SUPREME MOTIVE';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.6rem;
+            color: rgba(255, 215, 0, 0.15);
+            transform: rotate(-5deg);
+            pointer-events: none;
+        }
+
+        .ebook-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
+        }
+
+        .ebook-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid var(--gold);
+        }
+
+        .ebook-info {
+            padding: 1.2rem;
+        }
+
+        .ebook-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .ebook-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            flex: 1;
+        }
+
+        .price-badge {
+            background: linear-gradient(135deg, var(--telegram), #1E88E5);
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .price-badge.free {
+            background: linear-gradient(135deg, var(--success), #45A049);
+        }
+
+        .ebook-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            margin-bottom: 0.8rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .ebook-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .ebook-meta i {
+            margin-right: 0.3rem;
+            color: var(--gold);
+        }
+
+        .unlock-stats {
+            background: var(--bg-color);
+            padding: 0.6rem;
+            border-radius: 12px;
+            margin: 0.8rem 0;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.8rem;
+        }
+
+        .unlock-stat {
+            text-align: center;
+        }
+
+        .unlock-stat .count {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .unlock-stat .label {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+
+        .ebook-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .ebook-actions button {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background: linear-gradient(135deg, var(--electric-blue), var(--cyan));
+            color: var(--bg-color);
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, var(--error), #FF6B6B);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .view-btn {
+            background: linear-gradient(135deg, var(--gold), #FFC107);
+            color: var(--bg-color);
+        }
+
+        .view-btn:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid var(--gold);
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--error);
+            transform: rotate(90deg);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--gold);
+        }
+
+        .price-input {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .price-input span {
+            font-size: 1.2rem;
+        }
+
+        .stars-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            background: var(--bg-color);
+        }
+
+        .file-upload:hover {
+            border-color: var(--gold);
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .file-upload input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .upload-hint {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-top: 0.3rem;
+        }
+
+        .file-preview {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .file-preview.show {
+            display: block;
+        }
+
+        .preview-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .preview-image {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-name {
+            color: var(--text-color);
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .preview-size {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .remove-file {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 0.3rem 1rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .remove-file:hover {
+            filter: brightness(1.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            grid-column: 1 / -1;
+            background: var(--card-bg);
+            border-radius: 20px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 80px;
+                padding: 1rem;
+            }
+
+            .sidebar-logo {
+                font-size: 0;
+            }
+
+            .sidebar-logo::before {
+                content: 'SM';
+                font-size: 1.5rem;
+                background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .role-badge,
+            .admin-email,
+            .sidebar-nav a span {
+                display: none;
+            }
+
+            .sidebar-nav a {
+                justify-content: center;
+                padding: 0.9rem;
+            }
+
+            .sidebar-nav a i {
+                margin: 0;
+                font-size: 1.3rem;
+            }
+
+            .sidebar-footer {
+                left: 1rem;
+                right: 1rem;
+            }
+
+            .logout-btn span:last-child {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ebooks-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .preview-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">SupremeMotive</div>
+                <div id="roleBadge" class="role-badge">Ebook Admin</div>
+                <div id="adminEmail" class="admin-email"></div>
+            </div>
+
+            <ul class="sidebar-nav">
+                <li>
+                    <a href="admin-dashboard.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="post-admin.html">
+                        <i class="fas fa-newspaper"></i>
+                        <span>Post Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="admin-quotes.html">
+                        <i class="fas fa-quote-right"></i>
+                        <span>Quote Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ebook-admin.html" class="active">
+                        <i class="fas fa-book"></i>
+                        <span>Ebook Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="unlock-admin.html">
+                        <i class="fas fa-unlock-alt"></i>
+                        <span>Unlock Requests</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="../index.html">
+                        <i class="fas fa-home"></i>
+                        <span>View Site</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <button class="logout-btn" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>
+                    <i class="fas fa-book"></i>
+                    Manage Ebooks
+                </h1>
+                <button class="create-btn" id="newEbookBtn">
+                    <i class="fas fa-plus"></i>
+                    <span>Add New Ebook</span>
+                </button>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-book"></i></div>
+                    <div class="stat-value" id="totalEbooks">0</div>
+                    <div class="stat-label">Total Ebooks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-gift"></i></div>
+                    <div class="stat-value" id="freeEbooks">0</div>
+                    <div class="stat-label">Free Ebooks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                    <div class="stat-value" id="paidEbooks">0</div>
+                    <div class="stat-label">Paid Ebooks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-unlock-alt"></i></div>
+                    <div class="stat-value" id="totalUnlocks">0</div>
+                    <div class="stat-label">Total Unlocks</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search ebooks by title or description...">
+                </div>
+                <select class="filter-select" id="typeFilter">
+                    <option value="all">All Types</option>
+                    <option value="free">Free Only</option>
+                    <option value="paid">Paid Only</option>
+                </select>
+            </div>
+
+            <!-- Ebooks Grid -->
+            <div class="ebooks-grid" id="ebooksGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading ebooks...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Ebook Modal -->
+    <div class="modal" id="ebookModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Ebook</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+
+            <form id="ebookForm">
+                <input type="hidden" id="ebookId">
+
+                <div class="form-group">
+                    <label for="title">Ebook Title *</label>
+                    <input type="text" id="title" class="form-control" placeholder="Enter ebook title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" class="form-control" placeholder="Enter ebook description" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="starsPrice">⭐ Telegram Stars Price</label>
+                    <div class="price-input">
+                        <span><i class="fab fa-telegram"></i> ⭐</span>
+                        <input type="number" id="starsPrice" class="form-control" step="10" min="0" value="100" placeholder="Enter price in Stars (e.g., 100, 250, 500)">
+                    </div>
+                    <div class="stars-hint">💰 Set the price in Telegram Stars (minimum 0 stars). Examples: 0⭐ = Free, 100⭐, 250⭐, 500⭐, 1000⭐</div>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="isPaid">
+                    <label for="isPaid">This is a paid ebook (requires Stars payment)</label>
+                </div>
+
+                <div class="form-group">
+                    <label>Cover Image *</label>
+                    <div class="file-upload" id="coverUpload">
+                        <input type="file" id="coverFile" accept="image/*">
+                        <div class="upload-icon"><i class="fas fa-image"></i></div>
+                        <div class="upload-text">Click or drag cover image to upload</div>
+                        <div class="upload-hint">Supports: JPG, PNG, WebP (max 5MB)</div>
+                    </div>
+
+                    <div class="file-preview" id="coverPreview">
+                        <div class="preview-container">
+                            <img id="coverPreviewImage" class="preview-image" src="#" alt="Cover preview">
+                            <div class="preview-info">
+                                <div id="coverFileName" class="preview-name"></div>
+                                <div id="coverFileSize" class="preview-size"></div>
+                            </div>
+                            <button type="button" class="remove-file" id="removeCoverBtn">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>PDF File *</label>
+                    <div class="file-upload" id="pdfUpload">
+                        <input type="file" id="pdfFile" accept=".pdf">
+                        <div class="upload-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="upload-text">Click or drag PDF file to upload</div>
+                        <div class="upload-hint">Supports: PDF (max 20MB)</div>
+                    </div>
+
+                    <div class="file-preview" id="pdfPreview">
+                        <div class="preview-container">
+                            <div class="preview-info">
+                                <div id="pdfFileName" class="preview-name"></div>
+                                <div id="pdfFileSize" class="preview-size"></div>
+                            </div>
+                            <button type="button" class="remove-file" id="removePdfBtn">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <i class="fas fa-save"></i> Save Ebook
+                    </button>
+                    <button type="button" class="btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 style="color: var(--error);">
+                    <i class="fas fa-trash-alt"></i> Delete Ebook
+                </h2>
+                <button class="close-btn" id="closeDeleteModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                    Are you sure you want to delete this ebook? This action cannot be undone.
+                </p>
+                <p style="color: var(--warning); font-weight: bold;">
+                    <i class="fas fa-exclamation-triangle"></i> This will also remove access for all users who have unlocked it.
+                </p>
+            </div>
+            <div class="form-actions">
+                <button class="btn-primary" style="background: linear-gradient(135deg, var(--error), #FF6B6B);" id="confirmDeleteBtn">
+                    <i class="fas fa-trash-alt"></i> Delete Permanently
+                </button>
+                <button class="btn-secondary" id="cancelDeleteBtn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SECURE API PROXY - NO KEYS EXPOSED!
+        // ============================================
+        
+        const API_BASE = '/api'
+
+        // Admin emails
+        const ADMIN_EMAILS = [
+            'supremealpha04@gmail.com',
+            'suprememotive43@gmail.com',
+            'sandrakukk055@gmail.com',
+            'emmanuelamer6@gmail.com'
+        ]
+
+        // State
+        let currentUser = null
+        let allEbooks = []
+        let selectedEbookId = null
+        let selectedCoverFile = null
+        let selectedPdfFile = null
+        let existingCoverUrl = null
+        let existingPdfUrl = null
+
+        // DOM Elements
+        const ebooksGrid = document.getElementById('ebooksGrid')
+        const totalEbooks = document.getElementById('totalEbooks')
+        const freeEbooks = document.getElementById('freeEbooks')
+        const paidEbooks = document.getElementById('paidEbooks')
+        const totalUnlocks = document.getElementById('totalUnlocks')
+        const searchInput = document.getElementById('searchInput')
+        const typeFilter = document.getElementById('typeFilter')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const alertContainer = document.getElementById('alertContainer')
+        const newEbookBtn = document.getElementById('newEbookBtn')
+        const ebookModal = document.getElementById('ebookModal')
+        const modalTitle = document.getElementById('modalTitle')
+        const ebookForm = document.getElementById('ebookForm')
+        const ebookIdInput = document.getElementById('ebookId')
+        const titleInput = document.getElementById('title')
+        const descriptionInput = document.getElementById('description')
+        const starsPriceInput = document.getElementById('starsPrice')
+        const isPaidCheckbox = document.getElementById('isPaid')
+        const coverFileInput = document.getElementById('coverFile')
+        const pdfFileInput = document.getElementById('pdfFile')
+        const coverPreview = document.getElementById('coverPreview')
+        const pdfPreview = document.getElementById('pdfPreview')
+        const coverPreviewImage = document.getElementById('coverPreviewImage')
+        const coverFileName = document.getElementById('coverFileName')
+        const coverFileSize = document.getElementById('coverFileSize')
+        const pdfFileName = document.getElementById('pdfFileName')
+        const pdfFileSize = document.getElementById('pdfFileSize')
+        const removeCoverBtn = document.getElementById('removeCoverBtn')
+        const removePdfBtn = document.getElementById('removePdfBtn')
+        const submitBtn = document.getElementById('submitBtn')
+        const closeModalBtn = document.getElementById('closeModalBtn')
+        const cancelBtn = document.getElementById('cancelBtn')
+        const deleteModal = document.getElementById('deleteModal')
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn')
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn')
+        const closeDeleteModalBtn = document.getElementById('closeDeleteModalBtn')
+        const roleBadge = document.getElementById('roleBadge')
+        const adminEmailSpan = document.getElementById('adminEmail')
+
+        // API Helper Functions
+        async function callAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/supabase`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'API call failed')
+                return result
+            } catch (error) {
+                console.error(`API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `<div class="alert alert-${type}"><i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${message}</span></div>`
+            setTimeout(() => alertContainer.innerHTML = '', 3000)
+        }
+
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                
+                if (!result?.user || !ADMIN_EMAILS.includes(result.user.email)) { 
+                    window.location.href = '../login.html'
+                    return false 
+                }
+                currentUser = result.user
+                adminEmailSpan.textContent = currentUser.email
+                roleBadge.innerHTML = '<i class="fas fa-book"></i> Ebook Admin'
+                return true
+            } catch { 
+                window.location.href = '../login.html'
+                return false 
+            }
+        }
+
+        async function loadEbooks() {
+            ebooksGrid.innerHTML = `<div class="loading"><div class="spinner"></div><p>Loading ebooks...</p></div>`
+            
+            const result = await callAPI('getAllEbooks')
+            
+            if (!result || !result.success) {
+                ebooksGrid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-exclamation-triangle"></i></div><h3>Error</h3><p>Failed to load ebooks</p></div>`
+                return
+            }
+            
+            allEbooks = result.data || []
+            
+            totalEbooks.textContent = allEbooks.length
+            freeEbooks.textContent = allEbooks.filter(e => !e.is_paid).length
+            paidEbooks.textContent = allEbooks.filter(e => e.is_paid).length
+            totalUnlocks.textContent = allEbooks.reduce((sum, e) => sum + (e.approved_unlocks || 0), 0)
+            
+            renderEbooks(allEbooks)
+        }
+
+        function renderEbooks(ebooks) {
+            if (ebooks.length === 0) { 
+                ebooksGrid.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fas fa-book"></i></div><h3>No Ebooks Yet</h3><p>Click "Add New Ebook" to create your first ebook.</p></div>`
+                return 
+            }
+            
+            ebooksGrid.innerHTML = ebooks.map(ebook => `
+                <div class="ebook-card" data-id="${ebook.id}">
+                    <img src="${ebook.cover_url}" class="ebook-cover" onerror="this.src='https://via.placeholder.com/300x200?text=No+Cover'">
+                    <div class="ebook-info">
+                        <div class="ebook-header">
+                            <h3 class="ebook-title">${escapeHtml(ebook.title)}</h3>
+                            <span class="price-badge ${!ebook.is_paid ? 'free' : ''}">${ebook.is_paid ? `⭐ ${ebook.stars_price || 100} Stars` : 'FREE'}</span>
+                        </div>
+                        <p class="ebook-description">${escapeHtml(ebook.description.substring(0, 100))}${ebook.description.length > 100 ? '...' : ''}</p>
+                        <div class="ebook-meta">
+                            <span><i class="fas fa-calendar"></i> ${new Date(ebook.created_at).toLocaleDateString()}</span>
+                            <span><i class="fas fa-tag"></i> ${ebook.is_paid ? 'Paid' : 'Free'}</span>
+                        </div>
+                        <div class="unlock-stats">
+                            <div class="unlock-stat">
+                                <div class="count">${ebook.pending_unlocks || 0}</div>
+                                <div class="label">Pending</div>
+                            </div>
+                            <div class="unlock-stat">
+                                <div class="count">${ebook.approved_unlocks || 0}</div>
+                                <div class="label">Approved</div>
+                            </div>
+                        </div>
+                        <div class="ebook-actions">
+                            <button class="view-btn" onclick="viewEbook('${ebook.id}')"><i class="fas fa-eye"></i> View</button>
+                            <button class="edit-btn" onclick="editEbook('${ebook.id}')"><i class="fas fa-edit"></i> Edit</button>
+                            <button class="delete-btn" onclick="showDeleteModal('${ebook.id}')"><i class="fas fa-trash-alt"></i> Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        window.viewEbook = (id) => window.open(`../ebooks.html?id=${id}`, '_blank')
+        
+        window.editEbook = async (id) => {
+            const ebook = allEbooks.find(e => e.id === id)
+            if (!ebook) return
+            
+            ebookIdInput.value = ebook.id
+            titleInput.value = ebook.title
+            descriptionInput.value = ebook.description
+            starsPriceInput.value = ebook.stars_price || 100
+            isPaidCheckbox.checked = ebook.is_paid
+            existingCoverUrl = ebook.cover_url
+            existingPdfUrl = ebook.pdf_url
+            
+            if (ebook.cover_url) { 
+                coverPreviewImage.src = ebook.cover_url
+                coverFileName.textContent = 'Current cover'
+                coverFileSize.textContent = 'Existing'
+                coverPreview.classList.add('show')
+            }
+            if (ebook.pdf_url) { 
+                pdfFileName.textContent = 'Current PDF'
+                pdfFileSize.textContent = 'Existing'
+                pdfPreview.classList.add('show')
+            }
+            
+            modalTitle.innerHTML = '<i class="fas fa-edit"></i> Edit Ebook'
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Ebook'
+            ebookModal.classList.add('show')
+        }
+        
+        window.showDeleteModal = (id) => { 
+            selectedEbookId = id
+            deleteModal.classList.add('show')
+        }
+
+        async function uploadFile(file, folder, userId) {
+            try {
+                const formData = new FormData()
+                formData.append('file', file)
+                formData.append('folder', folder)
+                formData.append('userId', userId)
+
+                const response = await fetch(`${API_BASE}/upload-ebook`, {
+                    method: 'POST',
+                    body: formData
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Upload failed')
+                return { success: true, url: result.publicUrl }
+            } catch (error) {
+                console.error('Upload error:', error)
+                return { success: false, error: error.message }
+            }
+        }
+
+        ebookForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            submitBtn.disabled = true
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...'
+            
+            try {
+                const ebookData = {
+                    title: titleInput.value.trim(),
+                    description: descriptionInput.value.trim(),
+                    stars_price: parseInt(starsPriceInput.value) || 0,
+                    is_paid: isPaidCheckbox.checked,
+                    price: isPaidCheckbox.checked ? parseFloat(starsPriceInput.value) * 0.07 : 0,
+                    currency: 'Stars',
+                    updated_at: new Date().toISOString()
+                }
+                
+                if (selectedCoverFile) { 
+                    const result = await uploadFile(selectedCoverFile, 'ebook-covers', currentUser.id)
+                    if (result.success) ebookData.cover_url = result.url
+                    else throw new Error('Cover upload failed')
+                }
+                
+                if (selectedPdfFile) { 
+                    const result = await uploadFile(selectedPdfFile, 'ebook-pdfs', currentUser.id)
+                    if (result.success) ebookData.pdf_url = result.url
+                    else throw new Error('PDF upload failed')
+                }
+                
+                const id = ebookIdInput.value
+                let result
+                
+                if (id) {
+                    if (!ebookData.cover_url && existingCoverUrl) ebookData.cover_url = existingCoverUrl
+                    if (!ebookData.pdf_url && existingPdfUrl) ebookData.pdf_url = existingPdfUrl
+                    result = await callAPI('updateEbook', { ebookId: id, ...ebookData })
+                } else {
+                    if (!ebookData.cover_url && !existingCoverUrl) throw new Error('Cover image is required')
+                    if (!ebookData.pdf_url && !existingPdfUrl) throw new Error('PDF file is required')
+                    ebookData.created_by = currentUser.id
+                    result = await callAPI('createEbook', ebookData)
+                }
+                
+                if (!result || !result.success) throw new Error(result?.error || 'Operation failed')
+                
+                showAlert(id ? 'Ebook updated successfully!' : 'Ebook created successfully!', 'success')
+                resetForm()
+                ebookModal.classList.remove('show')
+                await loadEbooks()
+                
+            } catch (error) { 
+                showAlert('Error: ' + error.message, 'error')
+            } finally { 
+                submitBtn.disabled = false
+                submitBtn.innerHTML = ebookIdInput.value ? '<i class="fas fa-save"></i> Update Ebook' : '<i class="fas fa-save"></i> Save Ebook'
+            }
+        })
+
+        function resetForm() { 
+            ebookForm.reset()
+            ebookIdInput.value = ''
+            starsPriceInput.value = '100'
+            selectedCoverFile = null
+            selectedPdfFile = null
+            existingCoverUrl = null
+            existingPdfUrl = null
+            coverPreview.classList.remove('show')
+            pdfPreview.classList.remove('show')
+            modalTitle.innerHTML = '<i class="fas fa-plus"></i> Add New Ebook'
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Ebook'
+        }
+
+        coverFileInput.addEventListener('change', () => { 
+            const file = coverFileInput.files[0]
+            if (file) { 
+                if (file.size > 5 * 1024 * 1024) { 
+                    showAlert('Cover too large (max 5MB)', 'error')
+                    coverFileInput.value = ''
+                    return 
+                }
+                selectedCoverFile = file
+                const reader = new FileReader()
+                reader.onload = (e) => { 
+                    coverPreviewImage.src = e.target.result
+                    coverFileName.textContent = file.name
+                    coverFileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`
+                    coverPreview.classList.add('show')
+                }
+                reader.readAsDataURL(file)
+            }
+        })
+        
+        pdfFileInput.addEventListener('change', () => { 
+            const file = pdfFileInput.files[0]
+            if (file) { 
+                if (file.size > 20 * 1024 * 1024) { 
+                    showAlert('PDF too large (max 20MB)', 'error')
+                    pdfFileInput.value = ''
+                    return 
+                }
+                selectedPdfFile = file
+                pdfFileName.textContent = file.name
+                pdfFileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`
+                pdfPreview.classList.add('show')
+            }
+        })
+        
+        removeCoverBtn.addEventListener('click', () => { 
+            coverFileInput.value = ''
+            selectedCoverFile = null
+            coverPreview.classList.remove('show')
+        })
+        
+        removePdfBtn.addEventListener('click', () => { 
+            pdfFileInput.value = ''
+            selectedPdfFile = null
+            pdfPreview.classList.remove('show')
+        })
+
+        confirmDeleteBtn.addEventListener('click', async () => { 
+            if (!selectedEbookId) return
+            
+            const result = await callAPI('deleteEbook', { ebookId: selectedEbookId })
+            
+            if (!result || !result.success) { 
+                showAlert('Error deleting: ' + (result?.error || 'Unknown error'), 'error')
+            } else { 
+                showAlert('Ebook deleted successfully!', 'success')
+                deleteModal.classList.remove('show')
+                await loadEbooks()
+            }
+            selectedEbookId = null
+        })
+        
+        function filterEbooks() { 
+            let filtered = [...allEbooks]
+            const term = searchInput.value.toLowerCase()
+            const type = typeFilter.value
+            if (term) filtered = filtered.filter(e => e.title.toLowerCase().includes(term) || e.description.toLowerCase().includes(term))
+            if (type === 'free') filtered = filtered.filter(e => !e.is_paid)
+            if (type === 'paid') filtered = filtered.filter(e => e.is_paid)
+            renderEbooks(filtered)
+        }
+        
+        searchInput.addEventListener('input', filterEbooks)
+        typeFilter.addEventListener('change', filterEbooks)
+        newEbookBtn.addEventListener('click', () => { resetForm(); ebookModal.classList.add('show') })
+        closeModalBtn.addEventListener('click', () => { ebookModal.classList.remove('show'); resetForm() })
+        cancelBtn.addEventListener('click', () => { ebookModal.classList.remove('show'); resetForm() })
+        closeDeleteModalBtn.addEventListener('click', () => { deleteModal.classList.remove('show'); selectedEbookId = null })
+        cancelDeleteBtn.addEventListener('click', () => { deleteModal.classList.remove('show'); selectedEbookId = null })
+        window.addEventListener('click', (e) => { if (e.target === ebookModal) { ebookModal.classList.remove('show'); resetForm() } if (e.target === deleteModal) { deleteModal.classList.remove('show'); selectedEbookId = null } })
+        
+        logoutBtn.addEventListener('click', async () => { 
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.href = '../index.html'
+        })
+        
+        function escapeHtml(s) { if (!s) return ''; return s.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m }) }
+        
+        async function init() { if (await checkAuth()) await loadEbooks() }
+        init()
+    </script>
+</body>
+</html>
