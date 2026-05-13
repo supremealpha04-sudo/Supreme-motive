@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SupremeMotive - Daily Quotes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>SupremeMotive - Daily Quotes & Motivation</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#FFD700">
@@ -11,6 +11,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SupremeMotive">
     <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="description" content="Daily motivational quotes to inspire your day. Get inspired with SupremeMotive's collection of powerful quotes from great minds.">
+    <meta name="keywords" content="quotes, motivation, inspiration, daily quotes, success, life, wisdom">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -29,18 +31,25 @@
             --electric-blue: #00F0FF;
             --success: #4CAF50;
             --error: #F44336;
+            --warning: #FFC107;
+            --info: #2196F3;
+            --purple: #9C27B0;
+            --cyan: #00BCD4;
+            --pink: #E91E63;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-color);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
             color: var(--text-color);
             min-height: 100vh;
             padding-bottom: 80px;
         }
 
+        /* Top Navigation - Modern Glass Effect */
         .top-nav {
-            background: var(--card-bg);
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
@@ -48,7 +57,7 @@
             border-bottom: 2px solid var(--gold);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
         }
 
         .logo {
@@ -91,6 +100,23 @@
             text-decoration: none;
             font-size: 0.9rem;
             transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
         }
 
         .nav-links a:hover,
@@ -131,6 +157,7 @@
             border: none;
             cursor: pointer;
             padding: 0.3rem;
+            position: relative;
         }
 
         .notification-bell:hover {
@@ -139,8 +166,8 @@
 
         .notification-badge {
             position: absolute;
-            top: -8px;
-            right: -12px;
+            top: -5px;
+            right: -8px;
             background: var(--error);
             color: white;
             border-radius: 50%;
@@ -149,6 +176,13 @@
             font-weight: bold;
             min-width: 18px;
             text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         .notification-dropdown {
@@ -158,9 +192,9 @@
             width: 380px;
             max-height: 500px;
             background: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--gold);
             z-index: 1000;
             overflow: hidden;
         }
@@ -190,6 +224,7 @@
             font-size: 0.8rem;
             cursor: pointer;
             padding: 0.3rem;
+            transition: color 0.3s ease;
         }
 
         .mark-read-btn:hover, .settings-btn:hover {
@@ -199,6 +234,19 @@
         .notification-list {
             max-height: 400px;
             overflow-y: auto;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .notification-list::-webkit-scrollbar-track {
+            background: var(--border-color);
+        }
+
+        .notification-list::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
         }
 
         .notification-item {
@@ -236,12 +284,6 @@
             font-size: 0.7rem;
         }
 
-        .loading-notifications {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
-        }
-
         .auth-buttons {
             display: flex;
             gap: 0.8rem;
@@ -263,6 +305,7 @@
         .login-btn:hover {
             background: var(--gold);
             color: var(--bg-color);
+            transform: translateY(-2px);
         }
 
         .logout-btn {
@@ -279,6 +322,13 @@
         .logout-btn:hover {
             background: #F44336;
             color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
         }
 
         .theme-toggle {
@@ -288,14 +338,56 @@
             font-size: 1.2rem;
             cursor: pointer;
             padding: 0.3rem;
+            transition: all 0.3s ease;
         }
 
+        .theme-toggle:hover {
+            color: var(--gold);
+            transform: rotate(15deg);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Floating Feed Button */
         .floating-feed-btn {
             position: fixed;
             bottom: 100px;
             right: 20px;
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            height: 55px;
             background: linear-gradient(135deg, var(--gold), var(--electric-blue));
             color: var(--bg-color);
             border: none;
@@ -304,19 +396,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             z-index: 999;
-            animation: pulse 2s infinite;
+            animation: pulseRing 2s infinite;
         }
 
-        .floating-feed-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
-        }
-
-        @keyframes pulse {
+        @keyframes pulseRing {
             0% {
                 box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
             }
@@ -328,9 +415,15 @@
             }
         }
 
+        .floating-feed-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+        }
+
+        /* Feed Menu */
         .feed-menu {
             position: fixed;
-            bottom: 170px;
+            bottom: 165px;
             right: 20px;
             background: var(--card-bg);
             border-radius: 16px;
@@ -340,6 +433,17 @@
             z-index: 998;
             display: none;
             animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .feed-menu.show {
@@ -361,6 +465,7 @@
         .feed-menu-item:hover {
             background: var(--border-color);
             color: var(--gold);
+            transform: translateX(5px);
         }
 
         .feed-menu-item i {
@@ -374,45 +479,13 @@
             margin: 0.3rem 0;
         }
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card-bg);
-            border-top: 2px solid var(--gold);
-            display: flex;
-            justify-content: space-around;
-            padding: 0.8rem;
-            z-index: 100;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            transition: color 0.3s ease;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            color: var(--gold);
-        }
-
-        .nav-icon {
-            font-size: 1.3rem;
-            margin-bottom: 0.2rem;
-        }
-
+        /* Back to Top Button */
         .back-to-top {
             position: fixed;
             bottom: 100px;
             left: 20px;
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
             background: linear-gradient(135deg, var(--gold), var(--electric-blue));
             color: var(--bg-color);
             border: none;
@@ -421,7 +494,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -439,6 +512,7 @@
             box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
         }
 
+        /* Install Banner */
         .install-banner {
             position: fixed;
             bottom: 80px;
@@ -447,7 +521,7 @@
             background: linear-gradient(135deg, var(--gold), var(--electric-blue));
             color: var(--bg-color);
             padding: 1rem;
-            border-radius: 12px;
+            border-radius: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -455,17 +529,6 @@
             z-index: 1000;
             animation: slideUp 0.3s ease;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
         }
 
         .install-banner-content {
@@ -489,30 +552,54 @@
             font-size: 1.2rem;
             cursor: pointer;
             padding: 0.3rem;
+            transition: all 0.3s ease;
         }
 
+        .install-banner-close:hover {
+            transform: scale(1.1);
+        }
+
+        /* Main Container */
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
-        .header {
-            margin-bottom: 2rem;
+        /* Header */
+        .hero-section {
             text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 240, 255, 0.05));
+            border-radius: 30px;
+            border: 1px solid var(--gold);
         }
 
-        .header h1 {
+        .hero-section h1 {
             color: var(--gold);
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            animation: fadeInDown 0.5s ease;
         }
 
-        .header p {
+        .hero-section p {
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Categories */
         .categories {
             display: flex;
             gap: 0.8rem;
@@ -522,36 +609,66 @@
         }
 
         .category-btn {
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 1.2rem;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 30px;
             color: var(--text-secondary);
             font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .category-btn:hover,
+        .category-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
         .category-btn.active {
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
             color: var(--bg-color);
             border-color: var(--gold);
         }
 
+        /* Quote Cards */
         .quote-card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 1.5rem;
+            border-radius: 24px;
+            padding: 1.8rem;
             margin-bottom: 1.5rem;
             border: 1px solid var(--border-color);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
             position: relative;
+            overflow: hidden;
+        }
+
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            bottom: -20px;
+            right: 10px;
+            font-size: 80px;
+            color: rgba(255, 215, 0, 0.05);
+            font-family: Georgia, serif;
+            pointer-events: none;
+        }
+
+        .quote-card::after {
+            content: 'SUPREME MOTIVE';
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.6rem;
+            color: rgba(255, 215, 0, 0.15);
+            transform: rotate(-5deg);
+            pointer-events: none;
         }
 
         .quote-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-5px);
             border-color: var(--gold);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
         }
 
         .quote-text {
@@ -560,6 +677,8 @@
             margin-bottom: 1rem;
             color: var(--text-color);
             font-style: italic;
+            position: relative;
+            z-index: 2;
         }
 
         .quote-tag {
@@ -597,7 +716,7 @@
             justify-content: center;
             gap: 0.3rem;
             padding: 0.5rem;
-            border-radius: 8px;
+            border-radius: 12px;
             transition: all 0.3s ease;
         }
 
@@ -605,6 +724,7 @@
             background: var(--gold);
             color: var(--bg-color);
             border-color: var(--gold);
+            transform: translateY(-2px);
         }
 
         .action-btn.liked {
@@ -626,21 +746,15 @@
             display: inline-block;
         }
 
-        .user-greeting {
-            color: var(--gold);
-            font-size: 0.9rem;
-            margin-right: 0.5rem;
-        }
-
+        /* Loading */
         .loading {
             text-align: center;
-            padding: 2rem;
-            color: var(--text-secondary);
+            padding: 3rem;
         }
 
         .spinner {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border: 3px solid var(--border-color);
             border-top-color: var(--gold);
             border-radius: 50%;
@@ -652,18 +766,20 @@
             to { transform: rotate(360deg); }
         }
 
+        /* Alert */
         .alert {
             position: fixed;
             top: 80px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--card-bg);
-            border: 2px solid var(--gold);
-            border-radius: 8px;
+            border-left: 4px solid var(--gold);
+            border-radius: 12px;
             padding: 0.8rem 1.5rem;
             color: var(--text-color);
             z-index: 1000;
             animation: slideDown 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes slideDown {
@@ -677,12 +793,9 @@
             }
         }
 
-        .hidden {
-            display: none !important;
-        }
-
+        /* Offline Badge */
         .offline-badge {
-            background: #F44336;
+            background: var(--error);
             color: white;
             padding: 0.2rem 0.5rem;
             border-radius: 4px;
@@ -690,6 +803,11 @@
             margin-left: 0.5rem;
         }
 
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .menu-toggle {
                 display: flex;
@@ -750,7 +868,7 @@
                 right: 15px;
                 width: 50px;
                 height: 50px;
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
 
             .feed-menu {
@@ -763,7 +881,11 @@
                 left: 15px;
                 width: 40px;
                 height: 40px;
-                font-size: 1.2rem;
+                font-size: 1rem;
+            }
+
+            .hero-section h1 {
+                font-size: 1.8rem;
             }
         }
     </style>
@@ -771,6 +893,7 @@
 <body>
     <nav class="top-nav">
         <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
             <span>SupremeMotive</span>
             <span id="offlineIndicator" class="offline-badge hidden">Offline</span>
         </div>
@@ -822,37 +945,39 @@
                 <button class="logout-btn hidden" id="logoutBtn">Logout</button>
             </div>
             
-            <button class="theme-toggle" id="themeToggle">🌙</button>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
     <nav class="bottom-nav">
         <a href="index.html" class="nav-item active">
-            <span class="nav-icon">🏠</span>
+            <span class="nav-icon"><i class="fas fa-home"></i></span>
             <span>Home</span>
         </a>
         <a href="ebooks.html" class="nav-item">
-            <span class="nav-icon">📚</span>
+            <span class="nav-icon"><i class="fas fa-book"></i></span>
             <span>Ebooks</span>
         </a>
         <a href="profile.html" class="nav-item">
-            <span class="nav-icon">👤</span>
+            <span class="nav-icon"><i class="fas fa-user"></i></span>
             <span>Profile</span>
         </a>
         <a href="post.html" class="nav-item">
-            <span class="nav-icon">📰</span>
+            <span class="nav-icon"><i class="fas fa-newspaper"></i></span>
             <span>Articles</span>
         </a>
         <a href="videos.html" class="nav-item">
-            <span class="nav-icon">🎬</span>
+            <span class="nav-icon"><i class="fas fa-video"></i></span>
             <span>Videos</span>
         </a>
     </nav>
 
     <main class="container">
-        <div class="header">
+        <div class="hero-section">
             <h1>Daily Motivation</h1>
-            <p>Inspire your day with powerful quotes</p>
+            <p>Inspire your day with powerful quotes from great minds</p>
         </div>
 
         <div class="categories" id="categories">
@@ -875,10 +1000,12 @@
         </div>
     </main>
 
+    <!-- Floating Feed Button -->
     <button id="floatingFeedBtn" class="floating-feed-btn" title="Quick Feed">
         <i class="fas fa-rss"></i>
     </button>
 
+    <!-- Feed Menu -->
     <div id="feedMenu" class="feed-menu">
         <div class="feed-menu-item" data-type="quotes">
             <i class="fas fa-quote-left"></i>
@@ -903,13 +1030,15 @@
         </div>
     </div>
 
+    <!-- Back to Top Button -->
     <button id="backToTop" class="back-to-top" title="Back to top">
         <i class="fas fa-arrow-up"></i>
     </button>
 
+    <!-- Install Banner -->
     <div id="installBanner" class="install-banner hidden">
         <div class="install-banner-content">
-            <span class="install-banner-icon">📱</span>
+            <span class="install-banner-icon"><i class="fas fa-mobile-alt"></i></span>
             <span class="install-banner-text">Install SupremeMotive for a better experience!</span>
         </div>
         <div>
@@ -922,9 +1051,10 @@
         </div>
     </div>
 
-    <div id="notificationModal" class="modal hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); display: none; align-items: center; justify-content: center; z-index: 2000;">
-        <div style="background: var(--card-bg); border-radius: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow: auto; padding: 2rem; border: 2px solid var(--gold); position: relative;">
-            <button id="closeNotificationModal" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer;">&times;</button>
+    <!-- Notification Detail Modal -->
+    <div id="notificationModal" class="modal hidden" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; z-index: 2000;">
+        <div style="background: var(--card-bg); border-radius: 28px; max-width: 500px; width: 90%; max-height: 80vh; overflow: auto; padding: 2rem; border: 2px solid var(--gold); position: relative;">
+            <button id="closeNotificationModal" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; cursor: pointer; transition: color 0.3s ease;">&times;</button>
             <div id="notificationModalContent"></div>
         </div>
     </div>
@@ -935,8 +1065,8 @@
         // ============================================
         
         const API_BASE = '/api'
-        
-        // Admin emails (safe to expose)
+
+        // Admin emails
         const ADMIN_EMAILS = [
             'supremealpha04@gmail.com',
             'suprememotive43@gmail.com',
@@ -997,6 +1127,7 @@
         const logoutBtn = document.getElementById('logoutBtn')
         const userGreeting = document.getElementById('userGreeting')
         const categoryBtns = document.querySelectorAll('.category-btn')
+        
         const notificationBell = document.getElementById('notificationBell')
         const notificationDropdown = document.getElementById('notificationDropdown')
         const notificationList = document.getElementById('notificationList')
@@ -1203,7 +1334,6 @@
             })
         }
 
-        // Request notification permission
         function requestNotificationPermission() {
             if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
                 Notification.requestPermission()
@@ -1221,14 +1351,14 @@
                 document.documentElement.style.setProperty('--text-color', '#333333')
                 document.documentElement.style.setProperty('--text-secondary', '#666666')
                 document.documentElement.style.setProperty('--border-color', '#DDDDDD')
-                themeToggle.textContent = '☀️'
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
             } else {
                 document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
                 document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
                 document.documentElement.style.setProperty('--text-color', '#FFFFFF')
                 document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
                 document.documentElement.style.setProperty('--border-color', '#333333')
-                themeToggle.textContent = '🌙'
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
             }
         }
 
@@ -1240,7 +1370,7 @@
                 document.documentElement.style.setProperty('--text-color', '#FFFFFF')
                 document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
                 document.documentElement.style.setProperty('--border-color', '#333333')
-                themeToggle.textContent = '🌙'
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
                 localStorage.setItem('theme', 'dark')
             } else {
                 document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
@@ -1248,7 +1378,7 @@
                 document.documentElement.style.setProperty('--text-color', '#333333')
                 document.documentElement.style.setProperty('--text-secondary', '#666666')
                 document.documentElement.style.setProperty('--border-color', '#DDDDDD')
-                themeToggle.textContent = '☀️'
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
                 localStorage.setItem('theme', 'light')
             }
         })
@@ -1270,10 +1400,11 @@
         // SHOW ALERT
         // ============================================
         function showAlert(message, type = 'success') {
-            alertContainer.innerHTML = `<div class="alert">${message}</div>`
+            const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️'
+            alertContainer.innerHTML = `<div class="alert">${icon} ${message}</div>`
             setTimeout(() => {
                 alertContainer.innerHTML = ''
-            }, 2000)
+            }, 3000)
         }
 
         // ============================================
@@ -1301,7 +1432,7 @@
         }
 
         // ============================================
-        // AUTH FUNCTIONS
+        // CHECK AUTH
         // ============================================
         async function checkAuth() {
             try {
@@ -1311,9 +1442,11 @@
                 if (result?.user) {
                     currentUser = result.user
                     updateAuthUI(currentUser)
-                    await loadUserInteractions()
-                    await loadNotifications()
-                    subscribeToNotifications()
+                    if (currentUser) {
+                        await loadUserInteractions()
+                        await loadNotifications()
+                        subscribeToNotifications()
+                    }
                 } else {
                     updateAuthUI(null)
                 }
@@ -1323,6 +1456,9 @@
             }
         }
 
+        // ============================================
+        // LOGOUT
+        // ============================================
         async function handleLogout() {
             try {
                 await callAuthAPI('signOut')
@@ -1348,274 +1484,18 @@
             if (!currentUser) return
 
             try {
-                const likesData = await callAPI('getUserLikes', { userId: currentUser.id })
-                if (likesData && likesData.data) {
-                    userLikes = new Set(likesData.data.map(l => l.quote_id))
+                const likesResult = await callAPI('getUserQuoteLikes', { userId: currentUser.id })
+                if (likesResult && likesResult.data) {
+                    userLikes = new Set(likesResult.data.map(l => l.quote_id))
                 }
 
-                const savesData = await callAPI('getUserSaves', { userId: currentUser.id })
-                if (savesData && savesData.data) {
-                    userSaves = new Set(savesData.data.map(s => s.quote_id))
+                const savesResult = await callAPI('getUserQuoteSaves', { userId: currentUser.id })
+                if (savesResult && savesResult.data) {
+                    userSaves = new Set(savesResult.data.map(s => s.quote_id))
                 }
             } catch (error) {
                 console.error('Error loading interactions:', error)
             }
-        }
-
-        // ============================================
-        // QUOTE FUNCTIONS
-        // ============================================
-        async function loadQuotes() {
-            try {
-                const quotesData = await callAPI('getQuotes')
-                
-                if (quotesData && quotesData.data && quotesData.data.length > 0) {
-                    quotes = quotesData.data
-                    localStorage.setItem('cachedQuotes', JSON.stringify(quotesData.data))
-                } else {
-                    const cached = localStorage.getItem('cachedQuotes')
-                    if (cached) {
-                        quotes = JSON.parse(cached)
-                    } else {
-                        quotes = sampleQuotes
-                    }
-                }
-
-                renderQuotes()
-            } catch (error) {
-                console.error('Error loading quotes:', error)
-                const cached = localStorage.getItem('cachedQuotes')
-                if (cached) {
-                    quotes = JSON.parse(cached)
-                } else {
-                    quotes = sampleQuotes
-                }
-                renderQuotes()
-                
-                if (!navigator.onLine) {
-                    showAlert('You are offline. Showing cached quotes.', 'warning')
-                }
-            }
-        }
-
-        async function getLikeCount(quoteId) {
-            try {
-                const result = await callAPI('getLikeCount', { quoteId })
-                return result?.count || 0
-            } catch (error) {
-                return 0
-            }
-        }
-
-        window.shareQuote = (quoteId) => {
-            const quote = quotes.find(q => q.id === quoteId)
-            const shareText = `"${quote.text}" — ${quote.author}`
-            const shareUrl = window.location.href
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'SupremeMotive Quote',
-                    text: shareText,
-                    url: shareUrl
-                }).catch(() => copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`))
-            } else {
-                copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`)
-            }
-        }
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showAlert('Quote copied to clipboard!')
-            }).catch(() => {
-                showAlert('Could not copy quote')
-            })
-        }
-
-        async function renderQuotes() {
-            let filteredQuotes = [...quotes]
-
-            if (currentCategory !== 'all') {
-                filteredQuotes = filteredQuotes.filter(q => q.category === currentCategory)
-            }
-
-            if (filteredQuotes.length === 0) {
-                quotesContainer.innerHTML = `<div class="loading"><p>No quotes in this category</p></div>`
-                return
-            }
-
-            let quotesWithLikes = filteredQuotes
-            if (navigator.onLine) {
-                quotesWithLikes = await Promise.all(filteredQuotes.map(async (quote) => {
-                    const likeCount = await getLikeCount(quote.id)
-                    return { ...quote, likeCount }
-                }))
-            } else {
-                quotesWithLikes = filteredQuotes.map(quote => ({ ...quote, likeCount: 0 }))
-            }
-
-            quotesContainer.innerHTML = quotesWithLikes.map(quote => {
-                const isLiked = userLikes.has(quote.id)
-                const isSaved = userSaves.has(quote.id)
-                const displayLikeCount = quote.likeCount + (isLiked ? 1 : 0)
-
-                return `
-                    <div class="quote-card">
-                        <div class="quote-text">${escapeHtml(quote.text)}</div>
-                        <div class="quote-tag"><span>${escapeHtml(quote.tag)}</span> ${quote.category.charAt(0).toUpperCase() + quote.category.slice(1)} Quotes</div>
-                        <div class="quote-actions">
-                            <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" onclick="handleLike('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
-                                <span>❤️</span>
-                                <span class="like-count">${displayLikeCount}</span>
-                            </button>
-                            <button class="action-btn save-btn ${isSaved ? 'saved' : ''}" onclick="handleSave('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
-                                <span>🔖</span>
-                                <span>Save</span>
-                            </button>
-                            <button class="action-btn" onclick="downloadQuote('${quote.id}')">
-                                <span>📥</span>
-                                <span>Download</span>
-                            </button>
-                            <button class="action-btn" onclick="shareQuote('${quote.id}')">
-                                <span>📤</span>
-                                <span>Share</span>
-                            </button>
-                        </div>
-                    </div>
-                `
-            }).join('')
-        }
-
-        window.handleLike = async (quoteId) => {
-            if (!currentUser) {
-                if (confirm('Please login to like quotes')) {
-                    window.location.href = 'login.html'
-                }
-                return
-            }
-
-            if (!navigator.onLine) {
-                showAlert('You need to be online to like quotes', 'warning')
-                return
-            }
-
-            try {
-                if (userLikes.has(quoteId)) {
-                    await callAPI('unlikeQuote', { 
-                        quote_id: quoteId, 
-                        user_id: currentUser.id 
-                    })
-                    userLikes.delete(quoteId)
-                } else {
-                    await callAPI('likeQuote', { 
-                        quote_id: quoteId, 
-                        user_id: currentUser.id 
-                    })
-                    userLikes.add(quoteId)
-                }
-                renderQuotes()
-            } catch (error) {
-                showAlert('Error updating like')
-            }
-        }
-
-        window.handleSave = async (quoteId) => {
-            if (!currentUser) {
-                if (confirm('Please login to save quotes')) {
-                    window.location.href = 'login.html'
-                }
-                return
-            }
-
-            if (!navigator.onLine) {
-                showAlert('You need to be online to save quotes', 'warning')
-                return
-            }
-
-            try {
-                if (userSaves.has(quoteId)) {
-                    await callAPI('unsaveQuote', { 
-                        quote_id: quoteId, 
-                        user_id: currentUser.id 
-                    })
-                    userSaves.delete(quoteId)
-                    showAlert('Quote removed from saved')
-                } else {
-                    await callAPI('saveQuote', { 
-                        quote_id: quoteId, 
-                        user_id: currentUser.id 
-                    })
-                    userSaves.add(quoteId)
-                    showAlert('Quote saved!')
-                }
-                renderQuotes()
-            } catch (error) {
-                showAlert('Error saving quote')
-            }
-        }
-
-        window.downloadQuote = (quoteId) => {
-            const quote = quotes.find(q => q.id === quoteId)
-            const canvas = document.createElement('canvas')
-            canvas.width = 380
-            canvas.height = 380
-            const ctx = canvas.getContext('2d')
-
-            ctx.fillStyle = '#000000'
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-            ctx.font = 'bold 50px Georgia, serif'
-            ctx.fillStyle = '#FFFFFF'
-            ctx.fillText('“', 25, 20)
-
-            ctx.font = 'bold 28px Arial, Helvetica, sans-serif'
-            ctx.fillStyle = '#FFFFFF'
-            ctx.textAlign = 'center'
-            
-            const words = quote.text.split(' ')
-            let line = ''
-            let lines = []
-            let y = 100
-
-            for (let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + ' '
-                let metrics = ctx.measureText(testLine)
-                if (metrics.width > 300 && n > 0) {
-                    lines.push(line)
-                    line = words[n] + ' '
-                } else {
-                    line = testLine
-                }
-            }
-            lines.push(line)
-
-            lines.forEach((line, index) => {
-                ctx.fillText(line, 190, y + (index * 40))
-            })
-
-            ctx.font = 'bold 50px Georgia, serif'
-            ctx.fillStyle = '#FFFFFF'
-            ctx.textAlign = 'right'
-            ctx.fillText('”', 355, 300)
-
-            const tagText = 'supreme motive'
-            ctx.font = '14px Arial, Helvetica, sans-serif'
-            const textWidth = ctx.measureText(tagText).width
-            const rectX = 380 - textWidth - 30
-            const rectY = 340
-            const rectWidth = textWidth + 24
-            const rectHeight = 30
-            
-            ctx.strokeStyle = '#FFFFFF'
-            ctx.setLineDash([5, 5])
-            ctx.strokeRect(rectX, rectY, rectWidth, rectHeight)
-            ctx.fillStyle = '#FFFFFF'
-            ctx.fillText(tagText, rectX + 12, rectY + 15)
-
-            const link = document.createElement('a')
-            link.download = `suprememotive-${quote.category}-quote.jpg`
-            link.href = canvas.toDataURL('image/jpeg', 0.95)
-            link.click()
-            showAlert('Quote downloaded!')
         }
 
         // ============================================
@@ -1625,10 +1505,10 @@
             if (!currentUser) return
             
             try {
-                const data = await callAPI('getNotifications', { userId: currentUser.id })
+                const result = await callAPI('getUserNotifications', { userId: currentUser.id })
                 
-                if (data && data.data) {
-                    notifications = data.data
+                if (result && result.success) {
+                    notifications = result.data || []
                     updateNotificationUI()
                 }
             } catch (error) {
@@ -1763,25 +1643,26 @@
             
             // Poll for new notifications every 30 seconds
             setInterval(async () => {
-                const data = await callAPI('getNotifications', { userId: currentUser.id })
-                if (data && data.data && data.data.length > notifications.length) {
-                    const newNotifications = data.data.filter(n => !notifications.find(existing => existing.id === n.id))
-                    if (newNotifications.length > 0) {
-                        notifications = data.data
-                        updateNotificationUI()
-                        
-                        if (Notification.permission === 'granted') {
-                            newNotifications.forEach(notification => {
-                                new Notification(notification.title, {
-                                    body: notification.message,
-                                    icon: '/logo.png'
+                const result = await callAPI('getUserNotifications', { userId: currentUser.id })
+                if (result && result.success && result.data) {
+                    if (result.data.length > notifications.length) {
+                        const newNotifications = result.data.filter(n => !notifications.find(existing => existing.id === n.id))
+                        if (newNotifications.length > 0) {
+                            notifications = result.data
+                            updateNotificationUI()
+                            
+                            if (Notification.permission === 'granted') {
+                                newNotifications.forEach(notification => {
+                                    new Notification(notification.title, {
+                                        body: notification.message,
+                                        icon: '/logo.png'
+                                    })
                                 })
-                            })
-                        }
-                        
-                        // Show modal for the newest notification
-                        if (newNotifications[0]) {
-                            showNotificationModal(newNotifications[0])
+                            }
+                            
+                            if (newNotifications[0]) {
+                                showNotificationModal(newNotifications[0])
+                            }
                         }
                     }
                 }
@@ -1813,6 +1694,263 @@
                 notificationModal.style.display = 'none'
             }
         })
+
+        // ============================================
+        // QUOTE FUNCTIONS
+        // ============================================
+        async function loadQuotes() {
+            try {
+                const result = await callAPI('getAllQuotes')
+                
+                if (result && result.success && result.data && result.data.length > 0) {
+                    quotes = result.data
+                    localStorage.setItem('cachedQuotes', JSON.stringify(result.data))
+                } else {
+                    const cached = localStorage.getItem('cachedQuotes')
+                    if (cached) {
+                        quotes = JSON.parse(cached)
+                    } else {
+                        quotes = sampleQuotes
+                    }
+                }
+
+                renderQuotes()
+            } catch (error) {
+                console.error('Error loading quotes:', error)
+                const cached = localStorage.getItem('cachedQuotes')
+                if (cached) {
+                    quotes = JSON.parse(cached)
+                } else {
+                    quotes = sampleQuotes
+                }
+                renderQuotes()
+                
+                if (!navigator.onLine) {
+                    showAlert('You are offline. Showing cached quotes.', 'warning')
+                }
+            }
+        }
+
+        async function getLikeCount(quoteId) {
+            try {
+                const result = await callAPI('getQuoteLikeCount', { quoteId })
+                return result?.count || 0
+            } catch (error) {
+                return 0
+            }
+        }
+
+        window.shareQuote = (quoteId) => {
+            const quote = quotes.find(q => q.id === quoteId)
+            const shareText = `"${quote.text}" — ${quote.author}`
+            const shareUrl = window.location.href
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'SupremeMotive Quote',
+                    text: shareText,
+                    url: shareUrl
+                }).catch(() => copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`))
+            } else {
+                copyToClipboard(`${shareText}\n\nShared from SupremeMotive\n${shareUrl}`)
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showAlert('Quote copied to clipboard!')
+            }).catch(() => {
+                showAlert('Could not copy quote')
+            })
+        }
+
+        async function renderQuotes() {
+            let filteredQuotes = [...quotes]
+
+            if (currentCategory !== 'all') {
+                filteredQuotes = filteredQuotes.filter(q => q.category === currentCategory)
+            }
+
+            if (filteredQuotes.length === 0) {
+                quotesContainer.innerHTML = `<div class="loading"><p>No quotes in this category</p></div>`
+                return
+            }
+
+            let quotesWithLikes = filteredQuotes
+            if (navigator.onLine) {
+                quotesWithLikes = await Promise.all(filteredQuotes.map(async (quote) => {
+                    const likeCount = await getLikeCount(quote.id)
+                    return { ...quote, likeCount }
+                }))
+            } else {
+                quotesWithLikes = filteredQuotes.map(quote => ({ ...quote, likeCount: 0 }))
+            }
+
+            quotesContainer.innerHTML = quotesWithLikes.map(quote => {
+                const isLiked = userLikes.has(quote.id)
+                const isSaved = userSaves.has(quote.id)
+                const displayLikeCount = quote.likeCount + (isLiked ? 1 : 0)
+
+                return `
+                    <div class="quote-card">
+                        <div class="quote-text">${escapeHtml(quote.text)}</div>
+                        <div class="quote-tag"><span>${escapeHtml(quote.tag)}</span> ${quote.category.charAt(0).toUpperCase() + quote.category.slice(1)} Quotes</div>
+                        <div class="quote-actions">
+                            <button class="action-btn like-btn ${isLiked ? 'liked' : ''}" onclick="handleLike('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
+                                <span>❤️</span>
+                                <span class="like-count">${displayLikeCount}</span>
+                            </button>
+                            <button class="action-btn save-btn ${isSaved ? 'saved' : ''}" onclick="handleSave('${quote.id}')" ${!navigator.onLine ? 'disabled' : ''}>
+                                <span>🔖</span>
+                                <span>Save</span>
+                            </button>
+                            <button class="action-btn" onclick="downloadQuote('${quote.id}')">
+                                <span>📥</span>
+                                <span>Download</span>
+                            </button>
+                            <button class="action-btn" onclick="shareQuote('${quote.id}')">
+                                <span>📤</span>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                    </div>
+                `
+            }).join('')
+        }
+
+        window.handleLike = async (quoteId) => {
+            if (!currentUser) {
+                if (confirm('Please login to like quotes')) {
+                    window.location.href = 'login.html'
+                }
+                return
+            }
+
+            if (!navigator.onLine) {
+                showAlert('You need to be online to like quotes', 'warning')
+                return
+            }
+
+            try {
+                if (userLikes.has(quoteId)) {
+                    await callAPI('unlikeQuote', { quoteId, userId: currentUser.id })
+                    userLikes.delete(quoteId)
+                } else {
+                    await callAPI('likeQuote', { quoteId, userId: currentUser.id })
+                    userLikes.add(quoteId)
+                }
+                renderQuotes()
+            } catch (error) {
+                showAlert('Error updating like')
+            }
+        }
+
+        window.handleSave = async (quoteId) => {
+            if (!currentUser) {
+                if (confirm('Please login to save quotes')) {
+                    window.location.href = 'login.html'
+                }
+                return
+            }
+
+            if (!navigator.onLine) {
+                showAlert('You need to be online to save quotes', 'warning')
+                return
+            }
+
+            try {
+                if (userSaves.has(quoteId)) {
+                    await callAPI('unsaveQuote', { quoteId, userId: currentUser.id })
+                    userSaves.delete(quoteId)
+                    showAlert('Quote removed from saved')
+                } else {
+                    await callAPI('saveQuote', { quoteId, userId: currentUser.id })
+                    userSaves.add(quoteId)
+                    showAlert('Quote saved!')
+                }
+                renderQuotes()
+            } catch (error) {
+                showAlert('Error saving quote')
+            }
+        }
+
+        window.downloadQuote = (quoteId) => {
+            const quote = quotes.find(q => q.id === quoteId)
+            if (!quote) return
+            
+            const canvas = document.createElement('canvas')
+            canvas.width = 400
+            canvas.height = 400
+            const ctx = canvas.getContext('2d')
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+            gradient.addColorStop(0, '#1A1A1A')
+            gradient.addColorStop(1, '#0A0A0A')
+            ctx.fillStyle = gradient
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+            // Gold border
+            ctx.strokeStyle = '#FFD700'
+            ctx.lineWidth = 3
+            ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20)
+
+            // Quote mark
+            ctx.font = 'bold 50px Georgia, serif'
+            ctx.fillStyle = '#FFD700'
+            ctx.fillText('“', 25, 60)
+
+            // Quote text
+            ctx.font = 'bold 26px Arial, Helvetica, sans-serif'
+            ctx.fillStyle = '#FFFFFF'
+            ctx.textAlign = 'center'
+            
+            const words = quote.text.split(' ')
+            let line = ''
+            let lines = []
+            let y = 120
+
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' '
+                let metrics = ctx.measureText(testLine)
+                if (metrics.width > 320 && n > 0) {
+                    lines.push(line)
+                    line = words[n] + ' '
+                } else {
+                    line = testLine
+                }
+            }
+            lines.push(line)
+
+            lines.forEach((line, index) => {
+                ctx.fillText(line, canvas.width / 2, y + (index * 35))
+            })
+
+            // Closing quote mark
+            ctx.font = 'bold 50px Georgia, serif'
+            ctx.fillStyle = '#FFD700'
+            ctx.textAlign = 'right'
+            ctx.fillText('”', canvas.width - 25, y + (lines.length * 35) + 20)
+
+            // Author
+            ctx.font = 'italic 20px Arial, Helvetica, sans-serif'
+            ctx.fillStyle = '#B0B0B0'
+            ctx.textAlign = 'center'
+            ctx.fillText(`— ${quote.author}`, canvas.width / 2, y + (lines.length * 35) + 80)
+
+            // Logo text
+            const logoText = 'SUPREME MOTIVE'
+            ctx.font = 'bold 14px Arial, Helvetica, sans-serif'
+            const textWidth = ctx.measureText(logoText).width
+            ctx.fillStyle = '#B0B0B0'
+            ctx.fillText(logoText, canvas.width - textWidth - 20, canvas.height - 20)
+
+            const link = document.createElement('a')
+            link.download = `suprememotive-${quote.category}-quote.png`
+            link.href = canvas.toDataURL('image/png')
+            link.click()
+            showAlert('Quote downloaded!')
+        }
 
         // ============================================
         // CATEGORY FILTERING
