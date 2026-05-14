@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Privacy Policy</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Navigation */
+        .top-nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--gold);
+            transform: rotate(15deg);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 240, 255, 0.05));
+            border-radius: 30px;
+            border: 1px solid var(--gold);
+        }
+
+        .hero-section h1 {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-section p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .last-updated {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Content Card */
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-card h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-card h3 {
+            color: var(--electric-blue);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .content-card ul, .content-card ol {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .content-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content-card a {
+            color: var(--electric-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .content-card a:hover {
+            color: var(--gold);
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--gold);
+            margin: 1rem 0;
+        }
+
+        /* Alert */
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border-left: 4px solid var(--gold);
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .auth-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .login-btn, .logout-btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .hero-section h1 {
+                font-size: 1.8rem;
+            }
+
+            .content-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+            <a href="privacy.html" class="active">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-home"></i></span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-book"></i></span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-user"></i></span>
+            <span>Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-newspaper"></i></span>
+            <span>Articles</span>
+        </a>
+        <a href="videos.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-video"></i></span>
+            <span>Videos</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div class="hero-section">
+            <h1>Privacy Policy</h1>
+            <p>Your privacy is important to us. Learn how we protect your data.</p>
+            <div class="last-updated">Last Updated: January 1, 2024</div>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <div class="content-card">
+            <h2>1. Information We Collect</h2>
+            <p>We collect information that you provide directly to us, including:</p>
+            <ul>
+                <li><strong>Account Information:</strong> When you create an account, we collect your name, email address, and optional profile information.</li>
+                <li><strong>Payment Information:</strong> For ebook purchases, we process payments through Telegram Stars. We do not store your payment details.</li>
+                <li><strong>Usage Data:</strong> We collect information about how you interact with our platform, including quotes you like, save, or share.</li>
+                <li><strong>Device Information:</strong> We collect information about the device you use to access our service.</li>
+            </ul>
+
+            <h2>2. How We Use Your Information</h2>
+            <p>We use the information we collect to:</p>
+            <ul>
+                <li>Provide, maintain, and improve our services</li>
+                <li>Process your transactions and manage your account</li>
+                <li>Send you technical notices and support messages</li>
+                <li>Respond to your comments and questions</li>
+                <li>Personalize your experience with quotes and recommendations</li>
+                <li>Monitor and analyze trends, usage, and activities</li>
+            </ul>
+
+            <h2>3. Data Security</h2>
+            <p>We implement appropriate technical and organizational measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Your password is encrypted, and all data transmission is secured using SSL/TLS encryption.</p>
+            
+            <div class="highlight">
+                <i class="fas fa-shield-alt" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                <strong>Security Note:</strong> While we take reasonable measures to protect your information, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security.
+            </div>
+
+            <h2>4. Information Sharing</h2>
+            <p>We do not sell, trade, or rent your personal information to third parties. We may share information in the following circumstances:</p>
+            <ul>
+                <li><strong>With your consent:</strong> We may share information when you give us explicit permission.</li>
+                <li><strong>Service Providers:</strong> We may share information with third-party vendors who perform services on our behalf (e.g., payment processing through Telegram).</li>
+                <li><strong>Legal Requirements:</strong> We may disclose information if required by law or to protect our rights.</li>
+            </ul>
+
+            <h2>5. Your Rights and Choices</h2>
+            <p>You have the following rights regarding your personal information:</p>
+            <ul>
+                <li><strong>Access and Update:</strong> You can access and update your account information through your profile settings.</li>
+                <li><strong>Delete Account:</strong> You can request account deletion by contacting support.</li>
+                <li><strong>Opt-out:</strong> You can opt out of promotional emails by clicking the unsubscribe link.</li>
+                <li><strong>Cookies:</strong> Most browsers allow you to control cookies through their settings.</li>
+            </ul>
+
+            <h2>6. Cookies and Tracking</h2>
+            <p>We use cookies and similar tracking technologies to:</p>
+            <ul>
+                <li>Remember your preferences and login status</li>
+                <li>Understand how you use our platform</li>
+                <li>Improve our services and user experience</li>
+            </ul>
+            <p>You can set your browser to refuse all or some cookies, but this may affect the functionality of our service.</p>
+
+            <h2>7. Children's Privacy</h2>
+            <p>Our services are not directed to individuals under 13. We do not knowingly collect personal information from children under 13. If you become aware that a child has provided us with personal information, please contact us.</p>
+
+            <h2>8. International Data Transfers</h2>
+            <p>Your information may be transferred to and processed in countries other than your own. We take appropriate safeguards to ensure your information remains protected.</p>
+
+            <h2>9. Changes to This Policy</h2>
+            <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last Updated" date. You are advised to review this policy periodically for any changes.</p>
+
+            <h2>10. Contact Us</h2>
+            <p>If you have any questions about this Privacy Policy, please contact us:</p>
+            <ul>
+                <li><i class="fas fa-envelope"></i> Email: <a href="mailto:support@suprememotive.com">support@suprememotive.com</a></li>
+                <li><i class="fab fa-telegram"></i> Telegram: <a href="https://t.me/suprememotive_network_bot">@suprememotive_network_bot</a></li>
+                <li><i class="fab fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/234XXXXXXXXXX">+234 XXX XXX XXX</a></li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = '/api'
+
+        let currentUser = null
+
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'))
+        navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')))
+
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+                    const ADMIN_EMAILS = ['supremealpha04@gmail.com', 'suprememotive43@gmail.com', 'sandrakukk055@gmail.com', 'emmanuelamer6@gmail.com']
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-dashboard.html'
+                    }
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                }
+            } catch (error) { console.error('Auth error:', error) }
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.href = 'index.html'
+        })
+
+        initTheme()
+        checkAuth()
+    </script>
+</body>
+</html>
