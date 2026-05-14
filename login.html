@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>SupremeMotive - Login</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -25,29 +27,57 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-color);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
             color: var(--text-color);
             min-height: 100vh;
         }
 
-        .navbar {
-            background: var(--card-bg);
+        .top-nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
             padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 1.3rem;
             font-weight: bold;
             color: var(--gold);
         }
 
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
         .nav-links {
             display: flex;
             gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
@@ -55,190 +85,426 @@
             text-decoration: none;
             font-size: 0.9rem;
             transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .nav-links a:hover {
             color: var(--gold);
         }
 
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--gold);
+            transform: rotate(15deg);
+        }
+
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 2rem;
+            min-height: calc(100vh - 140px);
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 100%;
             border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
         }
 
-        .text-center {
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header {
             text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
-        .mt-20 {
-            margin-top: 20px;
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
         }
 
-        .mt-10 {
-            margin-top: 10px;
+        .header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
         }
 
-        label {
+        .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
             color: var(--text-secondary);
+            font-weight: 500;
             font-size: 0.9rem;
         }
 
-        input {
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .form-control {
             width: 100%;
-            padding: 12px;
+            padding: 1rem 1rem 1rem 3rem;
             background: var(--bg-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 15px;
             color: var(--text-color);
             font-size: 1rem;
             transition: all 0.3s ease;
         }
 
-        input:focus {
+        .form-control:focus {
             outline: none;
             border-color: var(--gold);
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
-            color: var(--bg-color);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
         }
 
         .error-message {
             background: rgba(244, 67, 54, 0.1);
             border: 1px solid var(--error);
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 0.9rem;
+            border-radius: 12px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--error);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .loading-message {
             background: rgba(0, 240, 255, 0.1);
             border: 1px solid var(--electric-blue);
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 0.9rem;
-            text-align: center;
+            border-radius: 12px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            color: var(--electric-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        a {
-            color: var(--gold);
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .register-link {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .register-link a {
+            color: var(--electric-blue);
             text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            color: var(--gold);
+        }
+
+        .forgot-link {
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+
+        .forgot-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
             transition: color 0.3s ease;
         }
 
-        a:hover {
-            color: var(--electric-blue);
+        .forgot-link a:hover {
+            color: var(--gold);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--bg-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
         }
 
         @media (max-width: 768px) {
-            .navbar {
-                padding: 1rem;
+            .menu-toggle {
+                display: flex;
             }
-            
+
             .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
                 gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
             }
-            
-            .card {
+
+            .nav-links.active {
+                transform: translateY(0);
+            }
+
+            .login-card {
                 padding: 1.5rem;
-                margin: 40px auto;
+                margin: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">SupremeMotive</div>
-        <div class="nav-links">
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
             <a href="index.html">Home</a>
+            <a href="about.html">About</a>
             <a href="ebooks.html">Ebooks</a>
             <a href="register.html">Register</a>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
-    <main class="container">
-        <div class="card" style="max-width: 400px; margin: 60px auto;">
-            <h1 class="text-center" style="color: var(--gold); margin-bottom: 32px;">
-                Welcome Back
-            </h1>
-            
-            <form id="login-form">
+    <div class="container">
+        <div class="login-card">
+            <div class="header">
+                <h1>Welcome Back</h1>
+                <p>Sign in to continue your journey</p>
+            </div>
+
+            <div id="alertContainer"></div>
+
+            <form id="loginForm">
                 <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"><i class="fas fa-envelope"></i></span>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <div class="input-wrapper">
+                        <span class="input-icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                    <div class="forgot-link">
+                        <a href="#" id="forgotPassword">Forgot Password?</a>
+                    </div>
                 </div>
-                
-                <div id="error-message" class="error-message" style="display: none;"></div>
-                <div id="loading-message" class="loading-message" style="display: none;">Processing...</div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%;" id="login-button">
-                    Login
-                </button>
+
+                <button type="submit" class="btn" id="loginButton">Sign In</button>
+
+                <div class="register-link">
+                    Don't have an account? <a href="register.html">Create Account</a>
+                </div>
             </form>
-            
-            <p class="text-center mt-20">
-                Don't have an account? 
-                <a href="register.html">Register here</a>
-            </p>
-            
-            <p class="text-center mt-10">
-                <a href="#" id="forgot-password">Forgot Password?</a>
-            </p>
         </div>
-    </main>
+    </div>
 
     <script>
-        // ============================================
-        // SECURE API PROXY - NO KEYS EXPOSED!
-        // ============================================
-        
         const API_BASE = '/api'
 
-        // API Helper Functions
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const loginForm = document.getElementById('loginForm')
+        const loginButton = document.getElementById('loginButton')
+        const emailInput = document.getElementById('email')
+        const passwordInput = document.getElementById('password')
+        const alertContainer = document.getElementById('alertContainer')
+        const forgotPasswordLink = document.getElementById('forgotPassword')
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active')
+        })
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active')
+            })
+        })
+
+        function showAlert(message, isError = false) {
+            alertContainer.innerHTML = `
+                <div class="${isError ? 'error-message' : 'loading-message'}">
+                    <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                </div>
+            `
+            setTimeout(() => {
+                alertContainer.innerHTML = ''
+            }, 5000)
+        }
+
         async function callAuthAPI(action, data = {}) {
             try {
+                console.log(`Calling API: ${action}`, data)
+                
                 const response = await fetch(`${API_BASE}/auth`, {
                     method: 'POST',
                     headers: {
@@ -246,40 +512,34 @@
                     },
                     body: JSON.stringify({ action, data })
                 })
-                const result = await response.json()
-                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                
+                const text = await response.text()
+                console.log('Raw response:', text)
+                
+                let result
+                try {
+                    result = JSON.parse(text)
+                } catch (e) {
+                    console.error('Failed to parse JSON:', e)
+                    throw new Error('Server returned invalid response. Please check your API configuration.')
+                }
+                
+                if (!response.ok) {
+                    throw new Error(result.error || `HTTP ${response.status}`)
+                }
+                
                 return result
             } catch (error) {
                 console.error(`Auth API Error (${action}):`, error)
-                return null
+                throw error
             }
         }
 
-        async function callAPI(action, data = {}) {
-            try {
-                const response = await fetch(`${API_BASE}/supabase`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ action, data })
-                })
-                const result = await response.json()
-                if (!response.ok) throw new Error(result.error || 'API call failed')
-                return result
-            } catch (error) {
-                console.error(`API Error (${action}):`, error)
-                return null
-            }
-        }
-
-        // Login function using secure API
         async function loginUser(email, password) {
             try {
                 const result = await callAuthAPI('login', { email, password })
                 
                 if (result && result.success) {
-                    // Store session for subsequent API calls
                     if (result.session) {
                         localStorage.setItem('supabase_session', result.session)
                     }
@@ -301,71 +561,67 @@
             }
         }
 
-        // Handle form submission
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        async function handleLogin(email, password) {
+            loginButton.disabled = true
+            loginButton.innerHTML = '<span class="spinner"></span> Signing in...'
+            
+            try {
+                const result = await loginUser(email, password)
+                
+                if (result.success) {
+                    showAlert('Login successful! Redirecting...')
+                    setTimeout(() => {
+                        window.location.href = 'index.html'
+                    }, 1000)
+                } else {
+                    showAlert(result.error || 'Login failed. Please check your credentials.', true)
+                    loginButton.disabled = false
+                    loginButton.innerHTML = 'Sign In'
+                }
+            } catch (error) {
+                showAlert('Network error. Please check your connection.', true)
+                loginButton.disabled = false
+                loginButton.innerHTML = 'Sign In'
+            }
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault()
             
-            const errorDiv = document.getElementById('error-message')
-            const loadingDiv = document.getElementById('loading-message')
-            const loginButton = document.getElementById('login-button')
+            const email = emailInput.value.trim()
+            const password = passwordInput.value
             
-            errorDiv.style.display = 'none'
-            loadingDiv.style.display = 'block'
-            loginButton.disabled = true
-            
-            const email = document.getElementById('email').value
-            const password = document.getElementById('password').value
-            
-            // Validate inputs
             if (!email || !password) {
-                errorDiv.textContent = 'Please fill in all fields'
-                errorDiv.style.display = 'block'
-                loadingDiv.style.display = 'none'
-                loginButton.disabled = false
+                showAlert('Please fill in all fields', true)
                 return
             }
             
-            const result = await loginUser(email, password)
-            
-            loadingDiv.style.display = 'none'
-            loginButton.disabled = false
-            
-            if (result.success) {
-                // Store user info in sessionStorage for quick access
-                sessionStorage.setItem('user', JSON.stringify({
-                    id: result.user.id,
-                    email: result.user.email
-                }))
-                
-                // Redirect to home page
-                window.location.href = 'index.html'
-            } else {
-                errorDiv.textContent = result.error || 'Login failed. Please check your credentials.'
-                errorDiv.style.display = 'block'
-            }
+            await handleLogin(email, password)
         })
 
-        // Forgot password handler
-        document.getElementById('forgot-password').addEventListener('click', async (e) => {
+        forgotPasswordLink.addEventListener('click', async (e) => {
             e.preventDefault()
-            const email = prompt('Enter your email address:')
             
-            if (email) {
-                try {
-                    const result = await callAuthAPI('resetPassword', { email })
-                    
-                    if (result && result.success) {
-                        alert('Password reset email sent! Check your inbox.')
-                    } else {
-                        throw new Error(result?.error || 'Failed to send reset email')
-                    }
-                } catch (error) {
-                    alert('Error: ' + error.message)
+            const email = emailInput.value.trim()
+            
+            if (!email) {
+                showAlert('Please enter your email address first', true)
+                return
+            }
+            
+            try {
+                const result = await callAuthAPI('resetPassword', { email })
+                
+                if (result && result.success) {
+                    showAlert('Password reset email sent! Check your inbox.')
+                } else {
+                    showAlert(result?.error || 'Failed to send reset email', true)
                 }
+            } catch (error) {
+                showAlert('Error sending reset email. Please try again.', true)
             }
         })
 
-        // Check if already logged in
         async function checkExistingSession() {
             try {
                 const session = localStorage.getItem('supabase_session')
@@ -374,15 +630,16 @@
                     if (result && result.user) {
                         window.location.href = 'index.html'
                     } else {
-                        // Session invalid, clear it
                         localStorage.removeItem('supabase_session')
                     }
                 }
             } catch (error) {
                 console.error('Session check error:', error)
+                localStorage.removeItem('supabase_session')
             }
         }
-        
+
+        initTheme()
         checkExistingSession()
     </script>
 </body>
