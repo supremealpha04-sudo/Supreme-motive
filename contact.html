@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Contact & Social Media</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+            --success: #4CAF50;
+            --error: #F44336;
+            --whatsapp: #25D366;
+            --telegram: #27A5E7;
+            --instagram: #E4405F;
+            --youtube: #FF0000;
+            --tiktok: #000000;
+            --facebook: #1877F2;
+            --twitter: #1DA1F2;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .top-nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--gold);
+            transform: rotate(15deg);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 240, 255, 0.05));
+            border-radius: 30px;
+            border: 1px solid var(--gold);
+        }
+
+        .hero-section h1 {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-section p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Social Media Section */
+        .social-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .social-card:hover::before {
+            left: 100%;
+        }
+
+        .social-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold);
+        }
+
+        .social-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2.5rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .social-card:hover .social-icon {
+            transform: scale(1.1);
+        }
+
+        .social-icon.instagram { background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF, #515BD4); }
+        .social-icon.youtube { background: var(--youtube); }
+        .social-icon.tiktok { background: var(--tiktok); }
+        .social-icon.facebook { background: var(--facebook); }
+        .social-icon.twitter { background: var(--twitter); }
+        .social-icon.telegram { background: var(--telegram); }
+        .social-icon.whatsapp { background: var(--whatsapp); }
+
+        .social-card h3 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .social-card p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-stats {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .social-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .follow-btn {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--electric-blue);
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .follow-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+        }
+
+        /* Contact Grid */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--gold);
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.8rem;
+            color: var(--bg-color);
+        }
+
+        .contact-card h3 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .contact-link {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--electric-blue);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+        }
+
+        /* Form Card */
+        .form-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .form-card h2 {
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            border-left: 4px solid var(--success);
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-color);
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .alert-error {
+            border-left-color: var(--error);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--bg-color);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Newsletter Section */
+        .newsletter-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 240, 255, 0.05));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            text-align: center;
+            border: 1px solid var(--gold);
+        }
+
+        .newsletter-section h3 {
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter-section p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-color);
+        }
+
+        .newsletter-form button {
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--gold), var(--electric-blue));
+            color: var(--bg-color);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-form button:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+            .nav-links.active { transform: translateY(0); }
+            .auth-buttons { flex-direction: column; width: 100%; }
+            .login-btn, .logout-btn { width: 100%; text-align: center; }
+            .hero-section h1 { font-size: 1.8rem; }
+            .social-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .form-card { padding: 1.5rem; }
+            .newsletter-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+            <a href="contact.html" class="active">Contact</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-home"></i></span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-book"></i></span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-user"></i></span>
+            <span>Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-newspaper"></i></span>
+            <span>Articles</span>
+        </a>
+        <a href="videos.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-video"></i></span>
+            <span>Videos</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div class="hero-section">
+            <h1>Connect With Us</h1>
+            <p>Follow us on social media for daily inspiration and motivation. Reach out to us anytime!</p>
+        </div>
+
+        <div id="alertContainer"></div>
+
+        <!-- Social Media Section -->
+        <div class="social-section">
+            <h2 class="section-title">
+                <i class="fas fa-share-alt"></i>
+                Follow Our Journey
+            </h2>
+            <div class="social-grid">
+                <!-- Instagram -->
+                <div class="social-card" onclick="window.open('https://instagram.com/suprememotive', '_blank')">
+                    <div class="social-icon instagram">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <h3>Instagram</h3>
+                    <p>Daily motivation, quotes, and behind-the-scenes content</p>
+                    <div class="social-stats">
+                        <span><i class="fas fa-heart"></i> 10K+</span>
+                        <span><i class="fas fa-users"></i> 5K+</span>
+                    </div>
+                    <button class="follow-btn">Follow @suprememotive</button>
+                </div>
+
+                <!-- TikTok -->
+                <div class="social-card" onclick="window.open('https://tiktok.com/@suprememotive', '_blank')">
+                    <div class="social-icon tiktok">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h3>TikTok</h3>
+                    <p>Short motivational videos and inspiring content</p>
+                    <div class="social-stats">
+                        <span><i class="fas fa-heart"></i> 50K+</span>
+                        <span><i class="fas fa-users"></i> 15K+</span>
+                    </div>
+                    <button class="follow-btn">Follow @suprememotive</button>
+                </div>
+
+                <!-- YouTube -->
+                <div class="social-card" onclick="window.open('https://youtube.com/@suprememotive', '_blank')">
+                    <div class="social-icon youtube">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                    <h3>YouTube</h3>
+                    <p>Full-length motivational videos and podcasts</p>
+                    <div class="social-stats">
+                        <span><i class="fas fa-heart"></i> 100K+</span>
+                        <span><i class="fas fa-users"></i> 20K+</span>
+                    </div>
+                    <button class="follow-btn">Subscribe @suprememotive</button>
+                </div>
+
+                <!-- Facebook -->
+                <div class="social-card" onclick="window.open('https://facebook.com/suprememotive', '_blank')">
+                    <div class="social-icon facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h3>Facebook</h3>
+                    <p>Community discussions and daily motivation</p>
+                    <div class="social-stats">
+                        <span><i class="fas fa-heart"></i> 8K+</span>
+                        <span><i class="fas fa-users"></i> 12K+</span>
+                    </div>
+                    <button class="follow-btn">Like @suprememotive</button>
+                </div>
+
+                <!-- Twitter/X -->
+                <div class="social-card" onclick="window.open('https://twitter.com/suprememotive', '_blank')">
+                    <div class="social-icon twitter">
+                        <i class="fab fa-twitter"></i>
+                    </div>
+                    <h3>Twitter/X</h3>
+                    <p>Daily quotes and quick inspiration</p>
+                    <div class="social-stats">
+                        <span><i class="fas fa-heart"></i> 5K+</span>
+                        <span><i class="fas fa-users"></i> 3K+</span>
+                    </div>
+                    <button class="follow-btn">Follow @suprememotive</button>
+                </div>
+
+                <!-- Telegram -->
+                <div class="social-card" onclick="window.open('https://t.me/suprememotive_network_bot', '_blank')">
+                    <div class="social-icon telegram">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <h3>Telegram</h3>
+                    <p>Quick support and instant updates</p>
+                    <div class="social-stats">
+                        <span><i class="fas fa-users"></i> 2K+</span>
+                    </div>
+                    <button class="follow-btn">Join Channel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Methods -->
+        <h2 class="section-title">
+            <i class="fas fa-envelope"></i>
+            Get in Touch
+        </h2>
+        <div class="contact-grid">
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3>Email Us</h3>
+                <p>For general inquiries, business partnerships, and support</p>
+                <a href="mailto:>suprememotive43@gmail.com" class="contact-link">suprememotive43@gmail.com</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fab fa-telegram"></i>
+                </div>
+                <h3>Telegram Bot</h3>
+                <p>Quick responses and automated support</p>
+                <a href="https://t.me/suprememotive_network_bot" class="contact-link">@suprememotive_network_bot</a>
+            </div>
+
+            <div class="contact-card">
+                <div class="contact-icon">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <h3>WhatsApp</h3>
+                <p>Chat with us directly for urgent inquiries</p>
+                <a href="https://wa.me/2348125955756" class="contact-link">+2348125955756 </a>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="form-card">
+            <h2>
+                <i class="fas fa-paper-plane"></i>
+                Send us a Message
+            </h2>
+            <form id="contactForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" class="form-control" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" class="form-control" placeholder="you@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Subject *</label>
+                    <input type="text" id="subject" class="form-control" placeholder="What is this regarding?" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" class="form-control" placeholder="Please provide details about your inquiry..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    Send Message
+                </button>
+            </form>
+        </div>
+
+        <!-- Newsletter Section -->
+        <div class="newsletter-section">
+            <h3><i class="fas fa-envelope-open-text"></i> Subscribe to Our Newsletter</h3>
+            <p>Get weekly motivational quotes, ebook updates, and exclusive content delivered to your inbox!</p>
+            <form class="newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="Enter your email address" id="newsletterEmail" required>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const API_BASE = '/api'
+        let currentUser = null
+
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+        const contactForm = document.getElementById('contactForm')
+        const submitBtn = document.getElementById('submitBtn')
+        const alertContainer = document.getElementById('alertContainer')
+        const newsletterForm = document.getElementById('newsletterForm')
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        async function submitContactForm(formData) {
+            try {
+                const response = await fetch(`${API_BASE}/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Failed to send message')
+                return result
+            } catch (error) {
+                console.error('Contact form error:', error)
+                throw error
+            }
+        }
+
+        async function subscribeNewsletter(email) {
+            try {
+                const response = await fetch(`${API_BASE}/newsletter`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, userId: currentUser?.id || null })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Failed to subscribe')
+                return result
+            } catch (error) {
+                console.error('Newsletter error:', error)
+                throw error
+            }
+        }
+
+        function showAlert(message, isError = false) {
+            alertContainer.innerHTML = `
+                <div class="alert ${isError ? 'alert-error' : ''}">
+                    <i class="fas ${isError ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
+                    ${message}
+                </div>
+            `
+            setTimeout(() => {
+                alertContainer.innerHTML = ''
+            }, 5000)
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'))
+        navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')))
+
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+                    const ADMIN_EMAILS = ['supremealpha04@gmail.com', 'suprememotive43@gmail.com', 'sandrakukk055@gmail.com', 'emmanuelamer6@gmail.com']
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-dashboard.html'
+                    }
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                }
+            } catch (error) { console.error('Auth error:', error) }
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.href = 'index.html'
+        })
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const name = document.getElementById('name').value.trim()
+            const email = document.getElementById('email').value.trim()
+            const subject = document.getElementById('subject').value.trim()
+            const message = document.getElementById('message').value.trim()
+            
+            if (!name || !email || !subject || !message) {
+                showAlert('Please fill in all fields', true)
+                return
+            }
+            
+            submitBtn.disabled = true
+            submitBtn.innerHTML = '<span class="spinner"></span> Sending...'
+            
+            try {
+                const result = await submitContactForm({
+                    name,
+                    email,
+                    subject,
+                    message,
+                    userId: currentUser?.id || null
+                })
+                
+                if (result.success) {
+                    showAlert('Message sent successfully! We will respond within 24-48 hours.')
+                    contactForm.reset()
+                } else {
+                    throw new Error(result.error || 'Failed to send message')
+                }
+            } catch (error) {
+                showAlert(error.message || 'Failed to send message. Please try again later.', true)
+            } finally {
+                submitBtn.disabled = false
+                submitBtn.innerHTML = 'Send Message'
+            }
+        })
+
+        newsletterForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+            
+            const email = document.getElementById('newsletterEmail').value.trim()
+            
+            if (!email) {
+                showAlert('Please enter your email address', true)
+                return
+            }
+            
+            const subscribeBtn = newsletterForm.querySelector('button')
+            subscribeBtn.disabled = true
+            subscribeBtn.innerHTML = '<span class="spinner"></span> Subscribing...'
+            
+            try {
+                const result = await subscribeNewsletter(email)
+                
+                if (result.success) {
+                    showAlert('Successfully subscribed to our newsletter! Check your inbox for confirmation.')
+                    newsletterForm.reset()
+                } else {
+                    throw new Error(result.error || 'Failed to subscribe')
+                }
+            } catch (error) {
+                showAlert(error.message || 'Failed to subscribe. Please try again later.', true)
+            } finally {
+                subscribeBtn.disabled = false
+                subscribeBtn.innerHTML = 'Subscribe'
+            }
+        })
+
+        initTheme()
+        checkAuth()
+    </script>
+</body>
+</html>
