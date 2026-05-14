@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icon Generator - SupremeMotive</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #1a1a1a;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        canvas {
+            background: #f0f0f0;
+            margin: 10px;
+            border: 2px solid #FFD700;
+            border-radius: 20px;
+        }
+        button {
+            background: #FFD700;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .size {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 SupremeMotive Icon Generator</h1>
+        <p>Upload your logo and download all required PWA icon sizes</p>
+        
+        <input type="file" id="upload" accept="image/*">
+        <button id="generate">Generate Icons</button>
+        
+        <div id="icons"></div>
+        
+        <button id="downloadAll" style="display:none;">📦 Download All Icons (ZIP)</button>
+    </div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        let generatedIcons = [];
+
+        document.getElementById('upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const img = new Image();
+                img.onload = function() {
+                    generateIcons(img);
+                };
+                img.src = URL.createObjectURL(file);
+            }
+        });
+
+        function generateIcons(img) {
+            const container = document.getElementById('icons');
+            container.innerHTML = '<h2>Generated Icons:</h2>';
+            generatedIcons = [];
+
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Draw background
+                ctx.fillStyle = '#0A0A0A';
+                ctx.fillRect(0, 0, size, size);
+                
+                // Draw gold border
+                ctx.strokeStyle = '#FFD700';
+                ctx.lineWidth = Math.max(2, size / 50);
+                ctx.strokeRect(5, 5, size - 10, size - 10);
+                
+                // Draw image
+                const imgSize = size * 0.7;
+                const x = (size - imgSize) / 2;
+                const y = (size - imgSize) / 2;
+                ctx.drawImage(img, x, y, imgSize, imgSize);
+                
+                // Add text for small sizes
+                if (size >= 192) {
+                    ctx.font = `bold ${size * 0.12}px Arial`;
+                    ctx.fillStyle = '#FFD700';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('SM', size/2, size - size * 0.1);
+                }
+                
+                const div = document.createElement('div');
+                div.className = 'size';
+                div.innerHTML = `
+                    <canvas width="${size}" height="${size}" style="width:${size/2}px;height:${size/2}px"></canvas>
+                    <br>${size}x${size}
+                    <br><a href="#" onclick="downloadIcon(this, ${size})">Download</a>
+                `;
+                div.querySelector('canvas').getContext('2d').drawImage(canvas, 0, 0);
+                div.querySelector('a').dataUrl = canvas.toDataURL('image/png');
+                container.appendChild(div);
+                
+                generatedIcons.push({
+                    size: size,
+                    dataUrl: canvas.toDataURL('image/png')
+                });
+            });
+            
+            document.getElementById('downloadAll').style.display = 'block';
+        }
+
+        window.downloadIcon = function(link, size) {
+            const a = document.createElement('a');
+            a.href = link.dataUrl;
+            a.download = `icon-${size}.png`;
+            a.click();
+        };
+
+        document.getElementById('downloadAll').addEventListener('click', function() {
+            generatedIcons.forEach(icon => {
+                const a = document.createElement('a');
+                a.href = icon.dataUrl;
+                a.download = `icon-${icon.size}.png`;
+                a.click();
+            });
+            alert('All icons downloaded! Place them in your /icons/ folder.');
+        });
+    </script>
+</body>
+</html>
