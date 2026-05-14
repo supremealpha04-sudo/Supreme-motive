@@ -6,23 +6,26 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Credentials', true)
+  // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  )
-
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  
   if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
+    return res.status(200).end()
   }
 
-  const { action, data } = req.body
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed', success: false })
+  }
 
   try {
+    const { action, data } = req.body
+
+    if (!action) {
+      return res.status(400).json({ error: 'Action is required', success: false })
+    }
+
     switch(action) {
       // ============================================
       // QUOTE MANAGEMENT
@@ -53,8 +56,98 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: quotesWithStats })
-        break
+        return res.status(200).json({ success: true, data: quotesWithStats })
+      }
+
+      case 'getQuoteLikeCount': {
+        const { quoteId } = data
+        
+        const { count, error } = await supabase
+          .from('quote_likes')
+          .select('*', { count: 'exact', head: true })
+          .eq('quote_id', quoteId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ count: count || 0, success: true })
+      }
+
+      case 'getUserQuoteLikes': {
+        const { userId } = data
+        
+        const { data: likes, error } = await supabase
+          .from('quote_likes')
+          .select('quote_id')
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ data: likes || [], success: true })
+      }
+
+      case 'getUserQuoteSaves': {
+        const { userId } = data
+        
+        const { data: saves, error } = await supabase
+          .from('quote_saves')
+          .select('quote_id')
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ data: saves || [], success: true })
+      }
+
+      case 'likeQuote': {
+        const { quoteId, userId } = data
+        
+        const { error } = await supabase
+          .from('quote_likes')
+          .insert([{ quote_id: quoteId, user_id: userId }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'unlikeQuote': {
+        const { quoteId, userId } = data
+        
+        const { error } = await supabase
+          .from('quote_likes')
+          .delete()
+          .eq('quote_id', quoteId)
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'saveQuote': {
+        const { quoteId, userId } = data
+        
+        const { error } = await supabase
+          .from('quote_saves')
+          .insert([{ quote_id: quoteId, user_id: userId }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'unsaveQuote': {
+        const { quoteId, userId } = data
+        
+        const { error } = await supabase
+          .from('quote_saves')
+          .delete()
+          .eq('quote_id', quoteId)
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
       }
 
       case 'createQuote': {
@@ -75,8 +168,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: quote })
-        break
+        
+        return res.status(200).json({ success: true, data: quote })
       }
 
       case 'updateQuote': {
@@ -96,8 +189,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: quote })
-        break
+        
+        return res.status(200).json({ success: true, data: quote })
       }
 
       case 'deleteQuote': {
@@ -112,8 +205,8 @@ export default async function handler(req, res) {
           .eq('id', quoteId)
 
         if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        
+        return res.status(200).json({ success: true })
       }
 
       // ============================================
@@ -149,8 +242,109 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: postsWithStats })
-        break
+        return res.status(200).json({ success: true, data: postsWithStats })
+      }
+
+      case 'getUserPostLikes': {
+        const { userId } = data
+        
+        const { data: likes, error } = await supabase
+          .from('post_likes')
+          .select('post_id')
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ data: likes || [], success: true })
+      }
+
+      case 'likePost': {
+        const { postId, userId } = data
+        
+        const { error } = await supabase
+          .from('post_likes')
+          .insert([{ post_id: postId, user_id: userId }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'unlikePost': {
+        const { postId, userId } = data
+        
+        const { error } = await supabase
+          .from('post_likes')
+          .delete()
+          .eq('post_id', postId)
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'getComments': {
+        const { postId } = data
+        
+        const { data: comments, error } = await supabase
+          .from('comments')
+          .select('*')
+          .eq('post_id', postId)
+          .order('created_at', { ascending: true })
+          
+        if (error) throw error
+        
+        const userIds = [...new Set((comments || []).map(c => c.user_id))]
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, name')
+          .in('id', userIds)
+        
+        const userMap = new Map()
+        if (profiles) {
+          profiles.forEach(p => userMap.set(p.id, p.name))
+        }
+        
+        const commentsWithNames = (comments || []).map(comment => ({
+          ...comment,
+          author_name: userMap.get(comment.user_id) || 'User'
+        }))
+        
+        return res.status(200).json({ data: commentsWithNames || [], success: true })
+      }
+
+      case 'addComment': {
+        const { postId, userId, content } = data
+        
+        const { error } = await supabase
+          .from('comments')
+          .insert([{
+            post_id: postId,
+            user_id: userId,
+            content: content
+          }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'addReply': {
+        const { postId, userId, content, parentCommentId } = data
+        
+        const { error } = await supabase
+          .from('comments')
+          .insert([{
+            post_id: postId,
+            user_id: userId,
+            content: content,
+            parent_comment_id: parentCommentId
+          }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
       }
 
       case 'createPost': {
@@ -170,8 +364,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: post })
-        break
+        
+        return res.status(200).json({ success: true, data: post })
       }
 
       case 'updatePost': {
@@ -192,8 +386,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: post })
-        break
+        
+        return res.status(200).json({ success: true, data: post })
       }
 
       case 'deletePost': {
@@ -208,8 +402,8 @@ export default async function handler(req, res) {
           .eq('id', postId)
 
         if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        
+        return res.status(200).json({ success: true })
       }
 
       // ============================================
@@ -247,8 +441,121 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: videosWithStats })
-        break
+        return res.status(200).json({ success: true, data: videosWithStats })
+      }
+
+      case 'getUserVideoLikes': {
+        const { userId } = data
+        
+        const { data: likes, error } = await supabase
+          .from('video_likes')
+          .select('video_id')
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ data: likes || [], success: true })
+      }
+
+      case 'likeVideo': {
+        const { videoId, userId } = data
+        
+        const { error } = await supabase
+          .from('video_likes')
+          .insert([{ video_id: videoId, user_id: userId }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'unlikeVideo': {
+        const { videoId, userId } = data
+        
+        const { error } = await supabase
+          .from('video_likes')
+          .delete()
+          .eq('video_id', videoId)
+          .eq('user_id', userId)
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'recordVideoView': {
+        const { videoId, userId } = data
+        
+        const { error } = await supabase
+          .from('video_views')
+          .upsert([{ video_id: videoId, user_id: userId }], { onConflict: 'video_id,user_id' })
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'getVideoComments': {
+        const { videoId } = data
+        
+        const { data: comments, error } = await supabase
+          .from('video_comments')
+          .select('*')
+          .eq('video_id', videoId)
+          .order('created_at', { ascending: true })
+          
+        if (error) throw error
+        
+        const userIds = [...new Set((comments || []).map(c => c.user_id))]
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('id, name')
+          .in('id', userIds)
+        
+        const userMap = new Map()
+        if (profiles) {
+          profiles.forEach(p => userMap.set(p.id, p.name))
+        }
+        
+        const commentsWithNames = (comments || []).map(comment => ({
+          ...comment,
+          author_name: userMap.get(comment.user_id) || 'User'
+        }))
+        
+        return res.status(200).json({ data: commentsWithNames || [], success: true })
+      }
+
+      case 'addVideoComment': {
+        const { videoId, userId, content } = data
+        
+        const { error } = await supabase
+          .from('video_comments')
+          .insert([{
+            video_id: videoId,
+            user_id: userId,
+            content: content
+          }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'addVideoReply': {
+        const { videoId, userId, content, parentCommentId } = data
+        
+        const { error } = await supabase
+          .from('video_comments')
+          .insert([{
+            video_id: videoId,
+            user_id: userId,
+            content: content,
+            parent_id: parentCommentId
+          }])
+          
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
       }
 
       case 'createVideo': {
@@ -270,8 +577,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: video })
-        break
+        
+        return res.status(200).json({ success: true, data: video })
       }
 
       case 'updateVideo': {
@@ -294,8 +601,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: video })
-        break
+        
+        return res.status(200).json({ success: true, data: video })
       }
 
       case 'deleteVideo': {
@@ -311,8 +618,8 @@ export default async function handler(req, res) {
           .eq('id', videoId)
 
         if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        
+        return res.status(200).json({ success: true })
       }
 
       // ============================================
@@ -346,8 +653,92 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: ebooksWithStats })
-        break
+        return res.status(200).json({ success: true, data: ebooksWithStats })
+      }
+
+      case 'getUserUnlocks': {
+        const { userId } = data
+        
+        const { data: unlocks, error } = await supabase
+          .from('unlocks')
+          .select(`*, ebook:ebooks(*)`)
+          .eq('user_id', userId)
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false })
+
+        if (error) throw error
+        
+        return res.status(200).json({ data: unlocks || [], success: true })
+      }
+
+      case 'getUserSavedEbooks': {
+        const { userId } = data
+        
+        const { data: saved, error } = await supabase
+          .from('saved_ebooks')
+          .select(`*, ebook:ebooks(*)`)
+          .eq('user_id', userId)
+
+        if (error) throw error
+        
+        return res.status(200).json({ data: saved || [], success: true })
+      }
+
+      case 'getUserPayments': {
+        const { userId } = data
+        
+        const { data: payments, error } = await supabase
+          .from('stars_payments')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('status', 'completed')
+          .order('created_at', { ascending: false })
+          .limit(10)
+
+        if (error) throw error
+        
+        return res.status(200).json({ data: payments || [], success: true })
+      }
+
+      case 'checkSavedEbook': {
+        const { ebookId, userId } = data
+        
+        const { data: saved, error } = await supabase
+          .from('saved_ebooks')
+          .select('*')
+          .eq('ebook_id', ebookId)
+          .eq('user_id', userId)
+          .maybeSingle()
+
+        if (error) throw error
+        
+        return res.status(200).json({ exists: !!saved, success: true })
+      }
+
+      case 'saveEbook': {
+        const { ebookId, userId } = data
+        
+        const { error } = await supabase
+          .from('saved_ebooks')
+          .insert([{ ebook_id: ebookId, user_id: userId }])
+
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'unsaveEbook': {
+        const { ebookId, userId } = data
+        
+        const { error } = await supabase
+          .from('saved_ebooks')
+          .delete()
+          .eq('ebook_id', ebookId)
+          .eq('user_id', userId)
+
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
       }
 
       case 'createEbook': {
@@ -372,8 +763,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: ebook })
-        break
+        
+        return res.status(200).json({ success: true, data: ebook })
       }
 
       case 'updateEbook': {
@@ -399,8 +790,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: ebook })
-        break
+        
+        return res.status(200).json({ success: true, data: ebook })
       }
 
       case 'deleteEbook': {
@@ -414,8 +805,8 @@ export default async function handler(req, res) {
           .eq('id', ebookId)
 
         if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        
+        return res.status(200).json({ success: true })
       }
 
       // ============================================
@@ -452,8 +843,7 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: requestsWithDetails })
-        break
+        return res.status(200).json({ success: true, data: requestsWithDetails })
       }
 
       case 'getUnlockRequestsCount': {
@@ -463,8 +853,8 @@ export default async function handler(req, res) {
           .eq('status', 'pending')
 
         if (error) throw error
-        res.status(200).json({ success: true, data: count || 0 })
-        break
+        
+        return res.status(200).json({ success: true, data: count || 0 })
       }
 
       case 'approveUnlockRequest': {
@@ -490,8 +880,7 @@ export default async function handler(req, res) {
             .eq('id', request.payment_id)
         }
 
-        res.status(200).json({ success: true, data: request })
-        break
+        return res.status(200).json({ success: true, data: request })
       }
 
       case 'rejectUnlockRequest': {
@@ -517,84 +906,162 @@ export default async function handler(req, res) {
             .eq('id', request.payment_id)
         }
 
-        res.status(200).json({ success: true, data: request })
-        break
+        return res.status(200).json({ success: true, data: request })
+      }
+
+      case 'createStarsPayment': {
+        const { paymentId, userId, userEmail, ebookId, ebookTitle, starsAmount } = data
+
+        const { data: payment, error } = await supabase
+          .from('stars_payments')
+          .insert([{
+            id: paymentId,
+            user_id: userId,
+            user_email: userEmail,
+            ebook_id: ebookId,
+            ebook_title: ebookTitle,
+            stars_amount: starsAmount,
+            status: 'pending',
+            created_at: new Date().toISOString()
+          }])
+          .select()
+          .single()
+
+        if (error) throw error
+        
+        return res.status(200).json({ data: payment, success: true })
+      }
+
+      case 'checkPaymentStatus': {
+        const { paymentId } = data
+
+        const { data: payment, error } = await supabase
+          .from('stars_payments')
+          .select('status')
+          .eq('id', paymentId)
+          .single()
+
+        if (error) throw error
+        
+        return res.status(200).json({ status: payment?.status || 'pending', success: true })
+      }
+
+      case 'createUnlock': {
+        const { userId, ebookId, paymentId } = data
+
+        const { data: unlock, error } = await supabase
+          .from('unlocks')
+          .insert([{
+            user_id: userId,
+            ebook_id: ebookId,
+            status: 'approved',
+            payment_method: 'telegram_stars',
+            payment_id: paymentId,
+            created_at: new Date().toISOString()
+          }])
+          .select()
+          .single()
+
+        if (error && error.code !== '23505') throw error
+        
+        return res.status(200).json({ data: unlock, success: true })
       }
 
       // ============================================
       // PROFILE MANAGEMENT
       // ============================================
       case 'getProfile': {
+        const { userId } = data
+        
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('*')
-          .eq('user_id', data.userId)
+          .eq('user_id', userId)
           .maybeSingle()
 
         if (error) throw error
-        res.status(200).json({ data: profile, success: true })
-        break
+        
+        return res.status(200).json({ data: profile, success: true })
       }
 
       case 'createProfile': {
+        const { user_id, name, email, country, age, bio, role } = data
+        
         const { data: profile, error } = await supabase
           .from('profiles')
-          .insert([data])
+          .insert([{
+            user_id,
+            name: name || email?.split('@')[0],
+            email,
+            country: country || null,
+            age: age || null,
+            bio: bio || null,
+            role: role || 'user',
+            created_at: new Date().toISOString()
+          }])
           .select()
           .single()
 
         if (error) throw error
-        res.status(200).json({ data: profile, success: true })
-        break
+        
+        return res.status(200).json({ data: profile, success: true })
       }
 
       case 'updateProfile': {
+        const { userId, updates } = data
+        
         const { error } = await supabase
           .from('profiles')
-          .update(data.updates)
-          .eq('user_id', data.userId)
+          .update({ ...updates, updated_at: new Date().toISOString() })
+          .eq('user_id', userId)
 
         if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        
+        return res.status(200).json({ success: true })
       }
 
-      case 'getUserUnlocks': {
-        const { data: unlocks, error } = await supabase
-          .from('unlocks')
-          .select(`*, ebook:ebooks(*)`)
-          .eq('user_id', data.userId)
-          .eq('status', 'approved')
-          .order('created_at', { ascending: false })
-
-        if (error) throw error
-        res.status(200).json({ data: unlocks || [], success: true })
-        break
-      }
-
-      case 'getUserSavedEbooks': {
-        const { data: saved, error } = await supabase
-          .from('saved_ebooks')
-          .select(`*, ebook:ebooks(*)`)
-          .eq('user_id', data.userId)
-
-        if (error) throw error
-        res.status(200).json({ data: saved || [], success: true })
-        break
-      }
-
-      case 'getUserPayments': {
-        const { data: payments, error } = await supabase
-          .from('stars_payments')
+      // ============================================
+      // NOTIFICATIONS
+      // ============================================
+      case 'getUserNotifications': {
+        const { userId } = data
+        
+        const { data: notifications, error } = await supabase
+          .from('notifications')
           .select('*')
-          .eq('user_id', data.userId)
-          .eq('status', 'completed')
+          .eq('user_id', userId)
           .order('created_at', { ascending: false })
-          .limit(10)
+          .limit(50)
 
         if (error) throw error
-        res.status(200).json({ data: payments || [], success: true })
-        break
+        
+        return res.status(200).json({ data: notifications || [], success: true })
+      }
+
+      case 'markNotificationRead': {
+        const { notificationId } = data
+        
+        const { error } = await supabase
+          .from('notifications')
+          .update({ is_read: true })
+          .eq('id', notificationId)
+
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
+      }
+
+      case 'markAllNotificationsRead': {
+        const { userId } = data
+        
+        const { error } = await supabase
+          .from('notifications')
+          .update({ is_read: true })
+          .eq('user_id', userId)
+
+        if (error) throw error
+        
+        return res.status(200).json({ success: true })
       }
 
       // ============================================
@@ -650,7 +1117,7 @@ export default async function handler(req, res) {
           .select('*', { count: 'exact', head: true })
           .gte('created_at', startOfMonth.toISOString())
 
-        res.status(200).json({
+        return res.status(200).json({
           success: true,
           data: {
             totalUsers: totalUsers || 0,
@@ -666,7 +1133,6 @@ export default async function handler(req, res) {
             newPostsLastMonth: newPostsLastMonth || 0
           }
         })
-        break
       }
 
       case 'getUsersByCountry': {
@@ -680,16 +1146,17 @@ export default async function handler(req, res) {
           countryCount[country] = (countryCount[country] || 0) + 1
         })
 
-        res.status(200).json({ success: true, data: countryCount })
-        break
+        return res.status(200).json({ success: true, data: countryCount })
       }
 
       case 'getRecentUnlocks': {
+        const { limit = 5 } = data
+        
         const { data: unlocks } = await supabase
           .from('unlocks')
           .select('*')
           .order('created_at', { ascending: false })
-          .limit(data.limit || 5)
+          .limit(limit)
 
         const unlocksWithDetails = await Promise.all((unlocks || []).map(async (unlock) => {
           const { data: profile } = await supabase
@@ -712,16 +1179,17 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: unlocksWithDetails })
-        break
+        return res.status(200).json({ success: true, data: unlocksWithDetails })
       }
 
       case 'getRecentComments': {
+        const { limit = 5 } = data
+        
         const { data: comments } = await supabase
           .from('comments')
           .select('*')
           .order('created_at', { ascending: false })
-          .limit(data.limit || 5)
+          .limit(limit)
 
         const commentsWithDetails = await Promise.all((comments || []).map(async (comment) => {
           const { data: profile } = await supabase
@@ -744,8 +1212,7 @@ export default async function handler(req, res) {
           }
         }))
 
-        res.status(200).json({ success: true, data: commentsWithDetails })
-        break
+        return res.status(200).json({ success: true, data: commentsWithDetails })
       }
 
       case 'getActivityData': {
@@ -788,11 +1255,10 @@ export default async function handler(req, res) {
           commentData.push(commentsCount || 0)
         }
 
-        res.status(200).json({
+        return res.status(200).json({
           success: true,
           data: { labels, users: userData, posts: postData, comments: commentData }
         })
-        break
       }
 
       case 'getSupportTickets': {
@@ -802,8 +1268,8 @@ export default async function handler(req, res) {
           .order('created_at', { ascending: false })
 
         if (error) throw error
-        res.status(200).json({ success: true, data: tickets || [] })
-        break
+        
+        return res.status(200).json({ success: true, data: tickets || [] })
       }
 
       case 'updateTicketStatus': {
@@ -820,8 +1286,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: ticket })
-        break
+        
+        return res.status(200).json({ success: true, data: ticket })
       }
 
       case 'resolveTicket': {
@@ -840,8 +1306,8 @@ export default async function handler(req, res) {
           .single()
 
         if (error) throw error
-        res.status(200).json({ success: true, data: ticket })
-        break
+        
+        return res.status(200).json({ success: true, data: ticket })
       }
 
       case 'getSettings': {
@@ -854,15 +1320,15 @@ export default async function handler(req, res) {
           .maybeSingle()
 
         if (error && error.code !== 'PGRST116') throw error
-        res.status(200).json({ success: true, data: setting })
-        break
+        
+        return res.status(200).json({ success: true, data: setting })
       }
 
       default:
-        res.status(400).json({ error: 'Invalid action', success: false })
+        return res.status(400).json({ error: `Unknown action: ${action}`, success: false })
     }
   } catch (error) {
     console.error('API Error:', error)
-    res.status(500).json({ error: error.message, success: false })
+    return res.status(500).json({ error: error.message || 'Internal server error', success: false })
   }
 }
