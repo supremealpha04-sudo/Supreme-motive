@@ -6,45 +6,58 @@ const supabase = createClient(
 )
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true)
+  // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  )
-
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
+    return res.status(200).end()
   }
 
-  const { action, data } = req.body
+  // Only allow POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed', success: false })
+  }
 
   try {
+    const { action, data } = req.body
+
+    // Validate action
+    if (!action) {
+      return res.status(400).json({ error: 'Action is required', success: false })
+    }
+
     switch(action) {
       case 'login': {
         const { email, password } = data
+        
+        if (!email || !password) {
+          return res.status(400).json({ error: 'Email and password are required', success: false })
+        }
 
         const { data: authData, error } = await supabase.auth.signInWithPassword({
           email: email,
           password: password
         })
 
-        if (error) throw error
+        if (error) {
+          return res.status(401).json({ error: error.message, success: false })
+        }
 
         let profile = null
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', authData.user.id)
-          .single()
+          .maybeSingle()
 
         if (!profileError) {
           profile = profileData
         }
 
-        res.status(200).json({ 
+        return res.status(200).json({ 
           success: true, 
           user: {
             id: authData.user.id,
@@ -53,11 +66,14 @@ export default async function handler(req, res) {
           session: authData.session.access_token,
           profile 
         })
-        break
       }
 
       case 'register': {
         const { email, password, name, country, age, bio, role } = data
+
+        if (!email || !password || !name) {
+          return res.status(400).json({ error: 'Email, password, and name are required', success: false })
+        }
 
         const { data: authData, error } = await supabase.auth.signUp({
           email: email,
@@ -65,19 +81,21 @@ export default async function handler(req, res) {
           options: {
             data: {
               name: name,
-              country: country,
-              age: age,
+              country: country || null,
+              age: age || null,
               bio: bio || null,
-              role: role
+              role: role || 'user'
             },
-            emailRedirectTo: `${req.headers.origin}/verify.html`
+            emailRedirectTo: `${process.env.SITE_URL || req.headers.origin}/verify.html`
           }
         })
 
-        if (error) throw error
+        if (error) {
+          return res.status(400).json({ error: error.message, success: false })
+        }
 
         if (authData.user && authData.user.identities && authData.user.identities.length === 0) {
-          throw new Error('User already registered')
+          return res.status(400).json({ error: 'User already registered', success: false })
         }
 
         if (authData.user) {
@@ -87,10 +105,10 @@ export default async function handler(req, res) {
               id: authData.user.id,
               name: name,
               email: email,
-              country: country,
-              age: age,
+              country: country || null,
+              age: age || null,
               bio: bio || null,
-              role: role,
+              role: role || 'user',
               created_at: new Date().toISOString()
             }])
 
@@ -99,7 +117,7 @@ export default async function handler(req, res) {
           }
         }
 
-        res.status(200).json({ 
+        return res.status(200).json({ 
           success: true, 
           user: {
             id: authData.user?.id,
@@ -107,83 +125,93 @@ export default async function handler(req, res) {
           },
           message: 'Registration successful. Please check your email to confirm your account.'
         })
-        break
       }
 
       case 'getUser': {
         const { session } = data
 
         if (!session) {
-          res.status(200).json({ user: null, success: true })
-          return
+          return res.status(200).json({ user: null, success: true })
         }
         
         const { data: { user }, error } = await supabase.auth.getUser(session)
-        if (error) throw error
-        res.status(200).json({ user, success: true })
-        break
+        
+        if (error) {
+          return res.status(401).json({ error: error.message, success: false })
+        }
+        
+        return res.status(200).json({ user, success: true })
       }
 
       case 'signOut': {
         const { error } = await supabase.auth.signOut()
-        if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        if (error) {
+          return res.status(400).json({ error: error.message, success: false })
+        }
+        return res.status(200).json({ success: true })
       }
 
       case 'resetPassword': {
         const { email } = data
 
+        if (!email) {
+          return res.status(400).json({ error: 'Email is required', success: false })
+        }
+
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${req.headers.origin}/reset-password.html`,
+          redirectTo: `${process.env.SITE_URL || req.headers.origin}/reset-password.html`,
         })
 
-        if (error) throw error
-        res.status(200).json({ success: true })
-        break
+        if (error) {
+          return res.status(400).json({ error: error.message, success: false })
+        }
+        
+        return res.status(200).json({ success: true })
       }
 
       case 'verifyEmail': {
         const { token } = data
+
+        if (!token) {
+          return res.status(400).json({ error: 'Token is required', success: false })
+        }
 
         const { data: authData, error } = await supabase.auth.verifyOtp({
           token_hash: token,
           type: 'signup'
         })
 
-        if (error) throw error
-        res.status(200).json({ success: true, user: authData?.user })
-        break
+        if (error) {
+          return res.status(400).json({ error: error.message, success: false })
+        }
+        
+        return res.status(200).json({ success: true, user: authData?.user })
       }
 
       case 'resendVerification': {
         const { email } = data
+
+        if (!email) {
+          return res.status(400).json({ error: 'Email is required', success: false })
+        }
 
         const { error } = await supabase.auth.resend({
           type: 'signup',
           email: email
         })
 
-        if (error) throw error
-        res.status(200).json({ success: true })
-        break
-      }
-
-      case 'checkVerificationStatus': {
-        const { email } = data
-
-        const { data: { user }, error } = await supabase.auth.admin.getUserByEmail(email)
-
-        if (error) throw error
-        res.status(200).json({ success: true, isVerified: user?.email_confirmed_at ? true : false })
-        break
+        if (error) {
+          return res.status(400).json({ error: error.message, success: false })
+        }
+        
+        return res.status(200).json({ success: true })
       }
 
       default:
-        res.status(400).json({ error: 'Invalid action', success: false })
+        return res.status(400).json({ error: 'Invalid action', success: false })
     }
   } catch (error) {
     console.error('Auth Error:', error)
-    res.status(500).json({ error: error.message, success: false })
+    return res.status(500).json({ error: 'Internal server error: ' + error.message, success: false })
   }
 }
