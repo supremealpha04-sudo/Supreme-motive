@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SupremeMotive - Terms of Service</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Same styles as privacy.html */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-color: #0A0A0A;
+            --card-bg: #1A1A1A;
+            --text-color: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --gold: #FFD700;
+            --border-color: #333333;
+            --electric-blue: #00F0FF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #0B1A33 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Navigation styles (same as privacy.html) */
+        .top-nav {
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--gold);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--gold);
+        }
+
+        .logo img {
+            height: 35px;
+            width: auto;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: var(--gold);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .login-btn {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .login-btn:hover {
+            background: var(--gold);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #F44336;
+            color: #F44336;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #F44336;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .user-greeting {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            color: var(--gold);
+            transform: rotate(15deg);
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-top: 2px solid var(--gold);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.8rem;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .nav-icon {
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(0, 240, 255, 0.05));
+            border-radius: 30px;
+            border: 1px solid var(--gold);
+        }
+
+        .hero-section h1 {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-section p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .last-updated {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .content-card h2 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-card h3 {
+            color: var(--electric-blue);
+            font-size: 1.2rem;
+            margin: 1.5rem 0 0.8rem 0;
+        }
+
+        .content-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .content-card ul, .content-card ol {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        .content-card li {
+            margin-bottom: 0.5rem;
+        }
+
+        .content-card a {
+            color: var(--electric-blue);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .content-card a:hover {
+            color: var(--gold);
+        }
+
+        .highlight {
+            background: rgba(255, 215, 0, 0.1);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 3px solid var(--warning);
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: var(--card-bg);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                transform: translateY(-150%);
+                transition: transform 0.3s ease;
+                border-bottom: 2px solid var(--gold);
+                z-index: 99;
+            }
+            .nav-links.active { transform: translateY(0); }
+            .auth-buttons { flex-direction: column; width: 100%; }
+            .login-btn, .logout-btn { width: 100%; text-align: center; }
+            .hero-section h1 { font-size: 1.8rem; }
+            .content-card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="logo">
+            <img src="logo.png" alt="SupremeMotive" onerror="this.style.display='none'">
+            <span>SupremeMotive</span>
+        </div>
+
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="support.html">Support</a>
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html" class="active">Terms</a>
+            <a href="#" id="adminLink" style="display: none;">Admin</a>
+            
+            <div class="auth-buttons">
+                <span id="userGreeting" class="user-greeting hidden"></span>
+                <a href="login.html" class="login-btn" id="loginBtn">Login</a>
+                <button class="logout-btn hidden" id="logoutBtn">Logout</button>
+            </div>
+            
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-home"></i></span>
+            <span>Home</span>
+        </a>
+        <a href="ebooks.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-book"></i></span>
+            <span>Ebooks</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-user"></i></span>
+            <span>Profile</span>
+        </a>
+        <a href="post.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-newspaper"></i></span>
+            <span>Articles</span>
+        </a>
+        <a href="videos.html" class="nav-item">
+            <span class="nav-icon"><i class="fas fa-video"></i></span>
+            <span>Videos</span>
+        </a>
+    </nav>
+
+    <main class="container">
+        <div class="hero-section">
+            <h1>Terms of Service</h1>
+            <p>Please read these terms carefully before using our service.</p>
+            <div class="last-updated">Last Updated: January 1, 2024</div>
+        </div>
+
+        <div class="content-card">
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing or using SupremeMotive ("we," "our," or "us"), you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our services.</p>
+
+            <h2>2. Description of Service</h2>
+            <p>SupremeMotive provides a platform for:</p>
+            <ul>
+                <li>Daily motivational quotes and inspiration</li>
+                <li>Ebook purchases and downloads via Telegram Stars</li>
+                <li>Articles, posts, and community content</li>
+                <li>Video content and motivational media</li>
+                <li>User profiles and saved content</li>
+            </ul>
+
+            <h2>3. User Accounts</h2>
+            <p>To access certain features, you must create an account. You agree to:</p>
+            <ul>
+                <li>Provide accurate and complete registration information</li>
+                <li>Maintain the security of your password</li>
+                <li>Accept responsibility for all activities under your account</li>
+                <li>Notify us immediately of any unauthorized use</li>
+            </ul>
+
+            <h2>4. Purchases and Payments</h2>
+            <p>Ebook purchases are processed through Telegram Stars. By making a purchase, you agree to:</p>
+            <ul>
+                <li>Pay all applicable fees and taxes</li>
+                <li>Provide accurate payment information</li>
+                <li>Understand that purchases are final and non-refundable</li>
+                <li>Accept that ebooks are for personal use only</li>
+            </ul>
+
+            <div class="highlight">
+                <i class="fas fa-exclamation-triangle" style="color: var(--gold); margin-right: 0.5rem;"></i>
+                <strong>Important:</strong> All ebook purchases are final. We do not offer refunds for digital products once the download link has been provided.
+            </div>
+
+            <h2>5. User Content</h2>
+            <p>You retain ownership of content you post, including comments and interactions. By posting, you grant us a license to display and share your content on our platform. You agree not to post:</p>
+            <ul>
+                <li>Offensive, harassing, or illegal content</li>
+                <li>Content that infringes on others' intellectual property</li>
+                <li>Spam or promotional content without permission</li>
+                <li>False or misleading information</li>
+            </ul>
+
+            <h2>6. Intellectual Property</h2>
+            <p>All content on SupremeMotive, including quotes, ebooks, videos, and designs, is owned by us or our licensors. You may not:</p>
+            <ul>
+                <li>Reproduce or distribute our content without permission</li>
+                <li>Modify or create derivative works</li>
+                <li>Use our content for commercial purposes without license</li>
+            </ul>
+
+            <h2>7. Prohibited Activities</h2>
+            <p>You agree not to:</p>
+            <ul>
+                <li>Use our service for any illegal purpose</li>
+                <li>Attempt to gain unauthorized access to our systems</li>
+                <li>Interfere with the proper functioning of our service</li>
+                <li>Share your account credentials with others</li>
+                <li>Scrape or collect user data without permission</li>
+            </ul>
+
+            <h2>8. Termination</h2>
+            <p>We reserve the right to suspend or terminate your account for violations of these terms, including:</p>
+            <ul>
+                <li>Repeated copyright infringement</li>
+                <li>Harassment of other users</li>
+                <li>Fraudulent activity</li>
+                <li>Violation of applicable laws</li>
+            </ul>
+
+            <h2>9. Disclaimer of Warranties</h2>
+            <p>Our service is provided "as is" without warranties of any kind. We do not guarantee that:</p>
+            <ul>
+                <li>The service will be uninterrupted or error-free</li>
+                <li>Quotes or content are accurate or reliable</li>
+                <li>Any defects will be corrected</li>
+            </ul>
+
+            <h2>10. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by law, SupremeMotive shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising from your use of our service.</p>
+
+            <h2>11. Changes to Terms</h2>
+            <p>We may modify these terms at any time. Continued use of our service after changes constitutes acceptance of the new terms.</p>
+
+            <h2>12. Governing Law</h2>
+            <p>These terms shall be governed by and construed in accordance with the laws of the jurisdiction where SupremeMotive operates, without regard to conflict of law principles.</p>
+
+            <h2>13. Contact Information</h2>
+            <p>For questions about these Terms of Service, please contact us:</p>
+            <ul>
+                <li><i class="fas fa-envelope"></i> Email: <a href="mailto:legal@suprememotive.com">legal@suprememotive.com</a></li>
+                <li><i class="fab fa-telegram"></i> Telegram: <a href="https://t.me/suprememotive_network_bot">@suprememotive_network_bot</a></li>
+            </ul>
+        </div>
+    </main>
+
+    <script>
+        // Same authentication script as privacy.html
+        const API_BASE = '/api'
+        let currentUser = null
+
+        const menuToggle = document.getElementById('menuToggle')
+        const navLinks = document.getElementById('navLinks')
+        const themeToggle = document.getElementById('themeToggle')
+        const adminLink = document.getElementById('adminLink')
+        const loginBtn = document.getElementById('loginBtn')
+        const logoutBtn = document.getElementById('logoutBtn')
+        const userGreeting = document.getElementById('userGreeting')
+
+        async function callAuthAPI(action, data = {}) {
+            try {
+                const response = await fetch(`${API_BASE}/auth`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action, data })
+                })
+                const result = await response.json()
+                if (!response.ok) throw new Error(result.error || 'Auth API call failed')
+                return result
+            } catch (error) {
+                console.error(`Auth API Error (${action}):`, error)
+                return null
+            }
+        }
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme')
+            if (savedTheme === 'light') {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+            }
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isLight = getComputedStyle(document.documentElement).getPropertyValue('--bg-color').trim() === '#F5F5F5'
+            if (isLight) {
+                document.documentElement.style.setProperty('--bg-color', '#0A0A0A')
+                document.documentElement.style.setProperty('--card-bg', '#1A1A1A')
+                document.documentElement.style.setProperty('--text-color', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-secondary', '#B0B0B0')
+                document.documentElement.style.setProperty('--border-color', '#333333')
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>'
+                localStorage.setItem('theme', 'dark')
+            } else {
+                document.documentElement.style.setProperty('--bg-color', '#F5F5F5')
+                document.documentElement.style.setProperty('--card-bg', '#FFFFFF')
+                document.documentElement.style.setProperty('--text-color', '#333333')
+                document.documentElement.style.setProperty('--text-secondary', '#666666')
+                document.documentElement.style.setProperty('--border-color', '#DDDDDD')
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>'
+                localStorage.setItem('theme', 'light')
+            }
+        })
+
+        menuToggle.addEventListener('click', () => navLinks.classList.toggle('active'))
+        navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => navLinks.classList.remove('active')))
+
+        async function checkAuth() {
+            try {
+                const session = localStorage.getItem('supabase_session')
+                const result = await callAuthAPI('getUser', { session })
+                if (result?.user) {
+                    currentUser = result.user
+                    loginBtn.classList.add('hidden')
+                    logoutBtn.classList.remove('hidden')
+                    userGreeting.classList.remove('hidden')
+                    userGreeting.textContent = `Hi, ${currentUser.email.split('@')[0]}!`
+                    const ADMIN_EMAILS = ['supremealpha04@gmail.com', 'suprememotive43@gmail.com', 'sandrakukk055@gmail.com', 'emmanuelamer6@gmail.com']
+                    if (ADMIN_EMAILS.includes(currentUser.email)) {
+                        adminLink.style.display = 'block'
+                        adminLink.href = 'admin/admin-dashboard.html'
+                    }
+                } else {
+                    loginBtn.classList.remove('hidden')
+                    logoutBtn.classList.add('hidden')
+                    userGreeting.classList.add('hidden')
+                    adminLink.style.display = 'none'
+                }
+            } catch (error) { console.error('Auth error:', error) }
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            await callAuthAPI('signOut')
+            localStorage.removeItem('supabase_session')
+            window.location.href = 'index.html'
+        })
+
+        initTheme()
+        checkAuth()
+    </script>
+</body>
+</html>
